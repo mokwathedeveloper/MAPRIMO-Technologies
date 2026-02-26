@@ -3,6 +3,8 @@ import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import type { Lead } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   const cookieStore = cookies();
   const supabase = createServerClient(
