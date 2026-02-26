@@ -29,7 +29,7 @@ async function getCaseStudies() {
   try {
     const { data, error } = await supabase
       .from("case_studies")
-      .select("*")
+      .select("*, projects(*)")
       .order("created_at", { ascending: false });
     if (error) throw error;
     return (data || []) as CaseStudy[];
