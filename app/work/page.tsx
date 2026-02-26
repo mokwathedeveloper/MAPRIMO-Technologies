@@ -12,19 +12,31 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 async function getProjects() {
-  const { data } = await supabase
-    .from("projects")
-    .select("*")
-    .order("created_at", { ascending: false });
-  return (data || []) as Project[];
+  try {
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data || []) as Project[];
+  } catch (e) {
+    console.error("Error fetching projects:", e);
+    return [];
+  }
 }
 
 async function getCaseStudies() {
-  const { data } = await supabase
-    .from("case_studies")
-    .select("*")
-    .order("created_at", { ascending: false });
-  return (data || []) as CaseStudy[];
+  try {
+    const { data, error } = await supabase
+      .from("case_studies")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data || []) as CaseStudy[];
+  } catch (e) {
+    console.error("Error fetching case studies:", e);
+    return [];
+  }
 }
 
 export default async function WorkPage() {

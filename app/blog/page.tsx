@@ -14,11 +14,21 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 async function getPosts() {
-  const { data } = await supabase
-    .from("posts")
-    .select("*")
-    .order("published_at", { ascending: false });
-  return (data || []) as Post[];
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("published_at", { ascending: false });
+    
+    if (error) {
+      console.error("Error fetching posts:", error);
+      return [];
+    }
+    return (data || []) as Post[];
+  } catch (e) {
+    console.error("Failed to get posts:", e);
+    return [];
+  }
 }
 
 export default async function BlogPage() {
