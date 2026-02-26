@@ -29,6 +29,7 @@ export interface Lead {
   email: string;
   company?: string;
   message: string;
+  requested_date?: string;
   created_at?: string;
 }
 
@@ -39,5 +40,18 @@ export interface Testimonial {
   company: string;
   content: string;
   avatar_url?: string;
+  created_at: string;
+}
+
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image_url: string;
+  author: string;
+  tags: string[];
+  published_at: string;
   created_at: string;
 }
