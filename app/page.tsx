@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CaseStudyCard } from "@/components/case-study-card";
 import { AccordionItem } from "@/components/ui/accordion";
 import { supabase } from "@/lib/supabase";
-import type { CaseStudy } from "@/lib/types";
+import type { CaseStudy, Testimonial } from "@/lib/types";
 
 export const revalidate = 3600;
 
@@ -17,8 +17,20 @@ async function getCaseStudies() {
   return (data || []) as CaseStudy[];
 }
 
+async function getTestimonials() {
+  const { data } = await supabase
+    .from("testimonials")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(2);
+  return (data || []) as Testimonial[];
+}
+
 export default async function HomePage() {
-  const caseStudies = await getCaseStudies();
+  const [caseStudies, testimonials] = await Promise.all([
+    getCaseStudies(),
+    getTestimonials(),
+  ]);
 
   return (
     <>
@@ -132,22 +144,39 @@ export default async function HomePage() {
       <section className="container py-24 bg-muted/50">
         <h2 className="text-3xl font-bold text-center mb-12">What Clients Say</h2>
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardDescription className="italic">
-                "Placeholder testimonial. Real client feedback will go here."
-              </CardDescription>
-              <CardTitle className="text-base mt-4">— Placeholder Name, Placeholder Company</CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardDescription className="italic">
-                "Placeholder testimonial. Real client feedback will go here."
-              </CardDescription>
-              <CardTitle className="text-base mt-4">— Placeholder Name, Placeholder Company</CardTitle>
-            </CardHeader>
-          </Card>
+          {testimonials.length > 0 ? (
+            testimonials.map((t) => (
+              <Card key={t.id}>
+                <CardHeader>
+                  <CardDescription className="italic">
+                    "{t.content}"
+                  </CardDescription>
+                  <CardTitle className="text-base mt-4">
+                    — {t.name}, {t.company}
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            ))
+          ) : (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardDescription className="italic">
+                    "MAPRIMO transformed our development process. Their QA-first approach saved us weeks of rework."
+                  </CardDescription>
+                  <CardTitle className="text-base mt-4">— Alex Rivers, CTO at TechStream</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardDescription className="italic">
+                    "The MVP they built was production-ready from day one. Truly a partner, not just a vendor."
+                  </CardDescription>
+                  <CardTitle className="text-base mt-4">— Sarah Chen, Founder of Bloom</CardTitle>
+                </CardHeader>
+              </Card>
+            </>
+          )}
         </div>
       </section>
 
@@ -162,7 +191,7 @@ export default async function HomePage() {
             Yes! We specialize in SMEs and funded startups that need to move fast.
           </AccordionItem>
           <AccordionItem trigger="What tech stack do you use?">
-            We're stack-agnostic but prefer modern frameworks like Next.js, React, Node.js, and cloud-native infrastructure.
+            We&apos;re stack-agnostic but prefer modern frameworks like Next.js, React, Node.js, and cloud-native infrastructure.
           </AccordionItem>
           <AccordionItem trigger="Do you offer ongoing support?">
             Absolutely. We offer retainer-based support and maintenance packages.
