@@ -2,25 +2,25 @@ export interface Project {
   id: string;
   title: string;
   slug: string;
-  description: string;
-  image_url: string;
-  tags: string[];
+  summary: string;
+  stack: string[];
+  cover_url: string;
+  repo_url?: string;
+  live_url?: string;
+  highlights: any[];
+  published: boolean;
   created_at: string;
 }
 
 export interface CaseStudy {
   id: string;
-  title: string;
-  slug: string;
-  client: string;
-  industry: string;
-  description: string;
-  challenge: string;
+  project_id: string;
+  problem: string;
   solution: string;
-  results: string[];
-  image_url: string;
-  tags: string[];
+  results: any[];
+  screenshots: string[];
   created_at: string;
+  projects?: Project;
 }
 
 export interface Lead {
@@ -29,6 +29,8 @@ export interface Lead {
   email: string;
   company?: string;
   message: string;
+  budget?: string;
+  source?: string;
   requested_date?: string;
   created_at?: string;
 }
@@ -38,8 +40,12 @@ export interface Testimonial {
   name: string;
   role: string;
   company: string;
-  content: string;
-  avatar_url?: string;
+  quote: string;
+  created_at: string;
+}
+
+export interface Admin {
+  user_id: string;
   created_at: string;
 }
 
