@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { leadSchema, type LeadFormData } from "@/lib/validations";
+import { User, Mail, Building, MessageSquare, Send, Calendar as CalendarIcon } from "lucide-react";
+import * as analytics from "@/lib/analytics";
 
 export function LeadForm() {
   const [loading, setLoading] = useState(false);
@@ -21,6 +23,7 @@ export function LeadForm() {
       email: formData.get("email") as string,
       company: formData.get("company") as string,
       message: formData.get("message") as string,
+      requested_date: formData.get("requested_date") as string,
       honeypot: formData.get("honeypot") as string,
     };
 
@@ -44,6 +47,12 @@ export function LeadForm() {
         throw new Error(result.error || "Failed to submit");
       }
 
+      analytics.event({
+        action: "submit_lead",
+        category: "Contact",
+        label: data.company || "Individual",
+      });
+
       setMessage({ type: "success", text: "Thanks! We'll be in touch soon." });
       e.currentTarget.reset();
     } catch (error) {
@@ -54,25 +63,60 @@ export function LeadForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <Input name="name" placeholder="Your Name" required />
+    <form onSubmit={onSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <div className="relative">
+          <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input name="name" placeholder="Your Name" required className="pl-10" />
+        </div>
+        <div className="relative">
+          <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input name="email" type="email" placeholder="Your Email" required className="pl-10" />
+        </div>
+        <div className="relative">
+          <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input name="company" placeholder="Company (optional)" className="pl-10" />
+        </div>
+        <div className="relative">
+          <CalendarIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input 
+            name="requested_date" 
+            type="datetime-local" 
+            placeholder="Preferred Meeting Time (Optional)" 
+            className="pl-10" 
+          />
+          <p className="text-[10px] text-muted-foreground mt-1 ml-1">Optional: Request a strategy call time</p>
+        </div>
+        <div className="relative">
+          <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Textarea 
+            name="message" 
+            placeholder="Tell us about your project" 
+            required 
+            rows={5} 
+            className="pl-10"
+          />
+        </div>
       </div>
-      <div>
-        <Input name="email" type="email" placeholder="Your Email" required />
-      </div>
-      <div>
-        <Input name="company" placeholder="Company (optional)" />
-      </div>
-      <div>
-        <Textarea name="message" placeholder="Tell us about your project" required rows={5} />
-      </div>
+      
       <input type="text" name="honeypot" className="hidden" tabIndex={-1} autoComplete="off" />
+      
       <Button type="submit" disabled={loading} className="w-full">
-        {loading ? "Sending..." : "Send Message"}
+        {loading ? (
+          "Sending..."
+        ) : (
+          <>
+            Send Message <Send className="ml-2 h-4 w-4" />
+          </>
+        )}
       </Button>
+      
       {message && (
-        <p className={`text-sm ${message.type === "success" ? "text-green-600" : "text-red-600"}`}>
+        <p className={`text-sm text-center p-3 rounded-md ${
+          message.type === "success" 
+            ? "bg-green-50 text-green-700 border border-green-200" 
+            : "bg-red-50 text-red-700 border border-red-200"
+        }`}>
           {message.text}
         </p>
       )}
