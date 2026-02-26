@@ -149,7 +149,7 @@ export default async function HomePage() {
               <Card key={t.id}>
                 <CardHeader>
                   <CardDescription className="italic">
-                    "{t.content}"
+                    "{t.quote}"
                   </CardDescription>
                   <CardTitle className="text-base mt-4">
                     — {t.name}, {t.company}
