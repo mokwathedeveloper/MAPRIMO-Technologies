@@ -5,6 +5,7 @@ export const leadSchema = z.object({
   email: z.string().email("Invalid email address"),
   company: z.string().optional(),
   message: z.string().min(10, "Message must be at least 10 characters"),
+  requested_date: z.string().optional(),
   honeypot: z.string().max(0, "Bot detected").optional(),
 });
 
