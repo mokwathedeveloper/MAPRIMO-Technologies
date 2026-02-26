@@ -1,6 +1,3 @@
-"use client"; // Note: This will be called from client components but actions are server-side in Next.js. 
-// Wait, Server Actions should be 'use server'.
-
 "use server";
 
 import { revalidatePath } from "next/cache";
