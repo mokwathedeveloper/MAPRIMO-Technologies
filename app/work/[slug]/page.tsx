@@ -11,8 +11,8 @@ export const revalidate = 3600;
 async function getCaseStudy(slug: string) {
   const { data } = await supabase
     .from("case_studies")
-    .select("*")
-    .eq("slug", slug)
+    .select("*, projects(*)")
+    .eq("projects.slug", slug)
     .single();
   
   return data as CaseStudy | null;
@@ -21,15 +21,15 @@ async function getCaseStudy(slug: string) {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const caseStudy = await getCaseStudy(params.slug);
   
-  if (!caseStudy) return {};
+  if (!caseStudy || !caseStudy.projects) return {};
 
   return {
-    title: `${caseStudy.title} | Case Study`,
-    description: caseStudy.description,
+    title: `${caseStudy.projects.title} | Case Study`,
+    description: caseStudy.projects.summary,
     openGraph: {
-      title: caseStudy.title,
-      description: caseStudy.description,
-      images: [{ url: caseStudy.image_url }],
+      title: caseStudy.projects.title,
+      description: caseStudy.projects.summary,
+      images: [{ url: caseStudy.projects.cover_url }],
     },
   };
 }
@@ -37,9 +37,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function CaseStudyPage({ params }: { params: { slug: string } }) {
   const caseStudy = await getCaseStudy(params.slug);
 
-  if (!caseStudy) {
+  if (!caseStudy || !caseStudy.projects) {
     notFound();
   }
+
+  const { projects: project } = caseStudy;
 
   return (
     <div className="container py-24">
@@ -52,16 +54,16 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
           <div className="text-sm font-medium text-primary mb-2">
-            {caseStudy.client} • {caseStudy.industry}
+            Case Study
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">{caseStudy.title}</h1>
-          <p className="text-xl text-muted-foreground">{caseStudy.description}</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">{project.title}</h1>
+          <p className="text-xl text-muted-foreground">{project.summary}</p>
         </div>
 
         <div className="relative h-[400px] w-full mb-16 rounded-xl overflow-hidden">
           <Image
-            src={caseStudy.image_url}
-            alt={caseStudy.title}
+            src={project.cover_url}
+            alt={project.title}
             fill
             className="object-cover"
           />
@@ -71,7 +73,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
           <div className="md:col-span-2 space-y-12">
             <section>
               <h2 className="text-2xl font-bold mb-4">The Challenge</h2>
-              <p className="text-lg leading-relaxed">{caseStudy.challenge}</p>
+              <p className="text-lg leading-relaxed">{caseStudy.problem}</p>
             </section>
 
             <section>
@@ -84,7 +86,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
             <div className="bg-muted p-6 rounded-lg">
               <h3 className="font-bold mb-4">Key Results</h3>
               <ul className="space-y-3">
-                {caseStudy.results.map((result, index) => (
+                {caseStudy.results.map((result: any, index: number) => (
                   <li key={index} className="flex items-start gap-2 text-sm">
                     <span className="text-primary font-bold">✓</span>
                     {result}
@@ -96,7 +98,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
             <div className="bg-primary/5 p-6 rounded-lg border border-primary/10">
               <h3 className="font-bold mb-4">Technologies</h3>
               <div className="flex flex-wrap gap-2">
-                {caseStudy.tags.map((tag) => (
+                {project.stack.map((tag) => (
                   <span key={tag} className="text-xs bg-background border px-2 py-1 rounded">
                     {tag}
                   </span>

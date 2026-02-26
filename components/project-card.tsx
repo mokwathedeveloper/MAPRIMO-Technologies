@@ -7,7 +7,7 @@ export function ProjectCard({ project }: { project: Project }) {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48 w-full">
         <Image
-          src={project.image_url}
+          src={project.cover_url}
           alt={project.title}
           fill
           className="object-cover"
@@ -15,11 +15,11 @@ export function ProjectCard({ project }: { project: Project }) {
       </div>
       <CardHeader>
         <CardTitle>{project.title}</CardTitle>
-        <CardDescription>{project.description}</CardDescription>
+        <CardDescription>{project.summary}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
+          {project.stack.map((tag) => (
             <span key={tag} className="text-xs bg-muted px-2 py-1 rounded">
               {tag}
             </span>
