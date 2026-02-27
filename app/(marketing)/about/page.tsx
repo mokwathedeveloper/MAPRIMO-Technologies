@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Users, Target, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Users, Target, ShieldCheck, Rocket } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Us | MAPRIMO Technologies",
