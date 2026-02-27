@@ -13,13 +13,17 @@ export interface Project {
 
 export interface CaseStudy {
   id: string;
-  project_id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  cover_url: string;
+  client: string;
   problem: string;
   solution: string;
-  results: any[];
+  results: string[];
   screenshots: string[];
+  tags: string[];
   created_at: string;
-  projects?: Project;
 }
 
 export interface Lead {

@@ -33,10 +33,15 @@ export const testimonialSchema = z.object({
 export type TestimonialFormData = z.infer<typeof testimonialSchema>;
 
 export const caseStudySchema = z.object({
-  project_id: z.string().uuid("Invalid project selected"),
+  title: z.string().min(2, "Title must be at least 2 characters"),
+  slug: z.string().min(2, "Slug must be at least 2 characters"),
+  summary: z.string().min(10, "Summary must be at least 10 characters"),
+  client: z.string().min(2, "Client name must be at least 2 characters"),
   problem: z.string().min(20, "Problem description must be at least 20 characters"),
   solution: z.string().min(20, "Solution description must be at least 20 characters"),
   results: z.array(z.string()).min(1, "At least one result point is required"),
+  tags: z.array(z.string()).optional().default([]),
+  cover_url: z.string().url("Invalid cover image URL").optional().or(z.literal("")),
 });
 
 export type CaseStudyFormData = z.infer<typeof caseStudySchema>;
