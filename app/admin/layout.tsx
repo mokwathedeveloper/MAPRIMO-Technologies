@@ -8,6 +8,7 @@ import {
   MessageSquare, 
   Users, 
   ExternalLink,
+  Newspaper,
   LogOut 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,10 @@ export default async function AdminLayout({
           <Link href="/admin/projects" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
             <Briefcase className="h-4 w-4" />
             <span>Projects</span>
+          </Link>
+          <Link href="/admin/blog" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
+            <Newspaper className="h-4 w-4" />
+            <span>Blog</span>
           </Link>
           <Link href="/admin/testimonials" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
             <MessageSquare className="h-4 w-4" />
