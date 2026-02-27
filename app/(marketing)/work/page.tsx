@@ -16,6 +16,7 @@ async function getProjects() {
     const { data, error } = await supabase
       .from("projects")
       .select("*")
+      .eq("published", true)
       .order("created_at", { ascending: false });
     if (error) throw error;
     return (data || []) as Project[];
@@ -30,6 +31,7 @@ async function getCaseStudies() {
     const { data, error } = await supabase
       .from("case_studies")
       .select("*, projects(*)")
+      .eq("projects.published", true)
       .order("created_at", { ascending: false });
     if (error) throw error;
     return (data || []) as CaseStudy[];
@@ -43,41 +45,54 @@ export default async function WorkPage() {
   const [projects, caseStudies] = await Promise.all([getProjects(), getCaseStudies()]);
 
   return (
-    <div className="container py-24">
-      <div className="max-w-3xl mb-16">
-        <h1 className="text-4xl font-bold mb-4">Our Work</h1>
-        <p className="text-xl text-muted-foreground">
-          Real projects. Real results. See how we help startups and SMEs ship faster.
-        </p>
+    <>
+      <section className="bg-muted/30 py-24 md:py-32 border-b">
+        <div className="container max-w-6xl text-center space-y-6">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+            Real projects. <br /> Real results.
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            See how we help startups and SMEs ship faster without compromising on quality or accumulating technical debt.
+          </p>
+        </div>
+      </section>
+
+      <div className="container max-w-6xl py-24 space-y-32">
+        {caseStudies.length > 0 && (
+          <section>
+            <div className="mb-12">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-primary mb-2">Deep Dives</h2>
+              <h3 className="text-3xl font-bold">Featured Case Studies</h3>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {caseStudies.map((cs) => (
+                <CaseStudyCard key={cs.id} caseStudy={cs} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {projects.length > 0 && (
+          <section>
+            <div className="mb-12">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-primary mb-2">Portfolio</h2>
+              <h3 className="text-3xl font-bold">All Projects</h3>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {projects.length === 0 && caseStudies.length === 0 && (
+          <div className="text-center py-24 border-2 border-dashed rounded-xl bg-muted/20">
+            <h3 className="text-lg font-medium text-muted-foreground mb-2">No projects published yet</h3>
+            <p className="text-sm text-muted-foreground/60">We're updating our portfolio. Check back soon!</p>
+          </div>
+        )}
       </div>
-
-      {caseStudies.length > 0 && (
-        <section className="mb-24">
-          <h2 className="text-3xl font-bold mb-8">Case Studies</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {caseStudies.map((cs) => (
-              <CaseStudyCard key={cs.id} caseStudy={cs} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {projects.length > 0 && (
-        <section>
-          <h2 className="text-3xl font-bold mb-8">Projects</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {projects.length === 0 && caseStudies.length === 0 && (
-        <p className="text-center text-muted-foreground py-12">
-          No projects available yet. Check back soon!
-        </p>
-      )}
-    </div>
+    </>
   );
 }
