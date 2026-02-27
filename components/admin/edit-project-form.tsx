@@ -11,13 +11,15 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { updateProject } from "@/lib/actions/portfolio";
-import { projectSchema, type ProjectFormData } from "@/lib/validations";
+import { ImageUpload } from "@/components/admin/image-upload";
+import { toast } from "sonner";
 import type { Project } from "@/lib/types";
 
 export function EditProjectForm({ project }: { project: Project }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,28 +28,24 @@ export function EditProjectForm({ project }: { project: Project }) {
 
     const formData = new FormData(e.currentTarget);
     
-    const data: ProjectFormData = {
-      title: formData.get("title") as string,
-      slug: formData.get("slug") as string,
-      summary: formData.get("summary") as string,
-      stack: (formData.get("stack") as string).split(",").map(s => s.trim()).filter(Boolean),
-      cover_url: formData.get("cover_url") as string,
-      repo_url: formData.get("repo_url") as string,
-      live_url: formData.get("live_url") as string,
-      published: formData.get("published") === "on",
-    };
+    // Add file and process data
+    if (file) {
+      formData.append("cover_image", file);
+    }
+    formData.append("current_cover_url", project.cover_url);
+    const stack = (formData.get("stack") as string).split(",").map(s => s.trim()).filter(Boolean);
+    formData.set("stack", JSON.stringify(stack));
+    formData.set("published", String(formData.get("published") === "on"));
 
     try {
-      const result = projectSchema.safeParse(data);
-      if (!result.success) {
-        throw new Error(result.error.errors[0].message);
-      }
-
-      await updateProject(project.id, data);
+      await updateProject(project.id, formData);
+      toast.success("Project updated successfully!");
       router.push("/admin/projects");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -94,10 +92,12 @@ export function EditProjectForm({ project }: { project: Project }) {
             <CardTitle>Media & Links</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="cover_url">Cover Image URL</Label>
-              <Input id="cover_url" name="cover_url" defaultValue={project.cover_url} required />
-            </div>
+            <ImageUpload 
+              label="Cover Image" 
+              defaultValue={project.cover_url}
+              onFileSelect={setFile} 
+              onUpload={() => {}} 
+            />
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
