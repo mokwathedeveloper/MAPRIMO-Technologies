@@ -96,7 +96,6 @@ export function EditProjectForm({ project }: { project: Project }) {
               label="Cover Image" 
               defaultValue={project.cover_url}
               onFileSelect={setFile} 
-              onUpload={() => {}} 
             />
 
             <div className="grid grid-cols-2 gap-4">

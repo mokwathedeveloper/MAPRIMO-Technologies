@@ -96,7 +96,6 @@ export default function NewBlogPostPage() {
               <ImageUpload 
                 label="Upload Post Image" 
                 onFileSelect={setFile} 
-                onUpload={() => {}} 
               />
             </CardContent>
           </Card>

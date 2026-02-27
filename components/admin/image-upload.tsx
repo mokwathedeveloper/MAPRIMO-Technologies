@@ -8,11 +8,10 @@ import { Label } from "@/components/ui/label";
 interface ImageUploadProps {
   label: string;
   defaultValue?: string;
-  onUpload: (url: string) => void;
   onFileSelect: (file: File | null) => void;
 }
 
-export function ImageUpload({ label, defaultValue, onUpload, onFileSelect }: ImageUploadProps) {
+export function ImageUpload({ label, defaultValue, onFileSelect }: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(defaultValue || null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
