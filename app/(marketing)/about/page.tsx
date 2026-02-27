@@ -41,7 +41,7 @@ export default async function AboutPage() {
             <div className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-[10px] font-black text-primary shadow-sm uppercase tracking-[0.2em] mb-4">
               Our Mission
             </div>
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 leading-[0.9]">
+            <h1 className="text-5xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 leading-[0.9] font-heading">
               Built for speed. <br />
               <span className="text-primary italic">Engineered for quality.</span>
             </h1>
@@ -69,7 +69,7 @@ export default async function AboutPage() {
             <div className="space-y-10">
               <div className="space-y-4">
                 <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Our Philosophy</h2>
-                <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">Speed and quality are not mutually exclusive.</h3>
+                <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-tight font-heading">Speed and quality are not mutually exclusive.</h3>
               </div>
               <p className="text-xl text-muted-foreground leading-relaxed font-medium">
                 By embedding QA into the development process from day one, we help our clients ship faster by breaking less. We don't just build features; we build scalable, testable systems that grow with your user base.
@@ -101,7 +101,7 @@ export default async function AboutPage() {
         <div className="container max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
             <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Core Values</h2>
-            <h3 className="text-4xl md:text-6xl font-black tracking-tight">Why MAPRIMO?</h3>
+            <h3 className="text-4xl md:text-6xl font-black tracking-tight font-heading">Why MAPRIMO?</h3>
           </div>
 
           <div className="grid md:grid-cols-3 gap-10">
@@ -141,7 +141,7 @@ export default async function AboutPage() {
             <div className="absolute top-0 left-0 h-64 w-64 rounded-full bg-white/5 blur-[60px]" />
             <Target className="h-20 w-20 mx-auto opacity-50 transition-transform duration-700 group-hover:scale-110" />
             <div className="space-y-4 relative z-10">
-              <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-none">Ready to work together?</h2>
+              <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-none font-heading">Ready to work together?</h2>
               <p className="text-xl md:text-2xl opacity-90 max-w-2xl mx-auto leading-relaxed font-medium">
                 We're always looking for ambitious founders and teams who want to build something exceptional.
               </p>

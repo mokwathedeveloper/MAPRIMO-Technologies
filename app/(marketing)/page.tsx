@@ -112,7 +112,7 @@ export default async function HomePage() {
                 <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-ping" />
                 Shipping MVPs in 4-8 weeks
               </div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-top-4 duration-1000 delay-300">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-top-4 duration-1000 delay-300 font-heading">
                 Full-Stack <br />
                 <span className="text-primary italic">Engineering</span> <br />
                 for Startups.
@@ -192,12 +192,11 @@ export default async function HomePage() {
             {/* Services Section */}
             <section className="py-24 bg-background overflow-hidden relative">
               <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                  <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Capabilities</h2>
-                  <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9]">Solutions for every <span className="text-primary italic">stage.</span></h3>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-8">
+                          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Capabilities</h2>
+                            <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9] font-heading">Solutions for every <span className="text-primary italic">stage.</span></h3>
+                          </div>
+                                <div className="grid md:grid-cols-3 gap-8">
                   {[
                     {
                       title: "MVP Build",
@@ -247,10 +246,11 @@ export default async function HomePage() {
                 <div className="absolute top-0 right-0 w-full h-full opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
                 <div className="container relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                   <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                    <div className="max-w-2xl space-y-4">
-                      <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Recent Work</h2>
-                      <h3 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-[0.9]">Real-world <span className="text-primary italic">results.</span></h3>
-                    </div>
+                                  <div className="max-w-2xl space-y-4">
+                                    <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Recent Work</h2>
+                                    <h3 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-[0.9] font-heading">Real-world <span className="text-primary italic">results.</span></h3>
+                                  </div>
+                    
                     <Link href="/work">
                       <Button variant="outline" size="lg" className="rounded-2xl font-black h-14 px-8 border-2">View Portfolio</Button>
                     </Link>
@@ -269,12 +269,11 @@ export default async function HomePage() {
             <section className="py-24 bg-background relative overflow-hidden">
               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -z-10" />
               <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                  <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Our Process</h2>
-                  <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9]">A framework for <span className="text-primary italic">quality.</span></h3>
-                </div>
-                
-                <div className="max-w-4xl mx-auto space-y-12">
+                          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+                            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Our Process</h2>
+                            <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9] font-heading">A framework for <span className="text-primary italic">quality.</span></h3>
+                          </div>
+                                <div className="max-w-4xl mx-auto space-y-12">
                   {[
                     { 
                       step: "01", 
@@ -428,8 +427,8 @@ export default async function HomePage() {
       <section className="py-24 bg-background">
         <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-primary">FAQ</h2>
-            <h3 className="text-3xl md:text-5xl font-bold">Frequently asked questions.</h3>
+            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">FAQ</h2>
+            <h3 className="text-4xl md:text-6xl font-black tracking-tight font-heading">Frequently asked questions.</h3>
           </div>
           
           <div className="max-w-2xl mx-auto bg-muted/20 rounded-xl border p-2 md:p-6">
@@ -461,7 +460,7 @@ export default async function HomePage() {
           </div>
           
           <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight">Ready to build your next breakthrough?</h2>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight font-heading">Ready to build your next breakthrough?</h2>
             <p className="text-xl opacity-90 leading-relaxed">
               Stop fighting bugs and start shipping features. Let's discuss your project roadmap and how we can help you hit your next milestone.
             </p>

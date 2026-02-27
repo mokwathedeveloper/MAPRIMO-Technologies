@@ -86,7 +86,7 @@ export default function ServicesPage() {
           <div className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-[10px] font-black text-primary shadow-sm uppercase tracking-[0.2em] mb-4">
             Our Capabilities
           </div>
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 leading-[0.9]">
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 leading-[0.9] font-heading">
             Engineering <br /> <span className="text-primary italic">for scale.</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
@@ -108,7 +108,7 @@ export default function ServicesPage() {
                     <Icon className="h-10 w-10" />
                   </div>
                   <div className="space-y-4">
-                    <h2 className="text-4xl md:text-5xl font-black tracking-tight">{service.title}</h2>
+                    <h2 className="text-4xl md:text-5xl font-black tracking-tight font-heading">{service.title}</h2>
                     <p className="text-sm font-black text-primary uppercase tracking-[0.2em]">{service.meta}</p>
                     <p className="text-xl text-muted-foreground leading-relaxed font-medium">{service.longDesc}</p>
                   </div>
@@ -152,7 +152,7 @@ export default function ServicesPage() {
         <div className="container max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
             <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">The Stack</h2>
-            <h3 className="text-4xl md:text-6xl font-black tracking-tight">Our Technical Arsenal.</h3>
+            <h3 className="text-4xl md:text-6xl font-black tracking-tight font-heading">Our Technical Arsenal.</h3>
             <p className="text-xl text-muted-foreground font-medium">We use industry-leading tools to build, test, and deploy exceptional software.</p>
           </div>
 
