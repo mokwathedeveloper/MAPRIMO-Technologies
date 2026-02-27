@@ -6,10 +6,12 @@ import {
   testimonialSchema, 
   directorSchema,
   podcastSchema,
+  caseStudySchema,
   type ProjectFormData, 
   type TestimonialFormData,
   type DirectorFormData,
-  type PodcastFormData
+  type PodcastFormData,
+  type CaseStudyFormData
 } from "@/lib/validations";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
@@ -424,43 +426,51 @@ export async function createCaseStudy(formData: FormData): Promise<ActionResult>
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
-    const projectId = formData.get("project_id") as string;
-    const problem = formData.get("problem") as string;
-    const solution = formData.get("solution") as string;
-    const results = JSON.parse(formData.get("results") as string);
+    const coverFile = formData.get("cover") as File | null;
     const screenshotFiles = formData.getAll("screenshots") as File[];
+    
+    const rawData = {
+      title: formData.get("title"),
+      slug: formData.get("slug"),
+      client: formData.get("client"),
+      summary: formData.get("summary"),
+      problem: formData.get("problem"),
+      solution: formData.get("solution"),
+      results: JSON.parse(formData.get("results") as string || "[]"),
+      tags: JSON.parse(formData.get("tags") as string || "[]"),
+    };
+
+    const validated = caseStudySchema.parse({ ...rawData, cover_url: "https://placeholder.com" });
 
     const { data: caseStudy, error: insertError } = await supabase
       .from("case_studies")
-      .insert({
-        project_id: projectId,
-        problem,
-        solution,
-        results,
-        screenshots: [],
-      })
+      .insert({ ...validated, cover_url: "", screenshots: [] })
       .select()
       .single();
 
     if (insertError) throw new Error(`DB:${insertError.message}`);
 
+    let cover_url = "";
+    if (coverFile && coverFile.size > 0) {
+      cover_url = await uploadFile(supabase, coverFile, `case-studies/${caseStudy.id}/cover`);
+    }
+
     const screenshotUrls: string[] = [];
     for (const file of screenshotFiles) {
-      if (file.size > 0) {
-        const url = await uploadFile(supabase, file, `portfolio/${projectId}/case-study`);
+      if (file && file.size > 0) {
+        const url = await uploadFile(supabase, file, `case-studies/${caseStudy.id}/screenshots`);
         screenshotUrls.push(url);
       }
     }
 
-    if (screenshotUrls.length > 0) {
-      await supabase
-        .from("case_studies")
-        .update({ screenshots: screenshotUrls })
-        .eq("id", caseStudy.id);
-    }
+    await supabase
+      .from("case_studies")
+      .update({ cover_url, screenshots: screenshotUrls })
+      .eq("id", caseStudy.id);
 
     revalidatePath("/admin/case-studies");
     revalidatePath("/work");
+    revalidatePath("/");
     return { ok: true, data: caseStudy };
   } catch (error) {
     return handleActionError(error);
@@ -488,19 +498,31 @@ export async function updateCaseStudy(id: string, formData: FormData): Promise<A
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
-    const problem = formData.get("problem") as string;
-    const solution = formData.get("solution") as string;
-    const results = JSON.parse(formData.get("results") as string);
+    const coverFile = formData.get("cover") as File | null;
     const screenshotFiles = formData.getAll("screenshots") as File[];
+    
+    const rawData = {
+      title: formData.get("title"),
+      slug: formData.get("slug"),
+      client: formData.get("client"),
+      summary: formData.get("summary"),
+      problem: formData.get("problem"),
+      solution: formData.get("solution"),
+      results: JSON.parse(formData.get("results") as string || "[]"),
+      tags: JSON.parse(formData.get("tags") as string || "[]"),
+    };
+
+    let cover_url = formData.get("current_cover_url") as string;
     let screenshots = JSON.parse(formData.get("current_screenshots") as string || "[]");
+
+    if (coverFile && coverFile.size > 0) {
+      cover_url = await uploadFile(supabase, coverFile, `case-studies/${id}/cover`);
+    }
 
     const newScreenshotUrls: string[] = [];
     for (const file of screenshotFiles) {
       if (file && file.size > 0) {
-        // We need the projectId for the path, but we can get it from the existing record
-        const { data: existing } = await supabase.from("case_studies").select("project_id").eq("id", id).single();
-        if (!existing) throw new Error("Case study not found");
-        const url = await uploadFile(supabase, file, `portfolio/${existing.project_id}/case-study`);
+        const url = await uploadFile(supabase, file, `case-studies/${id}/screenshots`);
         newScreenshotUrls.push(url);
       }
     }
@@ -509,12 +531,12 @@ export async function updateCaseStudy(id: string, formData: FormData): Promise<A
       screenshots = [...screenshots, ...newScreenshotUrls];
     }
 
+    const validated = caseStudySchema.parse({ ...rawData, cover_url });
+
     const { error } = await supabase
       .from("case_studies")
       .update({
-        problem,
-        solution,
-        results,
+        ...validated,
         screenshots,
       })
       .eq("id", id);
@@ -523,6 +545,7 @@ export async function updateCaseStudy(id: string, formData: FormData): Promise<A
 
     revalidatePath("/admin/case-studies");
     revalidatePath("/work");
+    revalidatePath("/");
     return { ok: true, data: null };
   } catch (error) {
     return handleActionError(error);
