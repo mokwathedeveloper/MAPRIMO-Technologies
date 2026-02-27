@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { Plus, Newspaper, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { DeleteBlogButton } from "@/components/admin/delete-blog-button";
 import type { Post } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -74,6 +75,7 @@ export default async function BlogAdminPage() {
                           <Pencil className="h-4 w-4" />
                         </Button>
                       </Link>
+                      <DeleteBlogButton id={post.id} title={post.title} />
                       <Link href={`/blog/${post.slug}`} target="_blank">
                         <Button variant="ghost" size="icon" title="View Live">
                           <ExternalLink className="h-4 w-4" />

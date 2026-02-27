@@ -89,7 +89,9 @@ export async function createProject(formData: FormData) {
     published: formData.get("published") === "true",
   };
 
-  const validated = projectSchema.parse({ ...rawData, cover_url: "temp" });
+  console.log("Creating project with data:", { ...rawData, stack_count: rawData.stack.length });
+
+  const validated = projectSchema.parse({ ...rawData, cover_url: "https://placeholder.com" });
 
   // 1. Insert row to get ID
   const { data: project, error: insertError } = await supabase

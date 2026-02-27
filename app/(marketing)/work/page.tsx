@@ -9,19 +9,24 @@ export const metadata: Metadata = {
   description: "Explore our portfolio of successful projects and case studies.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 0;
 
 async function getProjects() {
+  console.log("Fetching projects with simple client...");
   try {
     const { data, error } = await supabase
       .from("projects")
       .select("*")
-      .eq("published", true)
       .order("created_at", { ascending: false });
-    if (error) throw error;
+    
+    if (error) {
+      console.error("Supabase error fetching projects:", error);
+      throw error;
+    }
+    console.log(`Successfully fetched ${data?.length || 0} projects`);
     return (data || []) as Project[];
   } catch (e) {
-    console.error("Error fetching projects:", e);
+    console.error("Catch error fetching projects:", e);
     return [];
   }
 }
@@ -30,10 +35,11 @@ async function getCaseStudies() {
   try {
     const { data, error } = await supabase
       .from("case_studies")
-      .select("*, projects(*)")
-      .eq("projects.published", true)
+      .select("*, projects!inner(*)")
       .order("created_at", { ascending: false });
+
     if (error) throw error;
+    console.log(`Fetched ${data?.length || 0} case studies`);
     return (data || []) as CaseStudy[];
   } catch (e) {
     console.error("Error fetching case studies:", e);
