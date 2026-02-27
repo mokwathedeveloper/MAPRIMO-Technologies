@@ -10,6 +10,7 @@ import {
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { ActionResult } from "./result";
+import { ZodError } from "zod";
 
 /**
  * Helper to get a hardened Supabase client with admin verification.
@@ -56,11 +57,10 @@ function safeStringify(x: unknown) {
 function handleActionError(err: any): ActionResult {
   // Safe logging: never access deep properties or .value without guards
   try {
-    if (err instanceof Error) {
+    if (err instanceof ZodError) {
+      console.error("Validation Error:", err.flatten());
+    } else if (err instanceof Error) {
       console.error(err.message, err.stack);
-    } else if (err && typeof err === "object" && "issues" in err) {
-      // Safely log Zod errors
-      console.error("Validation Error:", (err as any).flatten?.() || err);
     } else {
       console.error("Action error:", typeof err === "string" ? err : safeStringify(err));
     }
@@ -69,15 +69,39 @@ function handleActionError(err: any): ActionResult {
   }
   
   // Return structured response
-  if (err && typeof err === "object" && "issues" in err) {
+  if (err instanceof ZodError) {
     return {
       ok: false,
       error: {
         code: "VALIDATION",
-        message: "Validation failed",
-        fieldErrors: (err as any).flatten?.().fieldErrors || {},
+        message: "Validation failed. Please check the fields below.",
+        fieldErrors: err.flatten().fieldErrors as Record<string, string[]>,
       },
     };
+  }
+
+  // Fallback for objects that look like ZodErrors but aren't instances
+  if (err && typeof err === "object" && "issues" in err && Array.isArray(err.issues)) {
+    try {
+      const fieldErrors: Record<string, string[]> = {};
+      for (const issue of err.issues) {
+        if (issue.path && issue.path.length > 0) {
+          const field = issue.path[0];
+          if (!fieldErrors[field]) fieldErrors[field] = [];
+          fieldErrors[field].push(issue.message);
+        }
+      }
+      return {
+        ok: false,
+        error: {
+          code: "VALIDATION",
+          message: "Validation failed. Please check the fields below.",
+          fieldErrors,
+        },
+      };
+    } catch (e) {
+      // ignore parsing error, fallback to generic
+    }
   }
 
   const message = err?.message || (typeof err === "string" ? err : "");
