@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { createPost } from "@/lib/actions/portfolio";
-import { createServerClient } from "@supabase/auth-helpers-nextjs";
+import { toast } from "sonner";
 
 export default function NewBlogPostPage() {
   const router = useRouter();
@@ -25,56 +25,20 @@ export default function NewBlogPostPage() {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return ""; // Not needed for simple client-side upload helper but required by type
-          },
-        },
-      }
-    );
+    
+    if (file) {
+      formData.append("featured_image", file);
+    }
     
     try {
-      let image_url = "";
-      
-      // 1. Optional Image Upload
-      if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `blog/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("uploads")
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from("uploads")
-          .getPublicUrl(filePath);
-        
-        image_url = publicUrl;
-      }
-
-      // 2. Prepare Data
-      const data = {
-        title: formData.get("title") as string,
-        slug: formData.get("slug") as string,
-        excerpt: formData.get("excerpt") as string,
-        content: formData.get("content") as string,
-        author: formData.get("author") as string || "MAPRIMO Team",
-        image_url: image_url,
-        published_at: new Date().toISOString(),
-      };
-
-      await createPost(data);
+      await createPost(formData);
+      toast.success("Blog post published!");
       router.push("/admin/blog");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
