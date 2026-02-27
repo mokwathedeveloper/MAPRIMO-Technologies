@@ -42,8 +42,8 @@ cp .env.local.example .env.local
 This project requires a specific database schema and Row Level Security (RLS) policies.
 1. Log in to your [Supabase Dashboard](https://supabase.com/dashboard).
 2. Go to the **SQL Editor**.
-3. Copy the contents of `bucket3.sql` (found in the root of this project) and paste it into the editor.
-4. Click **Run**. This will create all necessary tables, configure RLS, and set up your storage buckets safely.
+3. Copy the contents of `bucketv3.sql` (found in the root of this project) and paste it into the editor.
+4. Click **Run**. This will create all necessary tables (Projects, Case Studies, Blog, Directors, Podcasts, Leads, Admins), configure RLS, and set up your storage buckets safely.
 
 ### 4. Create an Admin User
 To access the `/admin` dashboard, your user ID must be present in the `admins` table.
