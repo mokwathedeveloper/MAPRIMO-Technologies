@@ -1,28 +1,19 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { projectSchema, testimonialSchema, type ProjectFormData, type TestimonialFormData } from "@/lib/validations";
+import { 
+  projectSchema, 
+  testimonialSchema, 
+  type ProjectFormData, 
+  type TestimonialFormData 
+} from "@/lib/validations";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
-async function uploadImage(supabase: any, file: File, path: string) {
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-  const filePath = `${path}/${fileName}`;
-
-  const { error: uploadError, data } = await supabase.storage
-    .from("uploads")
-    .upload(filePath, file);
-
-  if (uploadError) throw new Error(uploadError.message);
-
-  const { data: { publicUrl } } = supabase.storage
-    .from("uploads")
-    .getPublicUrl(filePath);
-
-  return publicUrl;
-}
-
+/**
+ * Helper to get a hardened Supabase client with admin verification.
+ * True security is enforced here, not just in middleware.
+ */
 async function getAdminSupabase() {
   const cookieStore = cookies();
   const supabase = createServerClient(
@@ -36,23 +27,18 @@ async function getAdminSupabase() {
         set(name: string, value: string, options: any) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
-            // Handle error (happens in Server Components)
-          }
+          } catch (error) {}
         },
         remove(name: string, options: any) {
           try {
             cookieStore.set({ name, value: "", ...options });
-          } catch (error) {
-            // Handle error
-          }
+          } catch (error) {}
         },
       },
     }
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  
   if (!user) throw new Error("Unauthorized");
   
   const { data: admin } = await supabase
@@ -66,44 +52,112 @@ async function getAdminSupabase() {
   return supabase;
 }
 
-export async function createProject(data: ProjectFormData) {
-  const supabase = await getAdminSupabase();
-  const validated = projectSchema.parse(data);
+/**
+ * Normalizes image upload to the 'projects' bucket.
+ * Path: projects/<folder>/<filename>
+ */
+async function uploadFile(supabase: any, file: File, folder: string) {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+  const filePath = `${folder}/${fileName}`;
 
-  const { data: project, error } = await supabase
+  const { error: uploadError } = await supabase.storage
     .from("projects")
-    .insert(validated)
-    .select()
-    .single();
+    .upload(filePath, file);
 
-  if (error) throw new Error(error.message);
-  
-  revalidatePath("/admin/projects");
-  revalidatePath("/work");
-  return project;
+  if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+
+  const { data: { publicUrl } } = supabase.storage
+    .from("projects")
+    .getPublicUrl(filePath);
+
+  return publicUrl;
 }
 
-export async function updateProject(id: string, data: ProjectFormData) {
+export async function createProject(formData: FormData) {
   const supabase = await getAdminSupabase();
-  const validated = projectSchema.parse(data);
+  
+  // Extract file and data
+  const file = formData.get("cover_image") as File;
+  const rawData = {
+    title: formData.get("title"),
+    slug: formData.get("slug"),
+    summary: formData.get("summary"),
+    stack: JSON.parse(formData.get("stack") as string),
+    repo_url: formData.get("repo_url") || "",
+    live_url: formData.get("live_url") || "",
+    published: formData.get("published") === "true",
+  };
 
-  const { data: project, error } = await supabase
+  const validated = projectSchema.parse({ ...rawData, cover_url: "temp" });
+
+  // 1. Insert row to get ID
+  const { data: project, error: insertError } = await supabase
     .from("projects")
-    .update(validated)
-    .eq("id", id)
+    .insert({ ...validated, cover_url: "" })
     .select()
     .single();
+
+  if (insertError) throw new Error(insertError.message);
+
+  // 2. Upload file to projects/<id>/
+  try {
+    const publicUrl = await uploadFile(supabase, file, `portfolio/${project.id}`);
+    
+    // 3. Update row with actual URL
+    await supabase
+      .from("projects")
+      .update({ cover_url: publicUrl })
+      .eq("id", project.id);
+  } catch (err) {
+    // Cleanup if upload fails
+    await supabase.from("projects").delete().eq("id", project.id);
+    throw err;
+  }
+
+  revalidatePath("/admin/projects");
+  revalidatePath("/work");
+  return { success: true };
+}
+
+export async function updateProject(id: string, formData: FormData) {
+  const supabase = await getAdminSupabase();
+  
+  const file = formData.get("cover_image") as File | null;
+  const rawData = {
+    title: formData.get("title"),
+    slug: formData.get("slug"),
+    summary: formData.get("summary"),
+    stack: JSON.parse(formData.get("stack") as string),
+    repo_url: formData.get("repo_url") || "",
+    live_url: formData.get("live_url") || "",
+    published: formData.get("published") === "true",
+  };
+
+  let cover_url = formData.get("current_cover_url") as string;
+
+  if (file && file.size > 0) {
+    cover_url = await uploadFile(supabase, file, `portfolio/${id}`);
+  }
+
+  const validated = projectSchema.parse({ ...rawData, cover_url });
+
+  const { error } = await supabase
+    .from("projects")
+    .update(validated)
+    .eq("id", id);
 
   if (error) throw new Error(error.message);
   
   revalidatePath("/admin/projects");
-  revalidatePath(`/work/${project.slug}`);
   revalidatePath("/work");
-  return project;
+  return { success: true };
 }
 
 export async function deleteProject(id: string) {
   const supabase = await getAdminSupabase();
+  
+  // Note: In production, we should also delete files from storage
   const { error } = await supabase.from("projects").delete().eq("id", id);
   if (error) throw new Error(error.message);
   
@@ -115,17 +169,14 @@ export async function createTestimonial(data: TestimonialFormData) {
   const supabase = await getAdminSupabase();
   const validated = testimonialSchema.parse(data);
 
-  const { data: testimonial, error } = await supabase
+  const { error } = await supabase
     .from("testimonials")
-    .insert(validated)
-    .select()
-    .single();
+    .insert(validated);
 
   if (error) throw new Error(error.message);
   
   revalidatePath("/admin/testimonials");
   revalidatePath("/");
-  return testimonial;
 }
 
 export async function deleteTestimonial(id: string) {
@@ -145,38 +196,33 @@ export async function deleteLead(id: string) {
   revalidatePath("/admin/leads");
 }
 
-export async function createPost(data: any) {
+export async function createPost(formData: FormData) {
   const supabase = await getAdminSupabase();
   
-  const { data: post, error } = await supabase
+  const file = formData.get("featured_image") as File | null;
+  let image_url = "";
+
+  const rawData = {
+    title: formData.get("title"),
+    slug: formData.get("slug"),
+    excerpt: formData.get("excerpt"),
+    content: formData.get("content"),
+    author: formData.get("author") || "MAPRIMO Team",
+    published_at: new Date().toISOString(),
+  };
+
+  if (file && file.size > 0) {
+    image_url = await uploadFile(supabase, file, "blog");
+  }
+
+  const { error } = await supabase
     .from("posts")
-    .insert(data)
-    .select()
-    .single();
+    .insert({ ...rawData, image_url });
 
   if (error) throw new Error(error.message);
   
   revalidatePath("/admin/blog");
   revalidatePath("/blog");
-  return post;
-}
-
-export async function updatePost(id: string, data: any) {
-  const supabase = await getAdminSupabase();
-
-  const { data: post, error } = await supabase
-    .from("posts")
-    .update(data)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) throw new Error(error.message);
-  
-  revalidatePath("/admin/blog");
-  revalidatePath(`/blog/${post.slug}`);
-  revalidatePath("/blog");
-  return post;
 }
 
 export async function deletePost(id: string) {
