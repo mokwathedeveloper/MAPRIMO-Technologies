@@ -40,7 +40,7 @@ export function CaseStudyList({ initialCaseStudies }: { initialCaseStudies: Case
         <Card key={cs.id} className="group overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <div>
-              <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+              <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors break-words">
                 {cs.title}
               </CardTitle>
               <div className="flex items-center gap-2 mt-1">
@@ -68,7 +68,7 @@ export function CaseStudyList({ initialCaseStudies }: { initialCaseStudies: Case
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{cs.summary}</p>
+            <p className="text-sm text-muted-foreground line-clamp-2 mb-4 break-words">{cs.summary}</p>
             {cs.tags && cs.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {cs.tags.map(tag => (

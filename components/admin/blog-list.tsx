@@ -51,7 +51,7 @@ export function BlogList({ initialPosts }: { initialPosts: Post[] }) {
             <div className="flex-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0">
                 <div>
-                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors break-words">
                     {post.title}
                   </CardTitle>
                   <div className="flex items-center gap-2 mt-1">
@@ -82,7 +82,7 @@ export function BlogList({ initialPosts }: { initialPosts: Post[] }) {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
+                <p className="text-sm text-muted-foreground line-clamp-2 break-words">{post.excerpt}</p>
               </CardContent>
             </div>
           </div>

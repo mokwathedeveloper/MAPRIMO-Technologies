@@ -51,7 +51,7 @@ export function PodcastList({ initialEpisodes }: { initialEpisodes: Podcast[] })
             <div className="flex-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0">
                 <div>
-                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors break-words">
                     {episode.title}
                   </CardTitle>
                   <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
@@ -85,7 +85,7 @@ export function PodcastList({ initialEpisodes }: { initialEpisodes: Podcast[] })
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground line-clamp-2">{episode.description}</p>
+                <p className="text-sm text-muted-foreground line-clamp-2 break-words">{episode.description}</p>
                 {episode.audio_url && (
                   <div className="mt-4 flex items-center gap-2 text-xs font-medium text-primary">
                     <Play className="h-3 w-3 fill-current" />

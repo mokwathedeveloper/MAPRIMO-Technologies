@@ -113,10 +113,10 @@ export default async function PodcastListingPage({
                             </span>
                             <span className="text-muted-foreground opacity-40">AUDIO LOG // 0{podcasts.indexOf(episode) + 1}</span>
                           </div>
-                          <h2 className="text-3xl md:text-5xl font-black group-hover:text-primary transition-colors leading-[1.1] tracking-tight">
+                          <h2 className="text-3xl md:text-5xl font-black group-hover:text-primary transition-colors leading-[1.1] tracking-tight break-words">
                             {episode.title}
                           </h2>
-                          <p className="text-lg md:text-xl text-muted-foreground line-clamp-2 leading-relaxed font-medium opacity-80 italic">
+                          <p className="text-lg md:text-xl text-muted-foreground line-clamp-2 leading-relaxed font-medium opacity-80 italic break-words">
                             "{episode.description}"
                           </p>
                         </div>

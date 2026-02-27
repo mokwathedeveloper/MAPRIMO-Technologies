@@ -73,10 +73,10 @@ export default async function BlogPage() {
                       <span className="bg-primary/10 px-3 py-1 rounded-full">Featured Article</span>
                       <span className="text-muted-foreground">{new Date(featuredPost.published_at).toLocaleDateString()}</span>
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight group-hover:text-primary transition-colors">
+                    <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight group-hover:text-primary transition-colors break-words">
                       {featuredPost.title}
                     </h2>
-                    <p className="text-xl text-muted-foreground leading-relaxed line-clamp-3 font-medium">
+                    <p className="text-xl text-muted-foreground leading-relaxed line-clamp-3 font-medium break-words">
                       {featuredPost.excerpt}
                     </p>
                     <div className="pt-4 flex items-center gap-3 font-black text-sm uppercase tracking-widest">
@@ -111,12 +111,12 @@ export default async function BlogPage() {
                     <span>{new Date(post.published_at).toLocaleDateString()}</span>
                     <span className="opacity-50">5 min read</span>
                   </div>
-                  <CardTitle className="line-clamp-2 text-2xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
+                  <CardTitle className="line-clamp-2 text-2xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight break-words">
                     <Link href={`/blog/${post.slug}`}>
                       {post.title}
                     </Link>
                   </CardTitle>
-                  <CardDescription className="line-clamp-3 text-base font-medium leading-relaxed">
+                  <CardDescription className="line-clamp-3 text-base font-medium leading-relaxed break-words">
                     {post.excerpt}
                   </CardDescription>
                 </CardHeader>

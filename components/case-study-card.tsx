@@ -37,10 +37,10 @@ export function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudy }) {
             Case Study
           </div>
         </div>
-        <CardTitle className="text-3xl font-black mb-4 tracking-tight group-hover:text-primary transition-colors leading-[1.1]">
+        <CardTitle className="text-3xl font-black mb-4 tracking-tight group-hover:text-primary transition-colors leading-[1.1] break-words">
           {caseStudy.title}
         </CardTitle>
-        <CardDescription className="text-lg font-medium line-clamp-2 leading-relaxed opacity-80">
+        <CardDescription className="text-lg font-medium line-clamp-2 leading-relaxed opacity-80 break-words">
           {caseStudy.summary}
         </CardDescription>
       </CardHeader>

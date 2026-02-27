@@ -73,12 +73,12 @@ export function PodcastSection({ episodes }: PodcastSectionProps) {
                         </span>
                         <span className="text-muted-foreground opacity-50">AUDIO SPEC V1.0</span>
                       </div>
-                      <h3 className="text-3xl md:text-4xl font-black group-hover:text-primary transition-colors tracking-tight leading-none">
+                      <h3 className="text-3xl md:text-4xl font-black group-hover:text-primary transition-colors tracking-tight leading-none break-words">
                         <Link href={`/podcast/${episode.slug}`}>
                           {episode.title}
                         </Link>
                       </h3>
-                      <p className="text-lg md:text-xl text-muted-foreground line-clamp-1 font-medium italic opacity-80">
+                      <p className="text-lg md:text-xl text-muted-foreground line-clamp-1 font-medium italic opacity-80 break-words">
                         "{episode.description}"
                       </p>
                     </div>

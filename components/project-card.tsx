@@ -38,10 +38,10 @@ export function ProjectCard({ project }: { project: Project }) {
             Project
           </div>
         </div>
-        <CardTitle className="text-2xl font-black mb-3 tracking-tight group-hover:text-primary transition-colors leading-none">
+        <CardTitle className="text-2xl font-black mb-3 tracking-tight group-hover:text-primary transition-colors leading-none break-words">
           {project.title}
         </CardTitle>
-        <CardDescription className="text-base font-medium line-clamp-2 leading-relaxed">
+        <CardDescription className="text-base font-medium line-clamp-2 leading-relaxed break-words">
           {project.summary}
         </CardDescription>
       </CardHeader>

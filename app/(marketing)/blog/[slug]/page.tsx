@@ -95,11 +95,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div className="text-muted-foreground opacity-50">ENGINEERING REPORT // V1.0</div>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+            <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 break-words">
               {post.title}
             </h1>
             
-            <p className="text-2xl md:text-3xl text-muted-foreground leading-relaxed max-w-3xl font-medium">
+            <p className="text-2xl md:text-3xl text-muted-foreground leading-relaxed max-w-3xl font-medium break-words">
               {post.excerpt}
             </p>
           </div>

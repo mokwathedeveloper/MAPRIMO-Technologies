@@ -91,10 +91,10 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
               <div className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-sm font-medium text-primary shadow-sm">
                 Case Study
               </div>
-              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
+              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight break-words">
                 {caseStudy.title}
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
+              <p className="text-xl text-muted-foreground leading-relaxed break-words">
                 {caseStudy.summary}
               </p>
               

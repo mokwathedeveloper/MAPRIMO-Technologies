@@ -96,17 +96,17 @@ export function DirectorsSection({ directors, isLoading }: DirectorsSectionProps
                 </div>
               </div>
               <CardHeader className="text-center pb-2 pt-8 relative z-10 px-8">
-                <CardTitle className="text-3xl font-black tracking-tight leading-none mb-2">{director.name}</CardTitle>
+                <CardTitle className="text-3xl font-black tracking-tight leading-none mb-2 break-words">{director.name}</CardTitle>
                 <div className="flex items-center justify-center gap-2">
                   <div className="h-px w-4 bg-primary/30" />
-                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">
+                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] break-words">
                     {director.role}
                   </p>
                   <div className="h-px w-4 bg-primary/30" />
                 </div>
               </CardHeader>
               <CardContent className="text-center pb-10 px-10 relative z-10">
-                <p className="text-muted-foreground line-clamp-3 mb-8 font-medium leading-relaxed">
+                <p className="text-muted-foreground line-clamp-3 mb-8 font-medium leading-relaxed break-words">
                   {director.bio}
                 </p>
                 <div className="flex justify-center items-center gap-4">

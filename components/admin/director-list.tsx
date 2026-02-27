@@ -51,10 +51,10 @@ export function DirectorList({ initialDirectors }: { initialDirectors: Director[
             <div className="flex-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0">
                 <div>
-                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors break-words">
                     {director.name}
                   </CardTitle>
-                  <p className="text-sm font-semibold text-primary uppercase tracking-wider mt-1">
+                  <p className="text-sm font-semibold text-primary uppercase tracking-wider mt-1 break-words">
                     {director.role}
                   </p>
                 </div>
@@ -72,7 +72,7 @@ export function DirectorList({ initialDirectors }: { initialDirectors: Director[
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground line-clamp-3">{director.bio}</p>
+                <p className="text-sm text-muted-foreground line-clamp-3 break-words">{director.bio}</p>
                 <div className="flex gap-4 mt-4">
                   {director.linkedin_url && (
                     <a href={director.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-blue-600 transition-colors">
