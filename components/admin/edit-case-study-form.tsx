@@ -10,21 +10,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { updateCaseStudy } from "@/lib/actions/portfolio";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { toast } from "sonner";
+import type { CaseStudy } from "@/lib/types";
 
 const STAGES = [
   { label: "Validating content...", progress: 20 },
-  { label: "Uploading new screenshots...", progress: 50 },
+  { label: "Uploading media...", progress: 50 },
   { label: "Updating database...", progress: 80 },
   { label: "Finalizing...", progress: 95 },
 ];
 
-export function EditCaseStudyForm({ caseStudy }: { caseStudy: any }) {
+export function EditCaseStudyForm({ caseStudy }: { caseStudy: CaseStudy }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [stageIndex, setStageIndex] = useState(-1);
   const [results, setResults] = useState<string[]>(caseStudy.results || [""]);
   const [screenshotFiles, setScreenshotFiles] = useState<File[]>([]);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
   const [currentScreenshots, setCurrentScreenshots] = useState<string[]>(caseStudy.screenshots || []);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
@@ -65,24 +68,28 @@ export function EditCaseStudyForm({ caseStudy }: { caseStudy: any }) {
     setFieldErrors({});
 
     const formData = new FormData(e.currentTarget);
-    const problem = formData.get("problem") as string;
-    const solution = formData.get("solution") as string;
+    if (coverFile) {
+      formData.set("cover", coverFile);
+    }
+    formData.set("current_cover_url", caseStudy.cover_url || "");
+    
     const filteredResults = results.filter(r => r.trim() !== "");
+    formData.set("results", JSON.stringify(filteredResults));
+    
+    const tagsRaw = formData.get("tags") as string;
+    const tags = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(Boolean) : [];
+    formData.set("tags", JSON.stringify(tags));
 
-    const submissionData = new FormData();
-    submissionData.append("problem", problem);
-    submissionData.append("solution", solution);
-    submissionData.append("results", JSON.stringify(filteredResults));
-    submissionData.append("current_screenshots", JSON.stringify(currentScreenshots));
+    formData.set("current_screenshots", JSON.stringify(currentScreenshots));
     
     screenshotFiles.forEach(file => {
-      submissionData.append("screenshots", file);
+      formData.append("screenshots", file);
     });
 
     startTransition(async () => {
       setStageIndex(0);
       try {
-        const result = await updateCaseStudy(caseStudy.id, submissionData);
+        const result = await updateCaseStudy(caseStudy.id, formData);
         
         if (result.ok) {
           toast.success("Case study updated successfully!");
@@ -113,19 +120,87 @@ export function EditCaseStudyForm({ caseStudy }: { caseStudy: any }) {
       <div className="grid gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Project Information</CardTitle>
+            <CardTitle>Basic Information</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="p-4 rounded-lg bg-muted/50 border">
-              <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-1">Associated Project</p>
-              <p className="text-xl font-black">{caseStudy.projects?.title || "Unknown Project"}</p>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
+                <Input 
+                  id="title" 
+                  name="title" 
+                  defaultValue={caseStudy.title}
+                  placeholder="e.g. Scaling TechStream's Infrastructure" 
+                  required 
+                  disabled={isLoading}
+                />
+                {fieldErrors.title && (
+                  <p className="text-xs text-red-500">{fieldErrors.title[0]}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="slug">URL Slug</Label>
+                <Input 
+                  id="slug" 
+                  name="slug" 
+                  defaultValue={caseStudy.slug}
+                  placeholder="e.g. techstream-scaling" 
+                  required 
+                  disabled={isLoading}
+                />
+                {fieldErrors.slug && (
+                  <p className="text-xs text-red-500">{fieldErrors.slug[0]}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="client">Client Name</Label>
+                <Input 
+                  id="client" 
+                  name="client" 
+                  defaultValue={caseStudy.client}
+                  placeholder="e.g. TechStream Inc." 
+                  required 
+                  disabled={isLoading}
+                />
+                {fieldErrors.client && (
+                  <p className="text-xs text-red-500">{fieldErrors.client[0]}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tags">Tags (comma separated)</Label>
+                <Input 
+                  id="tags" 
+                  name="tags" 
+                  defaultValue={caseStudy.tags?.join(", ")}
+                  placeholder="SaaS, Infrastructure, AWS" 
+                  disabled={isLoading}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="summary">Brief Summary</Label>
+              <Textarea 
+                id="summary" 
+                name="summary" 
+                defaultValue={caseStudy.summary}
+                placeholder="A one-sentence summary of the impact..." 
+                required 
+                disabled={isLoading}
+              />
+              {fieldErrors.summary && (
+                <p className="text-xs text-red-500">{fieldErrors.summary[0]}</p>
+              )}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Content</CardTitle>
+            <CardTitle>Case Study Content</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
@@ -190,43 +265,54 @@ export function EditCaseStudyForm({ caseStudy }: { caseStudy: any }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Visuals (Screenshots)</CardTitle>
+            <CardTitle>Visuals</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {currentScreenshots.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                {currentScreenshots.map((url, i) => (
-                  <div key={i} className="relative aspect-video rounded-md overflow-hidden border group">
-                    <img src={url} alt="Screenshot" className="object-cover w-full h-full" />
-                    <Button 
-                      type="button" 
-                      variant="destructive" 
-                      size="icon" 
-                      className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => removeExistingScreenshot(url)}
-                      disabled={isLoading}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
+            <ImageUpload 
+              label="Cover Image" 
+              defaultValue={caseStudy.cover_url}
+              onFileSelect={setCoverFile} 
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="screenshots">Add New Screenshots</Label>
-              <Input 
-                id="screenshots" 
-                name="screenshots" 
-                type="file" 
-                multiple 
-                accept="image/*" 
-                onChange={handleFileChange} 
-                disabled={isLoading}
-              />
-              <p className="text-xs text-muted-foreground mt-2">
-                Selected {screenshotFiles.length} new files.
-              </p>
+            <div className="space-y-4">
+              <Label>Current screenshots</Label>
+              {currentScreenshots.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                  {currentScreenshots.map((url, i) => (
+                    <div key={i} className="relative aspect-video rounded-md overflow-hidden border group">
+                      <img src={url} alt="Screenshot" className="object-cover w-full h-full" />
+                      <Button 
+                        type="button" 
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => removeExistingScreenshot(url)}
+                        disabled={isLoading}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">No screenshots uploaded yet.</p>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="screenshots">Add New Screenshots</Label>
+                <Input 
+                  id="screenshots" 
+                  name="screenshots" 
+                  type="file" 
+                  multiple 
+                  accept="image/*" 
+                  onChange={handleFileChange} 
+                  disabled={isLoading}
+                />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Selected {screenshotFiles.length} new files.
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
