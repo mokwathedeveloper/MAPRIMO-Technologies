@@ -9,7 +9,13 @@ import {
   Bug, 
   BarChart3, 
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Boxes,
+  Microscope,
+  Activity,
+  Cpu,
+  Layers,
+  Globe
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -183,134 +189,145 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-24 bg-background overflow-hidden relative">
-        <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Capabilities</h2>
-            <h3 className="text-3xl md:text-5xl font-bold">Solutions for every stage of your product lifecycle.</h3>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "MVP Build",
-                icon: Rocket,
-                description: "Ship your product in weeks, not months. Full-stack development with QA embedded from day one to ensure a scalable foundation.",
-                color: "bg-blue-500/10 text-blue-600"
-              },
-              {
-                title: "QA Automation",
-                icon: ShieldCheck,
-                description: "Catch bugs before users do. Comprehensive end-to-end automated testing that scales seamlessly with your product growth.",
-                color: "bg-green-500/10 text-green-600"
-              },
-              {
-                title: "Rescue & Audit",
-                icon: Zap,
-                description: "Inherited a mess? We audit, fix, and stabilize troubled codebases fast, transforming technical debt into a competitive advantage.",
-                color: "bg-purple-500/10 text-purple-600"
-              }
-            ].map((service, i) => (
-              <Card key={i} className="border-none bg-muted/40 hover:bg-muted/60 transition-all hover:-translate-y-1 duration-300">
-                <CardHeader>
-                  <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}>
-                    <service.icon className="h-6 w-6" />
+            {/* Services Section */}
+            <section className="py-24 bg-background overflow-hidden relative">
+              <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                  <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Capabilities</h2>
+                  <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9]">Solutions for every <span className="text-primary italic">stage.</span></h3>
+                </div>
+                
+                <div className="grid md:grid-cols-3 gap-8">
+                  {[
+                    {
+                      title: "MVP Build",
+                      icon: Boxes,
+                      description: "Ship your product in weeks, not months. Full-stack development with QA embedded from day one to ensure a scalable foundation.",
+                      color: "bg-blue-500/10 text-blue-600 border-blue-500/20"
+                    },
+                    {
+                      title: "QA Automation",
+                      icon: Microscope,
+                      description: "Catch bugs before users do. Comprehensive end-to-end automated testing that scales seamlessly with your product growth.",
+                      color: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                    },
+                    {
+                      title: "Rescue & Audit",
+                      icon: Activity,
+                      description: "Inherited a mess? We audit, fix, and stabilize troubled codebases fast, transforming technical debt into a competitive advantage.",
+                      color: "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                    }
+                  ].map((service, i) => (
+                    <Card key={i} className="border-4 border-muted/20 bg-muted/10 hover:bg-muted/30 transition-all hover:-translate-y-2 duration-500 rounded-[2.5rem] p-4 overflow-hidden relative group">
+                      <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                        <service.icon size={120} />
+                      </div>
+                      <CardHeader className="relative z-10">
+                        <div className={`w-14 h-14 rounded-2xl ${service.color} flex items-center justify-center mb-6 shadow-2xl border transition-transform duration-500 group-hover:rotate-6`}>
+                          <service.icon className="h-7 w-7" />
+                        </div>
+                        <CardTitle className="text-3xl font-black tracking-tight">{service.title}</CardTitle>
+                        <CardDescription className="text-lg text-muted-foreground font-medium pt-2 leading-relaxed">
+                          {service.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <div className="px-6 pb-6 pt-2">
+                         <div className="h-px w-full bg-foreground/5 mb-4" />
+                         <p className="text-[10px] font-black tracking-[0.3em] opacity-30">TECH SPEC // SYSTEM CORE</p>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </section>
+      
+            {/* Case Studies Section */}
+            {caseStudies.length > 0 && (
+              <section className="py-24 bg-muted/30 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                <div className="container relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                  <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                    <div className="max-w-2xl space-y-4">
+                      <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Recent Work</h2>
+                      <h3 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-[0.9]">Real-world <span className="text-primary italic">results.</span></h3>
+                    </div>
+                    <Link href="/work">
+                      <Button variant="outline" size="lg" className="rounded-2xl font-black h-14 px-8 border-2">View Portfolio</Button>
+                    </Link>
                   </div>
-                  <CardTitle className="text-2xl">{service.title}</CardTitle>
-                  <CardDescription className="text-base text-muted-foreground pt-2">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies Section */}
-      {caseStudies.length > 0 && (
-        <section className="py-24 bg-muted/30">
-          <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-              <div className="max-w-2xl space-y-4">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Recent Work</h2>
-                <h3 className="text-3xl md:text-5xl font-bold text-foreground">Real-world results for real-world companies.</h3>
-              </div>
-              <Link href="/work">
-                <Button variant="outline" size="lg">View All Case Studies</Button>
-              </Link>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {caseStudies.map((cs) => (
-                <CaseStudyCard key={cs.id} caseStudy={cs} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Process Section */}
-      <section className="py-24 bg-background">
-        <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Our Process</h2>
-            <h3 className="text-3xl md:text-5xl font-bold">A proven framework for quality and speed.</h3>
-          </div>
-          
-          <div className="max-w-4xl mx-auto space-y-12">
-            {[
-              { 
-                step: "01", 
-                title: "Discovery & Roadmap", 
-                icon: Search,
-                desc: "We map your requirements, technical risks, and success metrics. No surprises, just a clear plan." 
-              },
-              { 
-                step: "02", 
-                title: "Rapid Development", 
-                icon: Code2,
-                desc: "Agile sprints focused on high-value features. You get a working build every single week." 
-              },
-              { 
-                step: "03", 
-                title: "QA Embedding", 
-                icon: Bug,
-                desc: "Automated and manual testing are baked into the code as it's written, not added at the end." 
-              },
-              { 
-                step: "04", 
-                title: "Launch & Confidence", 
-                icon: Rocket,
-                desc: "Zero-downtime deployment with high-availability monitoring to ensure a smooth transition to live." 
-              },
-              { 
-                step: "05", 
-                title: "Scaling & Support", 
-                icon: BarChart3,
-                desc: "Post-launch maintenance and optimization to help your product grow with your user base." 
-              },
-            ].map((item, i) => (
-              <div key={i} className="flex gap-6 md:gap-10 relative group animate-in fade-in slide-in-from-left-4 duration-700" style={{ transitionDelay: `${i * 150}ms` }}>
-                {i < 4 && <div className="absolute left-6 md:left-8 top-14 bottom-[-48px] w-px bg-border group-hover:bg-primary/30 transition-colors" />}
-                <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-primary/20 bg-background flex items-center justify-center z-10 group-hover:border-primary transition-colors">
-                  <span className="text-sm font-bold text-primary">{item.step}</span>
+                  
+                  <div className="grid md:grid-cols-3 gap-10">
+                    {caseStudies.map((cs) => (
+                      <CaseStudyCard key={cs.id} caseStudy={cs} />
+                    ))}
+                  </div>
                 </div>
-                <div className="pt-2 md:pt-4 space-y-2">
-                  <h4 className="text-xl md:text-2xl font-bold flex items-center gap-3">
-                    <item.icon className="h-5 w-5 text-muted-foreground" />
-                    {item.title}
-                  </h4>
-                  <p className="text-muted-foreground md:text-lg max-w-2xl">{item.desc}</p>
+              </section>
+            )}
+      
+            {/* Process Section */}
+            <section className="py-24 bg-background relative overflow-hidden">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -z-10" />
+              <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+                  <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Our Process</h2>
+                  <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9]">A framework for <span className="text-primary italic">quality.</span></h3>
+                </div>
+                
+                <div className="max-w-4xl mx-auto space-y-12">
+                  {[
+                    { 
+                      step: "01", 
+                      title: "Discovery & Roadmap", 
+                      icon: Search,
+                      desc: "We map your requirements, technical risks, and success metrics. No surprises, just a clear plan." 
+                    },
+                    { 
+                      step: "02", 
+                      title: "Rapid Development", 
+                      icon: Code2,
+                      desc: "Agile sprints focused on high-value features. You get a working build every single week." 
+                    },
+                    { 
+                      step: "03", 
+                      title: "QA Embedding", 
+                      icon: Bug,
+                      desc: "Automated and manual testing are baked into the code as it's written, not added at the end." 
+                    },
+                    { 
+                      step: "04", 
+                      title: "Launch & Confidence", 
+                      icon: Rocket,
+                      desc: "Zero-downtime deployment with high-availability monitoring to ensure a smooth transition to live." 
+                    },
+                    { 
+                      step: "05", 
+                      title: "Scaling & Support", 
+                      icon: BarChart3,
+                      desc: "Post-launch maintenance and optimization to help your product grow with your user base." 
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="flex gap-6 md:gap-12 relative group animate-in fade-in slide-in-from-left-4 duration-700" style={{ transitionDelay: `${i * 150}ms` }}>
+                      {i < 4 && <div className="absolute left-7 md:left-9 top-16 bottom-[-48px] w-1 bg-muted group-hover:bg-primary/20 transition-colors rounded-full" />}
+                      <div className="flex-shrink-0 w-14 h-14 md:w-18 md:h-18 rounded-2xl border-4 border-muted bg-background flex items-center justify-center z-10 group-hover:border-primary/30 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <span className="text-xl font-black text-primary">{item.step}</span>
+                      </div>
+                      <div className="pt-2 md:pt-4 space-y-3 pb-12">
+                        <h4 className="text-2xl md:text-3xl font-black tracking-tight flex items-center gap-4">
+                          <item.icon className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
+                          {item.title}
+                        </h4>
+                        <p className="text-muted-foreground text-lg md:text-xl font-medium max-w-2xl leading-relaxed">{item.desc}</p>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-muted/50 text-[10px] font-black uppercase tracking-widest opacity-40">
+                          Process Milestone // Step {item.step}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Directors Section */}
+            </section>
+            {/* Directors Section */}
       <DirectorsSection directors={directors} />
 
       {/* Testimonials Section */}
