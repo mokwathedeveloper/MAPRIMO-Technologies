@@ -92,77 +92,93 @@ export default async function HomePage() {
     <>
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-background pt-24 pb-16 md:pt-32 md:pb-24 lg:pt-40 lg:pb-32 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-[120px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-[120px]" />
+        {/* Animated background elements */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px] animate-pulse" />
+          <div className="absolute bottom-[-10%] right-[-10%] h-[400px] w-[400px] rounded-full bg-blue-500/5 blur-[120px] animate-pulse delay-700" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         </div>
         
         <div className="container relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div className="flex-1 text-center lg:text-left space-y-8 max-w-2xl">
-              <div className="inline-flex items-center rounded-full border bg-muted/50 px-3 py-1 text-sm font-medium text-primary animate-in fade-in zoom-in duration-1000 delay-200">
-                <span className="flex h-2 w-2 rounded-full bg-primary mr-2" />
-                Now shipping MVPs in 4-8 weeks
+              <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs md:text-sm font-bold text-primary animate-in fade-in zoom-in duration-1000 delay-200 uppercase tracking-widest shadow-sm">
+                <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-ping" />
+                Shipping MVPs in 4-8 weeks
               </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 animate-in fade-in slide-in-from-top-4 duration-1000 delay-300">
-                Full-Stack + QA that ships fast and <span className="text-primary">breaks less.</span>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-top-4 duration-1000 delay-300">
+                Full-Stack <br />
+                <span className="text-primary italic">Engineering</span> <br />
+                for Startups.
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed animate-in fade-in duration-1000 delay-500">
-                We build MVPs, automate QA, and rescue troubled projects for SMEs and funded startups. Get your product to market with zero technical debt.
+              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed animate-in fade-in duration-1000 delay-500 font-medium">
+                We build production-ready products, automate QA, and rescue projects with a <span className="text-foreground underline decoration-primary/30 decoration-4 underline-offset-4">technical-first</span> approach.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
                 <Link href="/contact">
-                  <Button size="lg" className="h-12 px-8 text-base">
-                    Book a Strategy Call
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button size="lg" className="h-14 px-10 text-lg font-bold shadow-2xl shadow-primary/30 rounded-2xl group transition-all hover:scale-[1.02]">
+                    Build My MVP
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
                 <Link href="/work">
-                  <Button size="lg" variant="outline" className="h-12 px-8 text-base">
-                    View Our Work
+                  <Button size="lg" variant="outline" className="h-14 px-10 text-lg font-bold border-2 rounded-2xl transition-all hover:bg-muted">
+                    View Portfolio
                   </Button>
                 </Link>
               </div>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 text-sm text-muted-foreground font-medium pt-4 animate-in fade-in duration-1000 delay-1000">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 text-[10px] md:text-xs text-muted-foreground font-black uppercase tracking-[0.2em] pt-8 animate-in fade-in duration-1000 delay-1000 opacity-70">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
                   Fixed-cost delivery
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
-                  QA-first methodology
+                  Direct CTO access
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
-                  Direct CTO access
+                  QA-first methodology
                 </div>
               </div>
             </div>
             
-            <div className="flex-1 relative w-full max-w-[600px] aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden border bg-muted shadow-2xl animate-in fade-in slide-in-from-right-8 duration-1000 delay-500">
+            <div className="flex-1 relative w-full max-w-[650px] aspect-square lg:aspect-[4/5] rounded-[2.5rem] overflow-hidden border-8 border-background bg-muted shadow-[0_32px_64px_-12px_rgba(0,0,0,0.15)] animate-in fade-in slide-in-from-right-8 duration-1000 delay-500 group">
               <Image
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
                 alt="Digital product development dashboard"
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-background/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-60" />
+              <div className="absolute bottom-8 left-8 right-8 p-6 bg-background/80 backdrop-blur-md rounded-2xl border shadow-xl animate-in slide-in-from-bottom-4 duration-1000 delay-1000">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <Zap className="h-6 w-6 fill-current" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black tracking-tight">Active Projects</p>
+                    <p className="text-xs text-muted-foreground font-medium">Monitoring 4.2k active nodes</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Proof Bar */}
-      <section className="border-y bg-muted/30 py-12 animate-in fade-in duration-1000 delay-700">
-        <div className="container">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground mb-8">Helping innovative companies grow</p>
-          <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500">
-            <div className="text-2xl font-black italic tracking-tighter">TECHSTREAM</div>
-            <div className="text-2xl font-black italic tracking-tighter">BLOOM</div>
-            <div className="text-2xl font-black italic tracking-tighter">NEXUS</div>
-            <div className="text-2xl font-black italic tracking-tighter">QUANTUM</div>
+      {/* Modern Proof Bar */}
+      <section className="bg-background py-16 border-y">
+        <div className="container overflow-hidden">
+          <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 mb-12">Building with industry leaders</p>
+          <div className="flex flex-wrap justify-center gap-x-16 gap-y-10 md:gap-x-24 opacity-40 hover:opacity-100 transition-opacity duration-700">
+            {["TECHSTREAM", "BLOOM", "NEXUS", "QUANTUM", "VELOCITY"].map((name) => (
+              <div key={name} className="text-xl md:text-3xl font-black tracking-tighter hover:text-primary cursor-default transition-colors grayscale hover:grayscale-0">
+                {name}
+              </div>
+            ))}
           </div>
         </div>
       </section>
