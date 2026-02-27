@@ -56,12 +56,18 @@ export default async function WorkPage() {
 
   return (
     <>
-      <section className="bg-muted/30 py-24 md:py-32 border-b">
-        <div className="container max-w-6xl text-center space-y-6">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-            Real projects. <br /> Real results.
+      <section className="bg-muted/30 pt-32 pb-24 md:pt-40 md:pb-32 border-b relative overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-0 left-0 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
+        </div>
+        <div className="container max-w-6xl text-center space-y-6 relative z-10">
+          <div className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-[10px] font-black text-primary shadow-sm uppercase tracking-[0.2em] mb-4">
+            Our Portfolio
+          </div>
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 leading-[0.9]">
+            Real projects. <br /> <span className="text-primary italic">Real results.</span>
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
             See how we help startups and SMEs ship faster without compromising on quality or accumulating technical debt.
           </p>
         </div>
@@ -70,11 +76,11 @@ export default async function WorkPage() {
       <div className="container max-w-6xl py-24 space-y-32">
         {caseStudies.length > 0 && (
           <section>
-            <div className="mb-12">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-primary mb-2">Deep Dives</h2>
-              <h3 className="text-3xl font-bold">Featured Case Studies</h3>
+            <div className="mb-16 space-y-4">
+              <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Deep Dives</h2>
+              <h3 className="text-4xl md:text-6xl font-black tracking-tight">Featured Case Studies</h3>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
               {caseStudies.map((cs) => (
                 <CaseStudyCard key={cs.id} caseStudy={cs} />
               ))}
@@ -84,11 +90,11 @@ export default async function WorkPage() {
 
         {projects.length > 0 && (
           <section>
-            <div className="mb-12">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-primary mb-2">Portfolio</h2>
-              <h3 className="text-3xl font-bold">All Projects</h3>
+            <div className="mb-16 space-y-4">
+              <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Portfolio</h2>
+              <h3 className="text-4xl md:text-6xl font-black tracking-tight">All Projects</h3>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
               {projects.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}
@@ -97,9 +103,9 @@ export default async function WorkPage() {
         )}
 
         {projects.length === 0 && caseStudies.length === 0 && (
-          <div className="text-center py-24 border-2 border-dashed rounded-xl bg-muted/20">
-            <h3 className="text-lg font-medium text-muted-foreground mb-2">No projects published yet</h3>
-            <p className="text-sm text-muted-foreground/60">We're updating our portfolio. Check back soon!</p>
+          <div className="text-center py-32 border-2 border-dashed rounded-[3rem] bg-muted/10">
+            <h3 className="text-2xl font-bold text-muted-foreground mb-4">No projects published yet</h3>
+            <p className="text-muted-foreground/60 max-w-xs mx-auto">We're currently documenting our latest engineering successes. Check back soon!</p>
           </div>
         )}
       </div>

@@ -9,72 +9,75 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <>
-      <section className="bg-muted/30 py-24 md:py-32 border-b">
-        <div className="container max-w-6xl text-center space-y-6">
-          <div className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-sm font-medium text-primary shadow-sm mb-4">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Let's build together
+      <section className="bg-muted/30 pt-32 pb-24 md:pt-40 md:pb-32 border-b relative overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-0 right-0 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
+        </div>
+        <div className="container max-w-6xl text-center space-y-6 relative z-10">
+          <div className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-[10px] font-black text-primary shadow-sm uppercase tracking-[0.2em] mb-4">
+            Get in touch
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-            Start your next <br /> project with us.
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 leading-[0.9]">
+            Let's build <br /> <span className="text-primary italic">together.</span>
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
             Have a project in mind? Fill out the form below and our engineering team will get back to you within 24 hours.
           </p>
         </div>
       </section>
 
-      <section className="py-24 bg-background">
+      <section className="py-24 md:py-32 bg-background">
         <div className="container max-w-6xl">
-          <div className="grid lg:grid-cols-3 gap-12 lg:gap-24">
+          <div className="grid lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-32">
             {/* Contact Info Sidebar */}
-            <div className="lg:col-span-1 space-y-12">
-              <div>
-                <h3 className="text-2xl font-bold mb-6">Get in touch</h3>
-                <p className="text-muted-foreground leading-relaxed">
+            <div className="space-y-16">
+              <div className="space-y-6">
+                <h3 className="text-3xl font-black tracking-tight">Strategy awaits.</h3>
+                <p className="text-xl text-muted-foreground leading-relaxed font-medium">
                   Whether you need a full MVP build, an enterprise QA strategy, or a critical codebase rescue, we're ready to dive in.
                 </p>
               </div>
 
-              <div className="space-y-8">
-                <div className="flex gap-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <Mail className="h-5 w-5 text-primary" />
+              <div className="space-y-10">
+                <div className="flex gap-6 group">
+                  <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                    <Mail className="h-6 w-6" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground">Email</h4>
-                    <p className="text-muted-foreground mt-1">hello@maprimo.com</p>
-                    <p className="text-xs text-muted-foreground mt-1">We typically reply within a few hours.</p>
+                    <h4 className="text-lg font-black uppercase tracking-widest text-foreground">Email</h4>
+                    <p className="text-xl font-medium text-muted-foreground mt-1">hello@maprimo.com</p>
+                    <p className="text-xs font-bold text-primary mt-2 uppercase tracking-widest opacity-70">Reply time: &lt; 4 hours</p>
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <Clock className="h-5 w-5 text-primary" />
+                <div className="flex gap-6 group">
+                  <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                    <Clock className="h-6 w-6" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground">Office Hours</h4>
-                    <p className="text-muted-foreground mt-1">Mon-Fri, 9am - 6pm EST</p>
-                    <p className="text-xs text-muted-foreground mt-1">Available for urgent audits upon request.</p>
+                    <h4 className="text-lg font-black uppercase tracking-widest text-foreground">Office Hours</h4>
+                    <p className="text-xl font-medium text-muted-foreground mt-1">Mon-Fri, 9am - 6pm EST</p>
+                    <p className="text-xs font-bold text-primary mt-2 uppercase tracking-widest opacity-70">Emergency audits available</p>
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <MapPin className="h-5 w-5 text-primary" />
+                <div className="flex gap-6 group">
+                  <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                    <MapPin className="h-6 w-6" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground">Global Remote</h4>
-                    <p className="text-muted-foreground mt-1">Distributed Team</p>
-                    <p className="text-xs text-muted-foreground mt-1">Serving clients worldwide.</p>
+                    <h4 className="text-lg font-black uppercase tracking-widest text-foreground">Location</h4>
+                    <p className="text-xl font-medium text-muted-foreground mt-1">Global Remote</p>
+                    <p className="text-xs font-bold text-primary mt-2 uppercase tracking-widest opacity-70">Distributed engineering team</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Form Container */}
-            <div className="lg:col-span-2">
-              <div className="bg-card p-8 md:p-12 border rounded-2xl shadow-xl shadow-primary/5">
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/5 rounded-[3rem] -rotate-1 scale-105" />
+              <div className="relative bg-background p-8 md:p-16 border-4 border-muted/20 rounded-[3rem] shadow-2xl">
                 <LeadForm />
               </div>
             </div>
