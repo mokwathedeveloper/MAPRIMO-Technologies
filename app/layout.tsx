@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
@@ -64,9 +62,7 @@ export default function RootLayout({
           </>
         )}
         <AuthProvider>
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          {children}
         </AuthProvider>
         <Toaster />
       </body>
