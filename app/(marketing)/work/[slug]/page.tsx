@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import type { CaseStudy } from "@/lib/types";
-import { ArrowLeft, CheckCircle2, Code2, Rocket, Globe, Github } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Code2, Rocket, Globe, Github, ArrowRight } from "lucide-react";
+import { CaseStudyCard } from "@/components/case-study-card";
 
 export const revalidate = 3600;
 
@@ -25,6 +26,20 @@ async function getCaseStudy(slug: string) {
     return data as CaseStudy;
   } catch (e) {
     console.error("Catch error fetching case study:", e);
+    return null;
+  }
+}
+
+async function getNextCaseStudy(currentId: string) {
+  try {
+    const { data } = await supabase
+      .from("case_studies")
+      .select("*")
+      .neq("id", currentId)
+      .limit(1)
+      .single();
+    return data as CaseStudy | null;
+  } catch (e) {
     return null;
   }
 }
@@ -51,6 +66,8 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
   if (!caseStudy) {
     notFound();
   }
+
+  const nextCaseStudy = await getNextCaseStudy(caseStudy.id);
 
   return (
     <article className="bg-background">
@@ -194,6 +211,33 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
           </aside>
         </div>
       </div>
+
+      {/* Next Up Section */}
+      {nextCaseStudy && (
+        <section className="py-24 border-t bg-muted/10 relative overflow-hidden">
+          <div className="container max-w-6xl relative z-10">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+              <div className="space-y-4">
+                <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Next Project</h2>
+                <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-none">Keep <span className="text-primary italic">Exploring.</span></h3>
+              </div>
+              <Link href="/work">
+                <Button variant="outline" className="rounded-2xl font-black h-14 px-8 border-2 group shadow-xl shadow-primary/5">
+                  View All Portfolio
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </div>
+            
+            <div className="max-w-xl">
+              <CaseStudyCard caseStudy={nextCaseStudy} />
+            </div>
+          </div>
+          <div className="absolute right-0 bottom-0 opacity-[0.03] pointer-events-none p-24">
+            <Rocket size={400} />
+          </div>
+        </section>
+      )}
     </article>
   );
 }
