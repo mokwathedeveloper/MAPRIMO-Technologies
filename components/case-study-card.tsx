@@ -4,8 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import type { CaseStudy } from "@/lib/types";
 
-export function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudy }) {
-  const project = caseStudy.projects;
+export function CaseStudyCard({ caseStudy }: { caseStudy: any }) {
+  // Supabase might return projects as an object or a single-item array depending on the query
+  const project = Array.isArray(caseStudy.projects) 
+    ? caseStudy.projects[0] 
+    : caseStudy.projects;
   
   if (!project) return null;
 
