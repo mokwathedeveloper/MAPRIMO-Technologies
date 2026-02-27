@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createTestimonial } from "@/lib/actions/portfolio";
 import { testimonialSchema, type TestimonialFormData } from "@/lib/validations";
+import { toast } from "sonner";
 
 export default function NewTestimonialPage() {
   const router = useRouter();
@@ -38,10 +39,13 @@ export default function NewTestimonialPage() {
       }
 
       await createTestimonial(data);
+      toast.success("Testimonial added successfully!");
       router.push("/admin/testimonials");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
