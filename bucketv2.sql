@@ -46,12 +46,37 @@ create policy "Admin full access on podcasts" on podcasts for all using (
   exists (select 1 from admins where user_id = auth.uid())
 );
 
--- RE-INFORCE Public Read Access for existing tables (to fix visibility issue)
--- Using 'if not exists' or unique names to avoid conflicts if they already exist
-drop policy if exists "Allow public read-only access" on case_studies;
+-- 3. Create Independent Case Studies table (New Version)
+drop table if exists case_studies cascade;
+
+create table case_studies (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  slug text not null unique,
+  client text not null,
+  summary text not null,
+  problem text not null,
+  solution text not null,
+  cover_url text,
+  results jsonb default '[]',
+  screenshots text[] default '{}',
+  tags text[] default '{}',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- ENABLE RLS
+alter table case_studies enable row level security;
+
+-- POLICIES
 create policy "Allow public read-only access on case_studies" on case_studies for select using (true);
 
-drop policy if exists "Allow public read-only access" on projects;
+-- Admin CRUD Access
+create policy "Admin full access on case_studies" on case_studies for all using (
+  exists (select 1 from admins where user_id = auth.uid())
+);
+
+-- RE-INFORCE Public Read Access for projects
+drop policy if exists "Allow public read-only access on projects" on projects;
 create policy "Allow public read-only access on projects" on projects for select using (true);
 
 -- Storage bucket policies for directors and podcasts folders in 'projects' bucket
