@@ -11,9 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createProject } from "@/lib/actions/portfolio";
-import { projectSchema, type ProjectFormData } from "@/lib/validations";
 import { ImageUpload } from "@/components/admin/image-upload";
-import { createServerClient } from "@supabase/auth-helpers-nextjs";
+import { toast } from "sonner";
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -33,56 +32,22 @@ export default function NewProjectPage() {
     }
 
     const formData = new FormData(e.currentTarget);
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return "";
-          },
-        },
-      }
-    );
     
+    // Add file and process stack
+    formData.append("cover_image", file);
+    const stack = (formData.get("stack") as string).split(",").map(s => s.trim()).filter(Boolean);
+    formData.set("stack", JSON.stringify(stack));
+    formData.set("published", String(formData.get("published") === "on"));
+
     try {
-      // 1. Upload Image
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `projects/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("uploads")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from("uploads")
-        .getPublicUrl(filePath);
-
-      // 2. Prepare Data
-      const data: ProjectFormData = {
-        title: formData.get("title") as string,
-        slug: formData.get("slug") as string,
-        summary: formData.get("summary") as string,
-        stack: (formData.get("stack") as string).split(",").map(s => s.trim()).filter(Boolean),
-        cover_url: publicUrl,
-        repo_url: formData.get("repo_url") as string,
-        live_url: formData.get("live_url") as string,
-        published: formData.get("published") === "on",
-      };
-
-      const result = projectSchema.safeParse(data);
-      if (!result.success) {
-        throw new Error(result.error.errors[0].message);
-      }
-
-      await createProject(data);
+      await createProject(formData);
+      toast.success("Project created successfully!");
       router.push("/admin/projects");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
