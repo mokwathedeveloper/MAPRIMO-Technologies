@@ -4,8 +4,12 @@ import { revalidatePath } from "next/cache";
 import { 
   projectSchema, 
   testimonialSchema, 
+  directorSchema,
+  podcastSchema,
   type ProjectFormData, 
-  type TestimonialFormData 
+  type TestimonialFormData,
+  type DirectorFormData,
+  type PodcastFormData
 } from "@/lib/validations";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
@@ -417,6 +421,145 @@ export async function deleteCaseStudy(id: string): Promise<ActionResult> {
     
     revalidatePath("/admin/case-studies");
     revalidatePath("/work");
+    return { ok: true, data: null };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function createDirector(formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const file = formData.get("image") as File;
+    const rawData = {
+      name: formData.get("name"),
+      role: formData.get("role"),
+      bio: formData.get("bio"),
+      linkedin_url: formData.get("linkedin_url") || "",
+      twitter_url: formData.get("twitter_url") || "",
+    };
+
+    const validated = directorSchema.parse({ ...rawData, image_url: "https://placeholder.com" });
+
+    const { data: director, error: insertError } = await supabase
+      .from("directors")
+      .insert({ ...validated, image_url: "" })
+      .select()
+      .single();
+
+    if (insertError) throw new Error(`DB:${insertError.message}`);
+
+    if (file && file.size > 0) {
+      try {
+        const publicUrl = await uploadFile(supabase, file, `directors/${director.id}`);
+        const { error: updateError } = await supabase
+          .from("directors")
+          .update({ image_url: publicUrl })
+          .eq("id", director.id);
+        if (updateError) throw new Error(`DB_UPDATE:${updateError.message}`);
+      } catch (err) {
+        await supabase.from("directors").delete().eq("id", director.id);
+        throw err;
+      }
+    }
+
+    revalidatePath("/admin/directors");
+    revalidatePath("/");
+    return { ok: true, data: director };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function deleteDirector(id: string): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const { error } = await supabase.from("directors").delete().eq("id", id);
+    if (error) throw new Error(`DB:${error.message}`);
+    
+    revalidatePath("/admin/directors");
+    revalidatePath("/");
+    return { ok: true, data: null };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function createPodcast(formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const coverFile = formData.get("cover") as File;
+    const audioFile = formData.get("audio") as File;
+    const rawData = {
+      title: formData.get("title"),
+      slug: formData.get("slug"),
+      description: formData.get("description"),
+      duration: formData.get("duration"),
+      author: formData.get("author") || "MAPRIMO Team",
+    };
+
+    const validated = podcastSchema.parse({ 
+      ...rawData, 
+      cover_url: "https://placeholder.com",
+      audio_url: "https://placeholder.com" 
+    });
+
+    const { data: episode, error: insertError } = await supabase
+      .from("podcasts")
+      .insert({ ...validated, cover_url: "", audio_url: "" })
+      .select()
+      .single();
+
+    if (insertError) throw new Error(`DB:${insertError.message}`);
+
+    let cover_url = "";
+    let audio_url = "";
+
+    try {
+      if (coverFile && coverFile.size > 0) {
+        cover_url = await uploadFile(supabase, coverFile, `podcasts/${episode.id}/cover`);
+      }
+      if (audioFile && audioFile.size > 0) {
+        audio_url = await uploadFile(supabase, audioFile, `podcasts/${episode.id}/audio`);
+      }
+
+      const { error: updateError } = await supabase
+        .from("podcasts")
+        .update({ cover_url, audio_url })
+        .eq("id", episode.id);
+      
+      if (updateError) throw new Error(`DB_UPDATE:${updateError.message}`);
+    } catch (err) {
+      await supabase.from("podcasts").delete().eq("id", episode.id);
+      throw err;
+    }
+
+    revalidatePath("/admin/podcasts");
+    revalidatePath("/podcast");
+    revalidatePath("/");
+    return { ok: true, data: episode };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function deletePodcast(id: string): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const { error } = await supabase.from("podcasts").delete().eq("id", id);
+    if (error) throw new Error(`DB:${error.message}`);
+    
+    revalidatePath("/admin/podcasts");
+    revalidatePath("/podcast");
+    revalidatePath("/");
     return { ok: true, data: null };
   } catch (error) {
     return handleActionError(error);
