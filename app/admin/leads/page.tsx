@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import type { Lead } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { DeleteLeadButton } from "@/components/admin/delete-lead-button";
 import { Users } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -48,9 +49,12 @@ export default async function LeadsPage() {
             <Card key={lead.id} className="hover:border-primary/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-xl font-bold">{lead.name}</CardTitle>
-                <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                  {lead.created_at ? new Date(lead.created_at).toLocaleDateString() : ""}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                    {lead.created_at ? new Date(lead.created_at).toLocaleDateString() : ""}
+                  </span>
+                  <DeleteLeadButton id={lead.id!} name={lead.name} />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-6 mt-2">

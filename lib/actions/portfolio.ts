@@ -118,3 +118,11 @@ export async function deleteTestimonial(id: string) {
   revalidatePath("/admin/testimonials");
   revalidatePath("/");
 }
+
+export async function deleteLead(id: string) {
+  const supabase = await getAdminSupabase();
+  const { error } = await supabase.from("leads").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  
+  revalidatePath("/admin/leads");
+}
