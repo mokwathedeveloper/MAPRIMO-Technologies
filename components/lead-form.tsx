@@ -14,10 +14,11 @@ export function LeadForm() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
     setLoading(true);
     setMessage(null);
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(form);
     const data: LeadFormData = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
@@ -54,7 +55,7 @@ export function LeadForm() {
       });
 
       setMessage({ type: "success", text: "Thanks! We'll be in touch soon." });
-      e.currentTarget.reset();
+      form.reset();
     } catch (error) {
       setMessage({ type: "error", text: error instanceof Error ? error.message : "Something went wrong" });
     } finally {
