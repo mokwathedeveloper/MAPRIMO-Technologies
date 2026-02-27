@@ -2,7 +2,7 @@ import { LeadForm } from "@/components/lead-form";
 import { Mail, Clock, MapPin, MessageSquare } from "lucide-react";
 
 export const metadata = {
-  title: "Contact Us | MAPRIMO Technologies",
+  title: "Contact Us",
   description: "Get in touch with us to discuss your MVP build, QA automation, or codebase audit.",
 };
 
