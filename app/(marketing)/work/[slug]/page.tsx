@@ -5,17 +5,22 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import type { CaseStudy } from "@/lib/types";
+import { ArrowLeft, CheckCircle2, Code2, Rocket, Globe, Github } from "lucide-react";
 
 export const revalidate = 3600;
 
 async function getCaseStudy(slug: string) {
-  const { data } = await supabase
-    .from("case_studies")
-    .select("*, projects(*)")
-    .eq("projects.slug", slug)
-    .single();
-  
-  return data as CaseStudy | null;
+  try {
+    const { data } = await supabase
+      .from("case_studies")
+      .select("*, projects(*)")
+      .eq("projects.slug", slug)
+      .single();
+    
+    return data as CaseStudy | null;
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -24,7 +29,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!caseStudy || !caseStudy.projects) return {};
 
   return {
-    title: `${caseStudy.projects.title} | Case Study`,
+    title: `${caseStudy.projects.title} Case Study | MAPRIMO`,
     description: caseStudy.projects.summary,
     openGraph: {
       title: caseStudy.projects.title,
@@ -44,77 +49,151 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
   const { projects: project } = caseStudy;
 
   return (
-    <div className="container py-24">
-      <Link href="/work">
-        <Button variant="ghost" className="mb-8">
-          ← Back to Work
-        </Button>
-      </Link>
-
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-12">
-          <div className="text-sm font-medium text-primary mb-2">
-            Case Study
+    <article className="bg-background">
+      {/* Hero Header */}
+      <header className="relative pt-24 pb-12 md:pt-32 md:pb-20 bg-muted/30 border-b overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-0 right-0 h-[300px] w-[300px] rounded-full bg-primary/5 blur-[100px]" />
+        </div>
+        
+        <div className="container max-w-6xl relative z-10">
+          <Link 
+            href="/work" 
+            className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8 group"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Back to Portfolio
+          </Link>
+          
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-sm font-medium text-primary shadow-sm">
+                Case Study
+              </div>
+              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                {project.title}
+              </h1>
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                {project.summary}
+              </p>
+              
+              <div className="flex flex-wrap gap-4 pt-4">
+                {project.live_url && (
+                  <Link href={project.live_url} target="_blank">
+                    <Button className="gap-2">
+                      <Globe className="h-4 w-4" />
+                      View Live Site
+                    </Button>
+                  </Link>
+                )}
+                {project.repo_url && (
+                  <Link href={project.repo_url} target="_blank">
+                    <Button variant="outline" className="gap-2">
+                      <Github className="h-4 w-4" />
+                      View Repository
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+            
+            <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl border bg-muted">
+              <Image
+                src={project.cover_url}
+                alt={project.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">{project.title}</h1>
-          <p className="text-xl text-muted-foreground">{project.summary}</p>
         </div>
+      </header>
 
-        <div className="relative h-[400px] w-full mb-16 rounded-xl overflow-hidden">
-          <Image
-            src={project.cover_url}
-            alt={project.title}
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-12">
-          <div className="md:col-span-2 space-y-12">
-            <section>
-              <h2 className="text-2xl font-bold mb-4">The Challenge</h2>
-              <p className="text-lg leading-relaxed">{caseStudy.problem}</p>
+      <div className="container max-w-6xl py-16 md:py-24">
+        <div className="grid lg:grid-cols-[1fr_350px] gap-16 md:gap-24">
+          {/* Main Content */}
+          <div className="space-y-16">
+            <section className="space-y-6">
+              <h2 className="text-3xl font-bold tracking-tight">The Challenge</h2>
+              <div className="text-lg leading-relaxed text-muted-foreground space-y-4">
+                {caseStudy.problem.split('\n').map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
             </section>
 
-            <section>
-              <h2 className="text-2xl font-bold mb-4">Our Solution</h2>
-              <p className="text-lg leading-relaxed">{caseStudy.solution}</p>
+            <section className="space-y-6">
+              <h2 className="text-3xl font-bold tracking-tight">Our Solution</h2>
+              <div className="text-lg leading-relaxed text-muted-foreground space-y-4">
+                {caseStudy.solution.split('\n').map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
             </section>
+
+            {caseStudy.screenshots && caseStudy.screenshots.length > 0 && (
+              <section className="space-y-8">
+                <h2 className="text-3xl font-bold tracking-tight">Project Visuals</h2>
+                <div className="grid gap-8">
+                  {caseStudy.screenshots.map((url, i) => (
+                    <div key={i} className="relative aspect-video rounded-xl overflow-hidden border shadow-lg">
+                      <Image src={url} alt={`Screenshot ${i + 1}`} fill className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
 
-          <div className="space-y-8">
-            <div className="bg-muted p-6 rounded-lg">
-              <h3 className="font-bold mb-4">Key Results</h3>
-              <ul className="space-y-3">
+          {/* Sidebar */}
+          <aside className="space-y-8">
+            <div className="bg-muted/40 p-8 rounded-2xl border space-y-6">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <Rocket className="h-5 w-5 text-primary" />
+                Key Results
+              </h3>
+              <ul className="space-y-4">
                 {caseStudy.results.map((result: any, index: number) => (
-                  <li key={index} className="flex items-start gap-2 text-sm">
-                    <span className="text-primary font-bold">✓</span>
-                    {result}
+                  <li key={index} className="flex items-start gap-3 text-sm font-medium">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span>{result}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="bg-primary/5 p-6 rounded-lg border border-primary/10">
-              <h3 className="font-bold mb-4">Technologies</h3>
+            <div className="bg-primary/5 p-8 rounded-2xl border border-primary/10 space-y-6">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <Code2 className="h-5 w-5 text-primary" />
+                Technologies
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {project.stack.map((tag) => (
-                  <span key={tag} className="text-xs bg-background border px-2 py-1 rounded">
+                  <span 
+                    key={tag} 
+                    className="text-xs font-bold bg-background border px-3 py-1.5 rounded-lg shadow-sm"
+                  >
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="mt-24 pt-12 border-t text-center">
-          <h2 className="text-2xl font-bold mb-4">Ready for results like these?</h2>
-          <Link href="/contact">
-            <Button size="lg">Let&apos;s Talk Project</Button>
-          </Link>
+            <div className="p-8 rounded-2xl border bg-background shadow-sm space-y-6 text-center">
+              <h3 className="text-xl font-bold leading-tight">Ready for similar results?</h3>
+              <p className="text-sm text-muted-foreground">
+                Let's discuss how we can apply our engineering expertise to your project.
+              </p>
+              <Link href="/contact" className="block">
+                <Button className="w-full font-bold h-12">
+                  Start Your Project
+                </Button>
+              </Link>
+            </div>
+          </aside>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
