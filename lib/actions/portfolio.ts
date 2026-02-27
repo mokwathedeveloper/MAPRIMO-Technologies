@@ -167,6 +167,24 @@ async function uploadFile(supabase: any, file: File, folder: string) {
   return publicUrl;
 }
 
+async function deleteFileByUrl(supabase: any, url: string | null | undefined) {
+  if (!url || typeof url !== 'string' || !url.includes('/projects/')) return;
+  try {
+    const parts = url.split('/projects/');
+    if (parts.length === 2) {
+      const filePath = parts[1];
+      const { error } = await supabase.storage.from("projects").remove([filePath]);
+      if (error) {
+        console.error(`Error deleting storage file ${filePath}:`, error);
+      } else {
+        console.log(`Successfully deleted storage file: ${filePath}`);
+      }
+    }
+  } catch (e) {
+    console.error("Failed to delete storage file:", e);
+  }
+}
+
 export async function createProjectFromFormData(formData: FormData): Promise<ActionResult> {
   try {
     const supabase = await getAdminSupabase();
@@ -257,8 +275,14 @@ export async function deleteProject(id: string): Promise<ActionResult> {
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
+    const { data: project } = await supabase.from("projects").select("cover_url").eq("id", id).single();
+
     const { error } = await supabase.from("projects").delete().eq("id", id);
     if (error) throw new Error(`DB:${error.message}`);
+    
+    if (project?.cover_url) {
+      await deleteFileByUrl(supabase, project.cover_url);
+    }
     
     revalidatePath("/admin/projects");
     revalidatePath("/work");
@@ -375,8 +399,14 @@ export async function deletePost(id: string): Promise<ActionResult> {
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
+    const { data: post } = await supabase.from("posts").select("image_url").eq("id", id).single();
+
     const { error } = await supabase.from("posts").delete().eq("id", id);
     if (error) throw new Error(`DB:${error.message}`);
+    
+    if (post?.image_url) {
+      await deleteFileByUrl(supabase, post.image_url);
+    }
     
     revalidatePath("/admin/blog");
     revalidatePath("/blog");
@@ -482,8 +512,21 @@ export async function deleteCaseStudy(id: string): Promise<ActionResult> {
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
+    const { data: caseStudy } = await supabase.from("case_studies").select("cover_url, screenshots").eq("id", id).single();
+
     const { error } = await supabase.from("case_studies").delete().eq("id", id);
     if (error) throw new Error(`DB:${error.message}`);
+    
+    if (caseStudy) {
+      if (caseStudy.cover_url) {
+        await deleteFileByUrl(supabase, caseStudy.cover_url);
+      }
+      if (caseStudy.screenshots && Array.isArray(caseStudy.screenshots)) {
+        for (const url of caseStudy.screenshots) {
+          await deleteFileByUrl(supabase, url);
+        }
+      }
+    }
     
     revalidatePath("/admin/case-studies");
     revalidatePath("/work");
@@ -603,8 +646,14 @@ export async function deleteDirector(id: string): Promise<ActionResult> {
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
+    const { data: director } = await supabase.from("directors").select("image_url").eq("id", id).single();
+
     const { error } = await supabase.from("directors").delete().eq("id", id);
     if (error) throw new Error(`DB:${error.message}`);
+    
+    if (director?.image_url) {
+      await deleteFileByUrl(supabase, director.image_url);
+    }
     
     revalidatePath("/admin/directors");
     revalidatePath("/");
@@ -716,8 +765,15 @@ export async function deletePodcast(id: string): Promise<ActionResult> {
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
+    const { data: podcast } = await supabase.from("podcasts").select("cover_url, audio_url").eq("id", id).single();
+
     const { error } = await supabase.from("podcasts").delete().eq("id", id);
     if (error) throw new Error(`DB:${error.message}`);
+    
+    if (podcast) {
+      if (podcast.cover_url) await deleteFileByUrl(supabase, podcast.cover_url);
+      if (podcast.audio_url) await deleteFileByUrl(supabase, podcast.audio_url);
+    }
     
     revalidatePath("/admin/podcasts");
     revalidatePath("/podcast");
