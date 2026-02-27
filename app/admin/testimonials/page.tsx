@@ -34,11 +34,12 @@ export default async function TestimonialsAdminPage() {
           <h1 className="text-3xl font-bold tracking-tight">Testimonials</h1>
           <p className="text-muted-foreground">Manage client feedback and social proof.</p>
         </div>
-        {/* We can add a "New" button if we implement the form, but let's start with the list */}
-        <Button className="flex items-center gap-2" disabled>
-          <Plus className="h-4 w-4" />
-          New Testimonial
-        </Button>
+        <Link href="/admin/testimonials/new">
+          <Button className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            New Testimonial
+          </Button>
+        </Link>
       </div>
 
       <div className="grid gap-6">
