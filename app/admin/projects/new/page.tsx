@@ -12,31 +12,67 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createProject } from "@/lib/actions/portfolio";
 import { projectSchema, type ProjectFormData } from "@/lib/validations";
+import { ImageUpload } from "@/components/admin/image-upload";
+import { createServerClient } from "@supabase/auth-helpers-nextjs";
 
 export default function NewProjectPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const formData = new FormData(e.currentTarget);
-    
-    const data: ProjectFormData = {
-      title: formData.get("title") as string,
-      slug: formData.get("slug") as string,
-      summary: formData.get("summary") as string,
-      stack: (formData.get("stack") as string).split(",").map(s => s.trim()).filter(Boolean),
-      cover_url: formData.get("cover_url") as string,
-      repo_url: formData.get("repo_url") as string,
-      live_url: formData.get("live_url") as string,
-      published: formData.get("published") === "on",
-    };
+    if (!file) {
+      setError("Please upload a cover image.");
+      setLoading(false);
+      return;
+    }
 
+    const formData = new FormData(e.currentTarget);
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return "";
+          },
+        },
+      }
+    );
+    
     try {
+      // 1. Upload Image
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `projects/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("uploads")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("uploads")
+        .getPublicUrl(filePath);
+
+      // 2. Prepare Data
+      const data: ProjectFormData = {
+        title: formData.get("title") as string,
+        slug: formData.get("slug") as string,
+        summary: formData.get("summary") as string,
+        stack: (formData.get("stack") as string).split(",").map(s => s.trim()).filter(Boolean),
+        cover_url: publicUrl,
+        repo_url: formData.get("repo_url") as string,
+        live_url: formData.get("live_url") as string,
+        published: formData.get("published") === "on",
+      };
+
       const result = projectSchema.safeParse(data);
       if (!result.success) {
         throw new Error(result.error.errors[0].message);
@@ -51,6 +87,10 @@ export default function NewProjectPage() {
       setLoading(false);
     }
   }
+
+  // ... in render, replace Input for cover_url
+  // <ImageUpload label="Cover Image" onFileSelect={setFile} onUpload={() => {}} />
+
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -106,10 +146,11 @@ export default function NewProjectPage() {
               <CardTitle>Media & Links</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="cover_url">Cover Image URL</Label>
-                <Input id="cover_url" name="cover_url" placeholder="https://..." required />
-              </div>
+              <ImageUpload 
+                label="Cover Image" 
+                onFileSelect={setFile} 
+                onUpload={() => {}} 
+              />
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
