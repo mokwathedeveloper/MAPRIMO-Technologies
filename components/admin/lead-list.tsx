@@ -1,8 +1,17 @@
 "use client";
 
 import { useOptimistic, useTransition } from "react";
-import { Users, Mail, Calendar, Briefcase, DollarSign } from "lucide-react";
+import { Users, Mail, Calendar, Briefcase, DollarSign, Eye } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger,
+  DialogDescription
+} from "@/components/ui/dialog";
 import { DeleteLeadButton } from "@/components/admin/delete-lead-button";
 import { EmptyState } from "@/components/admin/empty-state";
 import type { Lead } from "@/lib/types";
@@ -54,6 +63,45 @@ export function LeadList({ initialLeads }: { initialLeads: Lead[] }) {
               <span className="text-[10px] uppercase font-bold text-muted-foreground bg-muted px-2 py-1 rounded">
                 {lead.created_at ? new Date(lead.created_at).toLocaleDateString() : ""}
               </span>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon" title="View Details">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-black">{lead.name}</DialogTitle>
+                    <DialogDescription>Full inquiry details from {lead.email}</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-6 mt-4">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Company</p>
+                        <p className="font-medium text-lg">{lead.company || "Individual"}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Budget Range</p>
+                        <p className="font-bold text-lg text-green-600">{lead.budget || "Not specified"}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Requested Date</p>
+                        <p className="font-medium">{lead.requested_date ? new Date(lead.requested_date).toLocaleString() : "None"}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Submitted On</p>
+                        <p className="font-medium">{lead.created_at ? new Date(lead.created_at).toLocaleString() : "Unknown"}</p>
+                      </div>
+                    </div>
+                    <div className="pt-6 border-t">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Message Content</p>
+                      <div className="bg-muted/30 p-6 rounded-2xl text-lg leading-relaxed whitespace-pre-wrap italic border-l-4 border-primary">
+                        "{lead.message}"
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               <DeleteLeadButton id={lead.id!} name={lead.name} onDelete={handleDelete} />
             </div>
           </CardHeader>
