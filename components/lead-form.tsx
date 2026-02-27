@@ -128,9 +128,10 @@ export function LeadForm() {
                 required 
                 className="h-14 pl-12 rounded-2xl border-2 border-muted bg-muted/20 focus-visible:ring-primary focus-visible:border-primary font-medium" 
                 disabled={isLoading}
+                data-testid="lead-name"
               />
             </div>
-            {fieldErrors.name && <p className="text-[10px] font-bold text-red-500 ml-1">{fieldErrors.name[0]}</p>}
+            {fieldErrors.name && <p className="text-[10px] font-bold text-red-500 ml-1" data-testid="error-name">{fieldErrors.name[0]}</p>}
           </div>
           
           <div className="space-y-2">
@@ -145,9 +146,10 @@ export function LeadForm() {
                 required 
                 className="h-14 pl-12 rounded-2xl border-2 border-muted bg-muted/20 focus-visible:ring-primary focus-visible:border-primary font-medium" 
                 disabled={isLoading}
+                data-testid="lead-email"
               />
             </div>
-            {fieldErrors.email && <p className="text-[10px] font-bold text-red-500 ml-1">{fieldErrors.email[0]}</p>}
+            {fieldErrors.email && <p className="text-[10px] font-bold text-red-500 ml-1" data-testid="error-email">{fieldErrors.email[0]}</p>}
           </div>
         </div>
 
@@ -162,6 +164,7 @@ export function LeadForm() {
                 placeholder="TechStream Inc." 
                 className="h-14 pl-12 rounded-2xl border-2 border-muted bg-muted/20 focus-visible:ring-primary focus-visible:border-primary font-medium" 
                 disabled={isLoading}
+                data-testid="lead-company"
               />
             </div>
           </div>
@@ -176,6 +179,7 @@ export function LeadForm() {
                 type="datetime-local" 
                 className="h-14 pl-12 rounded-2xl border-2 border-muted bg-muted/20 focus-visible:ring-primary focus-visible:border-primary font-medium" 
                 disabled={isLoading}
+                data-testid="lead-date"
               />
             </div>
           </div>
@@ -193,16 +197,17 @@ export function LeadForm() {
               rows={5} 
               className="pl-12 pt-4 rounded-2xl border-2 border-muted bg-muted/20 focus-visible:ring-primary focus-visible:border-primary font-medium resize-none"
               disabled={isLoading}
+              data-testid="lead-message"
             />
           </div>
-          {fieldErrors.message && <p className="text-[10px] font-bold text-red-500 ml-1">{fieldErrors.message[0]}</p>}
+          {fieldErrors.message && <p className="text-[10px] font-bold text-red-500 ml-1" data-testid="error-message">{fieldErrors.message[0]}</p>}
         </div>
       </div>
       
       <input type="text" name="honeypot" className="hidden" tabIndex={-1} autoComplete="off" />
       
       <div className="space-y-4">
-        <Button type="submit" disabled={isLoading} className="w-full h-16 rounded-2xl font-black text-lg gap-3 shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01]">
+        <Button type="submit" disabled={isLoading} className="w-full h-16 rounded-2xl font-black text-lg gap-3 shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01]" data-testid="lead-submit">
           {isLoading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
