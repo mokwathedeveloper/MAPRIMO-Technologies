@@ -11,11 +11,10 @@ export const revalidate = 3600;
 
 async function getCaseStudy(slug: string) {
   try {
-    // We need !inner to filter the case_study by the joined project's slug
     const { data, error } = await supabase
       .from("case_studies")
-      .select("*, projects!inner(*)")
-      .eq("projects.slug", slug)
+      .select("*")
+      .eq("slug", slug)
       .single();
     
     if (error) {
@@ -23,12 +22,7 @@ async function getCaseStudy(slug: string) {
       return null;
     }
 
-    const caseStudy = data as any;
-    if (caseStudy && Array.isArray(caseStudy.projects)) {
-      caseStudy.projects = caseStudy.projects[0];
-    }
-    
-    return caseStudy;
+    return data as CaseStudy;
   } catch (e) {
     console.error("Catch error fetching case study:", e);
     return null;
@@ -38,15 +32,15 @@ async function getCaseStudy(slug: string) {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const caseStudy = await getCaseStudy(params.slug);
   
-  if (!caseStudy || !caseStudy.projects) return {};
+  if (!caseStudy) return {};
 
   return {
-    title: `${caseStudy.projects.title} Case Study | MAPRIMO`,
-    description: caseStudy.projects.summary,
+    title: `${caseStudy.title} Case Study | MAPRIMO`,
+    description: caseStudy.summary,
     openGraph: {
-      title: caseStudy.projects.title,
-      description: caseStudy.projects.summary,
-      images: [{ url: caseStudy.projects.cover_url }],
+      title: caseStudy.title,
+      description: caseStudy.summary,
+      images: caseStudy.cover_url ? [{ url: caseStudy.cover_url }] : [],
     },
   };
 }
@@ -54,11 +48,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function CaseStudyPage({ params }: { params: { slug: string } }) {
   const caseStudy = await getCaseStudy(params.slug);
 
-  if (!caseStudy || !caseStudy.projects) {
+  if (!caseStudy) {
     notFound();
   }
-
-  const { projects: project } = caseStudy;
 
   return (
     <article className="bg-background">
@@ -83,33 +75,28 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
                 Case Study
               </div>
               <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-                {project.title}
+                {caseStudy.title}
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                {project.summary}
+                {caseStudy.summary}
               </p>
               
-              <div className="flex flex-wrap gap-4 pt-4">
-                {project.live_url && (
-                  <Link href={project.live_url} target="_blank">
-                    <Button className="gap-2">
-                      <Globe className="h-4 w-4" />
-                      View Live Site
-                    </Button>
-                  </Link>
-                )}
+              <div className="flex flex-wrap gap-4 pt-4 text-sm font-bold uppercase tracking-widest text-primary">
+                Client: {caseStudy.client}
               </div>
             </div>
             
             <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl border bg-muted">
-              <Image
-                src={project.cover_url}
-                alt={project.title}
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                priority
-              />
+              {caseStudy.cover_url && (
+                <Image
+                  src={caseStudy.cover_url}
+                  alt={caseStudy.title}
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  priority
+                />
+              )}
             </div>
           </div>
         </div>
@@ -174,22 +161,24 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
               </ul>
             </div>
 
-            <div className="bg-primary/5 p-8 rounded-2xl border border-primary/10 space-y-6">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <Code2 className="h-5 w-5 text-primary" />
-                Technologies
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {project.stack.map((tag: string) => (
-                  <span 
-                    key={tag} 
-                    className="text-xs font-bold bg-background border px-3 py-1.5 rounded-lg shadow-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
+            {caseStudy.tags && caseStudy.tags.length > 0 && (
+              <div className="bg-primary/5 p-8 rounded-2xl border border-primary/10 space-y-6">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  <Code2 className="h-5 w-5 text-primary" />
+                  Technologies
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {caseStudy.tags.map((tag: string) => (
+                    <span 
+                      key={tag} 
+                      className="text-xs font-bold bg-background border px-3 py-1.5 rounded-lg shadow-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="p-8 rounded-2xl border bg-background shadow-sm space-y-6 text-center">
               <h3 className="text-xl font-bold leading-tight">Ready for similar results?</h3>

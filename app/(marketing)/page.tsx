@@ -26,7 +26,7 @@ async function getCaseStudies() {
   try {
     const { data, error } = await supabase
       .from("case_studies")
-      .select("*, projects(title, slug, cover_url, summary)")
+      .select("*")
       .order("created_at", { ascending: false })
       .limit(3);
     
@@ -35,8 +35,7 @@ async function getCaseStudies() {
       return [];
     }
     
-    console.log(`Home: Fetched ${data?.length || 0} case studies`);
-    return (data || []) as any[];
+    return (data || []) as CaseStudy[];
   } catch (e) {
     console.error("Catch error fetching case studies on home:", e);
     return [];

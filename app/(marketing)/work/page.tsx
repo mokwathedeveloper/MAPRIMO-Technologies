@@ -34,10 +34,9 @@ async function getProjects() {
 
 async function getCaseStudies() {
   try {
-    console.log("Fetching case studies...");
     const { data, error } = await supabase
       .from("case_studies")
-      .select("*, projects(title, slug, cover_url, summary)")
+      .select("*")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -45,8 +44,7 @@ async function getCaseStudies() {
       throw error;
     }
     
-    console.log(`Work: Fetched ${data?.length || 0} case studies`);
-    return (data || []) as any[];
+    return (data || []) as CaseStudy[];
   } catch (e) {
     console.error("Error fetching case studies:", e);
     return [];
