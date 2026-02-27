@@ -42,7 +42,7 @@ export function Header() {
               key={link.href}
               href={link.href} 
               className={cn(
-                "text-sm font-semibold transition-colors hover:text-primary",
+                "text-sm font-semibold transition-colors hover:text-primary/90",
                 pathname.startsWith(link.href) ? "text-primary" : "text-muted-foreground"
               )}
             >
