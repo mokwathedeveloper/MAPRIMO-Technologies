@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { Plus, MessageSquare, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { DeleteTestimonialButton } from "@/components/admin/delete-testimonial-button";
 import type { Testimonial } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -51,9 +52,7 @@ export default async function TestimonialsAdminPage() {
                   <CardTitle className="text-lg font-bold">{t.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{t.role} at {t.company}</p>
                 </div>
-                <Button variant="ghost" size="icon" disabled>
-                  <Pencil className="h-4 w-4" />
-                </Button>
+                <DeleteTestimonialButton id={t.id} name={t.name} />
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-relaxed italic bg-muted/30 p-4 rounded-md">

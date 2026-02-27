@@ -109,3 +109,12 @@ export async function createTestimonial(data: TestimonialFormData) {
   revalidatePath("/");
   return testimonial;
 }
+
+export async function deleteTestimonial(id: string) {
+  const supabase = await getAdminSupabase();
+  const { error } = await supabase.from("testimonials").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  
+  revalidatePath("/admin/testimonials");
+  revalidatePath("/");
+}
