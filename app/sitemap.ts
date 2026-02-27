@@ -6,6 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let caseStudyUrls: any[] = [];
   let blogPostUrls: any[] = [];
+  let podcastUrls: any[] = [];
 
   try {
     // Fetch all case study slugs for dynamic routes
@@ -17,6 +18,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .from("posts")
       .select("slug, published_at, created_at");
 
+    const { data: podcasts } = await supabase
+      .from("podcasts")
+      .select("slug, created_at");
+
     caseStudyUrls = (caseStudies || []).map((cs) => ({
       url: `${baseUrl}/work/${cs.slug}`,
       lastModified: new Date(cs.created_at),
@@ -25,6 +30,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blogPostUrls = (posts || []).map((post) => ({
       url: `${baseUrl}/blog/${post.slug}`,
       lastModified: new Date(post.published_at || post.created_at),
+    }));
+
+    podcastUrls = (podcasts || []).map((p) => ({
+      url: `${baseUrl}/podcast/${p.slug}`,
+      lastModified: new Date(p.created_at),
     }));
   } catch (err) {
     console.warn("Failed to fetch dynamic routes for sitemap. Using static routes only.");
@@ -56,6 +66,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/podcast`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -69,5 +85,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...caseStudyUrls,
     ...blogPostUrls,
+    ...podcastUrls,
   ];
 }

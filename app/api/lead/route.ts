@@ -2,11 +2,21 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { leadSchema } from "@/lib/validations";
 import { appendToSheet, createCalendarEvent } from "@/lib/google";
+import { rateLimit } from "@/lib/rate-limit";
 import { Resend } from "resend";
 
 export async function POST(req: Request) {
   try {
-    // Note: Production-grade rate limiting should be handled via Upstash or Vercel KV.
+    const ip = req.headers.get("x-forwarded-for") || "anonymous";
+    const { success } = rateLimit(ip, 5, 60000 * 15); // 5 leads per IP per 15 mins
+
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const json = await req.json();
     
     // 1. Honeypot check (Bot protection)

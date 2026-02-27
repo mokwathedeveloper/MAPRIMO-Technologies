@@ -48,9 +48,52 @@ export default function RootLayout({
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "MAPRIMO Technologies",
+    "image": "https://maprimo.com/og-image.png",
+    "@id": "https://maprimo.com",
+    "url": "https://maprimo.com",
+    "telephone": "",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "",
+      "addressLocality": "Remote",
+      "addressRegion": "EST",
+      "postalCode": "",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 0,
+      "longitude": 0
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "sameAs": [
+      "https://twitter.com/maprimo",
+      "https://linkedin.com/company/maprimo"
+    ]
+  };
+
   return (
     <html lang="en" className={inter.variable}>
       <body className="antialiased font-sans">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {gaId && (
           <>
             <Script
