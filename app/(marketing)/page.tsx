@@ -56,7 +56,7 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-background pt-24 pb-16 md:pt-32 md:pb-24 lg:pt-40 lg:pb-32">
+      <section className="relative overflow-hidden bg-background pt-24 pb-16 md:pt-32 md:pb-24 lg:pt-40 lg:pb-32 animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-[120px]" />
           <div className="absolute bottom-[-10%] right-[-10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-[120px]" />
@@ -65,17 +65,17 @@ export default async function HomePage() {
         <div className="container relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             <div className="flex-1 text-center lg:text-left space-y-8 max-w-2xl">
-              <div className="inline-flex items-center rounded-full border bg-muted/50 px-3 py-1 text-sm font-medium text-primary">
+              <div className="inline-flex items-center rounded-full border bg-muted/50 px-3 py-1 text-sm font-medium text-primary animate-in fade-in zoom-in duration-1000 delay-200">
                 <span className="flex h-2 w-2 rounded-full bg-primary mr-2" />
                 Now shipping MVPs in 4-8 weeks
               </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 animate-in fade-in slide-in-from-top-4 duration-1000 delay-300">
                 Full-Stack + QA that ships fast and <span className="text-primary">breaks less.</span>
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
+              <p className="text-xl text-muted-foreground leading-relaxed animate-in fade-in duration-1000 delay-500">
                 We build MVPs, automate QA, and rescue troubled projects for SMEs and funded startups. Get your product to market with zero technical debt.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
                 <Link href="/contact">
                   <Button size="lg" className="h-12 px-8 text-base">
                     Book a Strategy Call
@@ -88,7 +88,7 @@ export default async function HomePage() {
                   </Button>
                 </Link>
               </div>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 text-sm text-muted-foreground font-medium pt-4">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 text-sm text-muted-foreground font-medium pt-4 animate-in fade-in duration-1000 delay-1000">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
                   Fixed-cost delivery
@@ -104,7 +104,7 @@ export default async function HomePage() {
               </div>
             </div>
             
-            <div className="flex-1 relative w-full max-w-[600px] aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden border bg-muted shadow-2xl">
+            <div className="flex-1 relative w-full max-w-[600px] aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden border bg-muted shadow-2xl animate-in fade-in slide-in-from-right-8 duration-1000 delay-500">
               <Image
                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"
                 alt="Digital product development dashboard"
@@ -119,7 +119,7 @@ export default async function HomePage() {
       </section>
 
       {/* Proof Bar */}
-      <section className="border-y bg-muted/30 py-12">
+      <section className="border-y bg-muted/30 py-12 animate-in fade-in duration-1000 delay-700">
         <div className="container">
           <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground mb-8">Helping innovative companies grow</p>
           <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500">
@@ -133,7 +133,7 @@ export default async function HomePage() {
 
       {/* Services Section */}
       <section className="py-24 bg-background overflow-hidden relative">
-        <div className="container">
+        <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Capabilities</h2>
             <h3 className="text-3xl md:text-5xl font-bold">Solutions for every stage of your product lifecycle.</h3>
@@ -160,7 +160,7 @@ export default async function HomePage() {
                 color: "bg-purple-500/10 text-purple-600"
               }
             ].map((service, i) => (
-              <Card key={i} className="border-none bg-muted/40 hover:bg-muted/60 transition-colors">
+              <Card key={i} className="border-none bg-muted/40 hover:bg-muted/60 transition-all hover:-translate-y-1 duration-300">
                 <CardHeader>
                   <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}>
                     <service.icon className="h-6 w-6" />
@@ -179,7 +179,7 @@ export default async function HomePage() {
       {/* Case Studies Section */}
       {caseStudies.length > 0 && (
         <section className="py-24 bg-muted/30">
-          <div className="container">
+          <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
               <div className="max-w-2xl space-y-4">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Recent Work</h2>
@@ -201,7 +201,7 @@ export default async function HomePage() {
 
       {/* Process Section */}
       <section className="py-24 bg-background">
-        <div className="container">
+        <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Our Process</h2>
             <h3 className="text-3xl md:text-5xl font-bold">A proven framework for quality and speed.</h3>
@@ -240,7 +240,7 @@ export default async function HomePage() {
                 desc: "Post-launch maintenance and optimization to help your product grow with your user base." 
               },
             ].map((item, i) => (
-              <div key={i} className="flex gap-6 md:gap-10 relative group">
+              <div key={i} className="flex gap-6 md:gap-10 relative group animate-in fade-in slide-in-from-left-4 duration-700" style={{ transitionDelay: `${i * 150}ms` }}>
                 {i < 4 && <div className="absolute left-6 md:left-8 top-14 bottom-[-48px] w-px bg-border group-hover:bg-primary/30 transition-colors" />}
                 <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-primary/20 bg-background flex items-center justify-center z-10 group-hover:border-primary transition-colors">
                   <span className="text-sm font-bold text-primary">{item.step}</span>
@@ -260,7 +260,7 @@ export default async function HomePage() {
 
       {/* Testimonials Section */}
       <section className="py-24 bg-muted/30">
-        <div className="container">
+        <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Feedback</h2>
             <h3 className="text-3xl md:text-5xl font-bold">What our partners say about us.</h3>
@@ -269,7 +269,7 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {testimonials.length > 0 ? (
               testimonials.map((t) => (
-                <Card key={t.id} className="border-none shadow-sm h-full flex flex-col">
+                <Card key={t.id} className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300">
                   <CardHeader className="pb-2">
                     <div className="flex gap-1 mb-4">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -297,7 +297,7 @@ export default async function HomePage() {
               ))
             ) : (
               <>
-                <Card className="border-none shadow-sm h-full flex flex-col">
+                <Card className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300">
                   <CardHeader className="pb-2">
                     <div className="flex gap-1 mb-4">
                       {[1, 2, 3, 4, 5].map((s) => (
@@ -320,7 +320,7 @@ export default async function HomePage() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="border-none shadow-sm h-full flex flex-col">
+                <Card className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300">
                   <CardHeader className="pb-2">
                     <div className="flex gap-1 mb-4">
                       {[1, 2, 3, 4, 5].map((s) => (
@@ -351,7 +351,7 @@ export default async function HomePage() {
 
       {/* FAQ Section */}
       <section className="py-24 bg-background">
-        <div className="container">
+        <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-primary">FAQ</h2>
             <h3 className="text-3xl md:text-5xl font-bold">Frequently asked questions.</h3>
@@ -378,7 +378,7 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="container py-24 mb-16">
+      <section className="container py-24 mb-16 animate-in fade-in zoom-in duration-1000 delay-300">
         <div className="relative overflow-hidden rounded-3xl bg-primary px-6 py-20 text-center text-primary-foreground md:px-12 md:py-28 shadow-2xl">
           <div className="absolute inset-0 z-0">
             <div className="absolute top-0 right-0 h-[300px] w-[300px] rounded-full bg-white/10 blur-[80px]" />
