@@ -340,78 +340,81 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {testimonials.length > 0 ? (
               testimonials.map((t) => (
-                <Card key={t.id} className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden">
-                  <CardHeader className="pb-2">
-                    <div className="flex gap-1 mb-4">
+                <Card key={t.id} className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden rounded-[2.5rem] bg-muted/20">
+                  <CardHeader className="pb-4 space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center font-black text-primary text-xl border-2 border-primary/10">
+                        {t.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-black text-xl leading-none tracking-tight break-words">{t.name}</p>
+                        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mt-2">{t.role}, {t.company}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <svg key={star} className="h-4 w-4 fill-primary text-primary" viewBox="0 0 20 20">
+                        <svg key={star} className="h-3 w-3 fill-primary text-primary" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
                     </div>
-                    <CardDescription className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic break-words">
-                      "{t.quote}"
-                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-4 mt-auto">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
-                        {t.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-bold text-base leading-none">{t.name}</p>
-                        <p className="text-sm text-muted-foreground mt-1">{t.role}, {t.company}</p>
-                      </div>
-                    </div>
+                  <CardContent className="pt-0">
+                    <div className="h-px w-full bg-foreground/5 mb-6" />
+                    <p className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic break-words">
+                      "{t.quote}"
+                    </p>
                   </CardContent>
                 </Card>
               ))
             ) : (
               <>
-                <Card className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300">
-                  <CardHeader className="pb-2">
-                    <div className="flex gap-1 mb-4">
+                <Card className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300 rounded-[2.5rem] bg-muted/20">
+                  <CardHeader className="pb-4 space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center font-black text-primary text-xl border-2 border-primary/10">AR</div>
+                      <div>
+                        <p className="font-black text-xl leading-none tracking-tight">Alex Rivers</p>
+                        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mt-2">CTO at TechStream</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <svg key={s} className="h-4 w-4 fill-primary text-primary" viewBox="0 0 20 20">
+                        <svg key={s} className="h-3 w-3 fill-primary text-primary" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
                     </div>
-                    <CardDescription className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
-                      "MAPRIMO transformed our development process. Their QA-first approach saved us weeks of rework and delivered a superior product."
-                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-4 mt-auto">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center font-bold text-blue-600 text-sm">AR</div>
-                      <div>
-                        <p className="font-bold text-base leading-none">Alex Rivers</p>
-                        <p className="text-sm text-muted-foreground mt-1">CTO at TechStream</p>
-                      </div>
-                    </div>
+                  <CardContent className="pt-0">
+                    <div className="h-px w-full bg-foreground/5 mb-6" />
+                    <p className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
+                      "MAPRIMO transformed our development process. Their QA-first approach saved us weeks of rework and delivered a superior product."
+                    </p>
                   </CardContent>
                 </Card>
-                <Card className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300">
-                  <CardHeader className="pb-2">
-                    <div className="flex gap-1 mb-4">
+                <Card className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300 rounded-[2.5rem] bg-muted/20">
+                  <CardHeader className="pb-4 space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center font-black text-primary text-xl border-2 border-primary/10">SC</div>
+                      <div>
+                        <p className="font-black text-xl leading-none tracking-tight">Sarah Chen</p>
+                        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mt-2">Founder of Bloom</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <svg key={s} className="h-4 w-4 fill-primary text-primary" viewBox="0 0 20 20">
+                        <svg key={s} className="h-3 w-3 fill-primary text-primary" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
                     </div>
-                    <CardDescription className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
-                      "The MVP they built was production-ready from day one. Truly a strategic partner, not just another dev shop."
-                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-4 mt-auto">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center font-bold text-green-600 text-sm">SC</div>
-                      <div>
-                        <p className="font-bold text-base leading-none">Sarah Chen</p>
-                        <p className="text-sm text-muted-foreground mt-1">Founder of Bloom</p>
-                      </div>
-                    </div>
+                  <CardContent className="pt-0">
+                    <div className="h-px w-full bg-foreground/5 mb-6" />
+                    <p className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
+                      "The MVP they built was production-ready from day one. Truly a strategic partner, not just another dev shop."
+                    </p>
                   </CardContent>
                 </Card>
               </>
