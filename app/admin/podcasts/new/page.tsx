@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Loader2, Music } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Music, Play } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ export default function NewPodcastPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
 
   // Perceived progress timer
   useEffect(() => {
@@ -51,14 +52,17 @@ export default function NewPodcastPage() {
       return;
     }
 
-    if (!audioFile) {
-      toast.error("Please upload an audio file.");
+    const formData = new FormData(e.currentTarget);
+    const youtubeUrl = formData.get("youtube_url") as string;
+
+    if (!audioFile && !videoFile && !youtubeUrl) {
+      toast.error("Please provide at least one media source (Audio, Video, or YouTube).");
       return;
     }
 
-    const formData = new FormData(e.currentTarget);
     formData.set("cover", coverFile);
-    formData.set("audio", audioFile);
+    if (audioFile) formData.set("audio", audioFile);
+    if (videoFile) formData.set("video", videoFile);
 
     startTransition(async () => {
       setStageIndex(0);
@@ -196,23 +200,59 @@ export default function NewPodcastPage() {
               />
 
               <div className="space-y-4">
-                <Label className="flex items-center gap-2">
-                  <Music className="h-4 w-4" />
-                  Audio File (.mp3)
+                <Label htmlFor="youtube_url" className="flex items-center gap-2">
+                  <Play className="h-4 w-4 text-red-600" />
+                  YouTube Video URL (Optional)
                 </Label>
-                <div className="grid gap-2">
-                  <Input 
-                    type="file" 
-                    accept="audio/*" 
-                    onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
-                    className="cursor-pointer"
-                    disabled={isLoading}
-                  />
-                  {audioFile && (
-                    <p className="text-xs text-green-600 font-medium">
-                      Selected: {audioFile.name} ({(audioFile.size / (1024 * 1024)).toFixed(2)} MB)
-                    </p>
-                  )}
+                <Input 
+                  id="youtube_url"
+                  name="youtube_url"
+                  placeholder="https://youtube.com/watch?v=..."
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <Label className="flex items-center gap-2">
+                    <Music className="h-4 w-4" />
+                    Audio File (.mp3)
+                  </Label>
+                  <div className="grid gap-2">
+                    <Input 
+                      type="file" 
+                      accept="audio/*" 
+                      onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
+                      className="cursor-pointer"
+                      disabled={isLoading}
+                    />
+                    {audioFile && (
+                      <p className="text-xs text-green-600 font-medium">
+                        Selected: {audioFile.name} ({(audioFile.size / (1024 * 1024)).toFixed(2)} MB)
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <Label className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4" />
+                    Video File (.mp4)
+                  </Label>
+                  <div className="grid gap-2">
+                    <Input 
+                      type="file" 
+                      accept="video/*" 
+                      onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+                      className="cursor-pointer"
+                      disabled={isLoading}
+                    />
+                    {videoFile && (
+                      <p className="text-xs text-green-600 font-medium">
+                        Selected: {videoFile.name} ({(videoFile.size / (1024 * 1024)).toFixed(2)} MB)
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </CardContent>

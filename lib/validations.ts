@@ -62,6 +62,8 @@ export const podcastSchema = z.object({
   slug: z.string().min(2, "Slug must be at least 2 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   audio_url: z.string().url("Invalid audio URL").optional().or(z.literal("")),
+  video_url: z.string().url("Invalid video URL").optional().or(z.literal("")),
+  youtube_url: z.string().url("Invalid YouTube URL").optional().or(z.literal("")),
   cover_url: z.string().url("Invalid cover URL").optional().or(z.literal("")),
   duration: z.string().min(1, "Duration is required"),
   author: z.string().min(2, "Author must be at least 2 characters"),

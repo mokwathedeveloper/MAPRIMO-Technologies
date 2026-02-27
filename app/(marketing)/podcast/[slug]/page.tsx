@@ -22,6 +22,13 @@ async function getPodcast(slug: string) {
   }
 }
 
+function getYoutubeEmbedUrl(url: string | null | undefined) {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+}
+
 export default async function PodcastDetailPage({
   params,
 }: {
@@ -32,6 +39,8 @@ export default async function PodcastDetailPage({
   if (!episode) {
     notFound();
   }
+
+  const youtubeEmbedUrl = getYoutubeEmbedUrl(episode.youtube_url);
 
   return (
     <div className="min-h-screen pt-40 pb-24 bg-background/50">
@@ -81,7 +90,7 @@ export default async function PodcastDetailPage({
               <div className="flex flex-wrap gap-5 pt-4">
                 <Button className="h-16 px-10 rounded-full text-xl font-black gap-4 shadow-2xl shadow-primary/30 transition-all hover:scale-105">
                   <Play className="h-6 w-6 fill-current" />
-                  Play Episode
+                  {episode.video_url || episode.youtube_url ? "Watch Episode" : "Play Episode"}
                 </Button>
                 <Button variant="outline" size="icon" className="h-16 w-16 rounded-full border-muted/20 hover:bg-muted/10 transition-colors">
                   <Share2 className="h-6 w-6" />
@@ -90,27 +99,57 @@ export default async function PodcastDetailPage({
             </div>
           </div>
 
-          {/* Audio Player Placeholder */}
-          <div className="p-10 rounded-[3rem] bg-muted/20 border border-primary/5 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black flex items-center gap-3">
-                <Mic2 className="h-6 w-6 text-primary" />
-                Episode Stream
-              </h2>
-            </div>
-            {episode.audio_url ? (
-               <div className="bg-background/80 backdrop-blur-sm p-4 rounded-2xl border shadow-inner">
-                 <audio controls className="w-full h-14">
-                   <source src={episode.audio_url} type="audio/mpeg" />
-                   Your browser does not support the audio element.
-                 </audio>
-               </div>
-            ) : (
-              <div className="h-32 bg-background/50 rounded-[2rem] flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/10 space-y-2">
-                <p className="text-muted-foreground font-medium italic">Streaming service will be available shortly.</p>
-                <p className="text-xs text-muted-foreground/60">We are currently finalising the audio hosting for this episode.</p>
+          {/* Media Player Section */}
+          <div className="p-1 rounded-[3rem] bg-muted/20 border border-primary/5 overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 shadow-2xl">
+            <div className="bg-background/40 backdrop-blur-md p-8 md:p-12 space-y-8">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-black flex items-center gap-3">
+                  <Mic2 className="h-6 w-6 text-primary" />
+                  Episode Media
+                </h2>
               </div>
-            )}
+
+              {/* YouTube Embed Prioritized */}
+              {youtubeEmbedUrl ? (
+                <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-background">
+                  <iframe
+                    src={youtubeEmbedUrl}
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              ) : episode.video_url ? (
+                /* Local Video Second */
+                <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-background bg-black">
+                  <video controls className="w-full h-full">
+                    <source src={episode.video_url} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ) : episode.audio_url ? (
+                /* Audio Only Fallback */
+                <div className="bg-background/80 backdrop-blur-sm p-8 rounded-3xl border shadow-inner">
+                  <div className="flex items-center gap-6">
+                    <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg animate-pulse">
+                      <Play className="h-8 w-8 fill-current ml-1" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-black uppercase tracking-widest text-primary mb-2">Now Streaming Audio</p>
+                      <audio controls className="w-full h-12">
+                        <source src={episode.audio_url} type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-48 bg-background/50 rounded-[2.5rem] flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/10 space-y-3">
+                  <p className="text-muted-foreground font-black uppercase tracking-widest opacity-40 italic">Media Synchronization Pending</p>
+                  <p className="text-xs text-muted-foreground/60 font-medium">The technical report will be available across all streams shortly.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Content / Show Notes */}

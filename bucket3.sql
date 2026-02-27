@@ -20,6 +20,8 @@ create table if not exists podcasts (
   slug text not null unique,
   description text,
   audio_url text,
+  video_url text,
+  youtube_url text,
   cover_url text,
   duration text,
   author text default 'MAPRIMO Team',

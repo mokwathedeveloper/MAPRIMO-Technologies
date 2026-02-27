@@ -82,6 +82,8 @@ export interface Podcast {
   slug: string;
   description: string;
   audio_url: string;
+  video_url?: string;
+  youtube_url?: string;
   cover_url: string;
   duration: string;
   author: string;

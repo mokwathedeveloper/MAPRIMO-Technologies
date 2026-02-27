@@ -707,23 +707,27 @@ export async function createPodcast(formData: FormData): Promise<ActionResult> {
     
     const coverFile = formData.get("cover") as File;
     const audioFile = formData.get("audio") as File;
+    const videoFile = formData.get("video") as File | null;
+    
     const rawData = {
       title: formData.get("title"),
       slug: formData.get("slug"),
       description: formData.get("description"),
       duration: formData.get("duration"),
       author: formData.get("author") || "MAPRIMO Team",
+      youtube_url: formData.get("youtube_url") || "",
     };
 
     const validated = podcastSchema.parse({ 
       ...rawData, 
       cover_url: "https://placeholder.com",
-      audio_url: "https://placeholder.com" 
+      audio_url: "https://placeholder.com",
+      video_url: "https://placeholder.com"
     });
 
     const { data: episode, error: insertError } = await supabase
       .from("podcasts")
-      .insert({ ...validated, cover_url: "", audio_url: "" })
+      .insert({ ...validated, cover_url: "", audio_url: "", video_url: "" })
       .select()
       .single();
 
@@ -731,6 +735,7 @@ export async function createPodcast(formData: FormData): Promise<ActionResult> {
 
     let cover_url = "";
     let audio_url = "";
+    let video_url = "";
 
     try {
       if (coverFile && coverFile.size > 0) {
@@ -739,10 +744,13 @@ export async function createPodcast(formData: FormData): Promise<ActionResult> {
       if (audioFile && audioFile.size > 0) {
         audio_url = await uploadFile(supabase, audioFile, `podcasts/${episode.id}/audio`);
       }
+      if (videoFile && videoFile.size > 0) {
+        video_url = await uploadFile(supabase, videoFile, `podcasts/${episode.id}/video`);
+      }
 
       const { error: updateError } = await supabase
         .from("podcasts")
-        .update({ cover_url, audio_url })
+        .update({ cover_url, audio_url, video_url })
         .eq("id", episode.id);
       
       if (updateError) throw new Error(`DB_UPDATE:${updateError.message}`);
@@ -765,7 +773,7 @@ export async function deletePodcast(id: string): Promise<ActionResult> {
     const supabase = await getAdminSupabase();
     if (!supabase) throw new Error("AUTH");
     
-    const { data: podcast } = await supabase.from("podcasts").select("cover_url, audio_url").eq("id", id).single();
+    const { data: podcast } = await supabase.from("podcasts").select("cover_url, audio_url, video_url").eq("id", id).single();
 
     const { error } = await supabase.from("podcasts").delete().eq("id", id);
     if (error) throw new Error(`DB:${error.message}`);
@@ -773,6 +781,7 @@ export async function deletePodcast(id: string): Promise<ActionResult> {
     if (podcast) {
       if (podcast.cover_url) await deleteFileByUrl(supabase, podcast.cover_url);
       if (podcast.audio_url) await deleteFileByUrl(supabase, podcast.audio_url);
+      if (podcast.video_url) await deleteFileByUrl(supabase, podcast.video_url);
     }
     
     revalidatePath("/admin/podcasts");
@@ -791,6 +800,7 @@ export async function updatePodcast(id: string, formData: FormData): Promise<Act
     
     const coverFile = formData.get("cover") as File | null;
     const audioFile = formData.get("audio") as File | null;
+    const videoFile = formData.get("video") as File | null;
     
     const rawData = {
       title: formData.get("title"),
@@ -798,10 +808,12 @@ export async function updatePodcast(id: string, formData: FormData): Promise<Act
       description: formData.get("description"),
       duration: formData.get("duration"),
       author: formData.get("author") || "MAPRIMO Team",
+      youtube_url: formData.get("youtube_url") || "",
     };
 
     let cover_url = formData.get("current_cover_url") as string;
     let audio_url = formData.get("current_audio_url") as string;
+    let video_url = formData.get("current_video_url") as string;
 
     if (coverFile && coverFile.size > 0) {
       cover_url = await uploadFile(supabase, coverFile, `podcasts/${id}/cover`);
@@ -809,11 +821,15 @@ export async function updatePodcast(id: string, formData: FormData): Promise<Act
     if (audioFile && audioFile.size > 0) {
       audio_url = await uploadFile(supabase, audioFile, `podcasts/${id}/audio`);
     }
+    if (videoFile && videoFile.size > 0) {
+      video_url = await uploadFile(supabase, videoFile, `podcasts/${id}/video`);
+    }
 
     const validated = podcastSchema.parse({ 
       ...rawData, 
       cover_url,
-      audio_url 
+      audio_url,
+      video_url 
     });
 
     const { error } = await supabase
