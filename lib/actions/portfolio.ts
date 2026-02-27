@@ -60,7 +60,7 @@ function safeStringify(x: unknown) {
   }
 }
 
-function handleActionError(err: any): ActionResult {
+export async function handleActionError(err: any): Promise<ActionResult> {
   // Safe logging: never access deep properties or .value without guards
   try {
     if (err instanceof ZodError) {
