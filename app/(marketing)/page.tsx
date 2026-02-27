@@ -26,11 +26,10 @@ async function getCaseStudies() {
   try {
     const { data } = await supabase
       .from("case_studies")
-      .select("*, projects!inner(*)")
-      .eq("projects.published", true)
+      .select("*, projects(*)")
       .order("created_at", { ascending: false })
       .limit(3);
-    return (data || []) as CaseStudy[];
+    return (data || []) as any[];
   } catch (e) {
     console.error("Error fetching case studies on home:", e);
     return [];
