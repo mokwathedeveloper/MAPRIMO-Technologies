@@ -48,9 +48,11 @@ export function CaseStudyList({ initialCaseStudies }: { initialCaseStudies: any[
               </p>
             </div>
             <div className="flex gap-2">
-              <Button variant="ghost" size="icon" disabled title="Edit Case Study">
-                <Pencil className="h-4 w-4" />
-              </Button>
+              <Link href={`/admin/case-studies/${cs.id}`}>
+                <Button variant="ghost" size="icon" title="Edit Case Study">
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </Link>
               <DeleteCaseStudyButton 
                 id={cs.id} 
                 title={cs.projects?.title || "Case Study"} 

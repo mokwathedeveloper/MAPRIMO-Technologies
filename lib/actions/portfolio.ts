@@ -300,6 +300,27 @@ export async function deleteTestimonial(id: string): Promise<ActionResult> {
   }
 }
 
+export async function updateTestimonial(id: string, data: TestimonialFormData): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const validated = testimonialSchema.parse(data);
+    const { error } = await supabase
+      .from("testimonials")
+      .update(validated)
+      .eq("id", id);
+
+    if (error) throw new Error(`DB:${error.message}`);
+    
+    revalidatePath("/admin/testimonials");
+    revalidatePath("/");
+    return { ok: true, data: null };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
 export async function deleteLead(id: string): Promise<ActionResult> {
   try {
     const supabase = await getAdminSupabase();
@@ -353,6 +374,41 @@ export async function deletePost(id: string): Promise<ActionResult> {
     if (!supabase) throw new Error("AUTH");
     
     const { error } = await supabase.from("posts").delete().eq("id", id);
+    if (error) throw new Error(`DB:${error.message}`);
+    
+    revalidatePath("/admin/blog");
+    revalidatePath("/blog");
+    return { ok: true, data: null };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function updatePost(id: string, formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const file = formData.get("featured_image") as File | null;
+    let image_url = formData.get("current_image_url") as string;
+
+    const rawData = {
+      title: formData.get("title"),
+      slug: formData.get("slug"),
+      excerpt: formData.get("excerpt"),
+      content: formData.get("content"),
+      author: formData.get("author") || "MAPRIMO Team",
+    };
+
+    if (file && file.size > 0) {
+      image_url = await uploadFile(supabase, file, "blog");
+    }
+
+    const { error } = await supabase
+      .from("posts")
+      .update({ ...rawData, image_url })
+      .eq("id", id);
+
     if (error) throw new Error(`DB:${error.message}`);
     
     revalidatePath("/admin/blog");
@@ -419,6 +475,52 @@ export async function deleteCaseStudy(id: string): Promise<ActionResult> {
     const { error } = await supabase.from("case_studies").delete().eq("id", id);
     if (error) throw new Error(`DB:${error.message}`);
     
+    revalidatePath("/admin/case-studies");
+    revalidatePath("/work");
+    return { ok: true, data: null };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function updateCaseStudy(id: string, formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const problem = formData.get("problem") as string;
+    const solution = formData.get("solution") as string;
+    const results = JSON.parse(formData.get("results") as string);
+    const screenshotFiles = formData.getAll("screenshots") as File[];
+    let screenshots = JSON.parse(formData.get("current_screenshots") as string || "[]");
+
+    const newScreenshotUrls: string[] = [];
+    for (const file of screenshotFiles) {
+      if (file && file.size > 0) {
+        // We need the projectId for the path, but we can get it from the existing record
+        const { data: existing } = await supabase.from("case_studies").select("project_id").eq("id", id).single();
+        if (!existing) throw new Error("Case study not found");
+        const url = await uploadFile(supabase, file, `portfolio/${existing.project_id}/case-study`);
+        newScreenshotUrls.push(url);
+      }
+    }
+
+    if (newScreenshotUrls.length > 0) {
+      screenshots = [...screenshots, ...newScreenshotUrls];
+    }
+
+    const { error } = await supabase
+      .from("case_studies")
+      .update({
+        problem,
+        solution,
+        results,
+        screenshots,
+      })
+      .eq("id", id);
+
+    if (error) throw new Error(`DB:${error.message}`);
+
     revalidatePath("/admin/case-studies");
     revalidatePath("/work");
     return { ok: true, data: null };

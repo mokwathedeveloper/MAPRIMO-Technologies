@@ -17,6 +17,7 @@ async function getProjects() {
     const { data, error } = await supabase
       .from("projects")
       .select("*")
+      .eq("published", true)
       .order("created_at", { ascending: false });
     
     if (error) {
