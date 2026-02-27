@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Terms of Service | MAPRIMO Technologies",
+  title: "Terms of Service",
 };
 
 export default function TermsPage() {

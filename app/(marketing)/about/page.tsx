@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, Users, Target, ShieldCheck, Rocket } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us | MAPRIMO Technologies",
+  title: "About Us",
   description: "Learn more about MAPRIMO Technologies and our mission to help startups ship quality software fast.",
 };
 

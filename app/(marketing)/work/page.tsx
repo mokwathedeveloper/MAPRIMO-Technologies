@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import type { Project, CaseStudy } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Our Work | MAPRIMO Technologies",
+  title: "Our Work",
   description: "Explore our portfolio of successful projects and case studies.",
 };
 

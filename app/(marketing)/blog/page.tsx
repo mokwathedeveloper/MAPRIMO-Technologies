@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Blog | MAPRIMO Technologies",
+  title: "Blog",
   description: "Insights on software engineering, QA automation, and building successful MVPs.",
 };
 

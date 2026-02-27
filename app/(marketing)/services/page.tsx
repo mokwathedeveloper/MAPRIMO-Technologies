@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Rocket, ShieldCheck, Zap, CheckCircle2, Calendar, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Services | MAPRIMO Technologies",
+  title: "Services",
   description: "MVP Build, QA Automation, and Rescue & Audit services for startups and SMEs.",
 };
 
