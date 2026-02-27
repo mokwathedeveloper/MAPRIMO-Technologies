@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Loader2, Music } from "lucide-react";
 import Link from "next/link";
@@ -14,13 +14,33 @@ import { ImageUpload } from "@/components/admin/image-upload";
 import { toast } from "sonner";
 import type { Podcast } from "@/lib/types";
 
+const STAGES = [
+  { label: "Validating changes...", progress: 20 },
+  { label: "Uploading media (if changed)...", progress: 50 },
+  { label: "Updating database...", progress: 80 },
+  { label: "Finalizing...", progress: 95 },
+];
+
 export function EditPodcastForm({ episode }: { episode: Podcast }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [stageIndex, setStageIndex] = useState(-1);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
+
+  // Perceived progress timer
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isPending && stageIndex < STAGES.length - 1) {
+      const duration = stageIndex === -1 ? 500 : 1500;
+      timer = setTimeout(() => {
+        setStageIndex((prev) => prev + 1);
+      }, duration);
+    }
+    return () => clearTimeout(timer);
+  }, [isPending, stageIndex]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -38,6 +58,7 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
     formData.set("current_audio_url", episode.audio_url);
 
     startTransition(async () => {
+      setStageIndex(0);
       try {
         const result = await updatePodcast(episode.id, formData);
         
@@ -51,15 +72,19 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
             setFieldErrors(result.error.fieldErrors);
           }
           toast.error(result.error.message);
+          setStageIndex(-1);
         }
       } catch (err) {
         console.error("Submission error:", err);
         const msg = "A network error occurred. Please try again.";
         setError(msg);
         toast.error(msg);
+        setStageIndex(-1);
       }
     });
   }
+
+  const isLoading = isPending || stageIndex !== -1;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -78,7 +103,7 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
                   defaultValue={episode.title}
                   placeholder="e.g. Scaling Technical Teams" 
                   required 
-                  disabled={isPending}
+                  disabled={isLoading}
                 />
                 {fieldErrors.title && (
                   <p className="text-xs text-red-500">{fieldErrors.title[0]}</p>
@@ -92,7 +117,7 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
                   defaultValue={episode.slug}
                   placeholder="e.g. scaling-technical-teams" 
                   required 
-                  disabled={isPending}
+                  disabled={isLoading}
                 />
                 {fieldErrors.slug && (
                   <p className="text-xs text-red-500">{fieldErrors.slug[0]}</p>
@@ -109,7 +134,7 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
                 placeholder="A brief summary of the conversation..." 
                 required 
                 className="min-h-[100px]"
-                disabled={isPending}
+                disabled={isLoading}
               />
               {fieldErrors.description && (
                 <p className="text-xs text-red-500">{fieldErrors.description[0]}</p>
@@ -125,7 +150,7 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
                   defaultValue={episode.duration}
                   placeholder="e.g. 45:12" 
                   required 
-                  disabled={isPending}
+                  disabled={isLoading}
                 />
                 {fieldErrors.duration && (
                   <p className="text-xs text-red-500">{fieldErrors.duration[0]}</p>
@@ -138,7 +163,7 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
                   name="author" 
                   defaultValue={episode.author}
                   required 
-                  disabled={isPending}
+                  disabled={isLoading}
                 />
                 {fieldErrors.author && (
                   <p className="text-xs text-red-500">{fieldErrors.author[0]}</p>
@@ -170,7 +195,7 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
                   accept="audio/*" 
                   onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
                   className="cursor-pointer"
-                  disabled={isPending}
+                  disabled={isLoading}
                 />
                 <p className="text-xs text-muted-foreground italic">
                   Current file: {episode.audio_url.split('/').pop()}
@@ -185,7 +210,22 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
           </CardContent>
         </Card>
 
-        {error && (
+        {isLoading && stageIndex !== -1 && (
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm font-medium">
+              <span>{STAGES[stageIndex].label}</span>
+              <span>{STAGES[stageIndex].progress}%</span>
+            </div>
+            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary transition-all duration-500 ease-out"
+                style={{ width: `${STAGES[stageIndex].progress}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {error && !isLoading && (
           <div className="p-4 bg-red-50 text-red-700 border border-red-200 rounded-md text-sm">
             {error}
           </div>
@@ -193,10 +233,10 @@ export function EditPodcastForm({ episode }: { episode: Podcast }) {
 
         <div className="flex justify-end gap-4">
           <Link href="/admin/podcasts">
-            <Button variant="outline" type="button" disabled={isPending}>Cancel</Button>
+            <Button variant="outline" type="button" disabled={isLoading}>Cancel</Button>
           </Link>
-          <Button type="submit" disabled={isPending} className="gap-2 min-w-[150px]">
-            {isPending ? (
+          <Button type="submit" disabled={isLoading} className="gap-2 min-w-[150px]">
+            {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Updating...
