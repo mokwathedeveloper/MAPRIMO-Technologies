@@ -95,6 +95,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               alt={post.title}
               fill
               className="object-cover"
+              sizes="(min-width: 1024px) 896px, 100vw"
               priority
             />
           </div>

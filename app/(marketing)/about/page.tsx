@@ -40,6 +40,7 @@ export default function AboutPage() {
                 alt="Our philosophy"
                 fill
                 className="object-cover"
+                sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
             <div className="space-y-8">
