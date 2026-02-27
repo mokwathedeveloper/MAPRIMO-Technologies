@@ -1,19 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  MessageSquare, 
-  Users, 
-  ExternalLink,
-  Newspaper,
-  Mic2,
-  UserRound,
-  LogOut 
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AdminSidebar } from "@/components/admin/admin-sidebar";
 
 export default async function AdminLayout({
   children,
@@ -53,61 +41,11 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-screen bg-muted/30">
-      {/* Sidebar */}
-      <aside className="hidden md:flex w-64 flex-col fixed inset-y-0 border-r bg-background">
-        <div className="p-6 border-b">
-          <Link href="/admin" className="flex items-center gap-2 font-bold text-xl">
-            <LayoutDashboard className="h-6 w-6" />
-            <span>Admin</span>
-          </Link>
-        </div>
-        
-        <nav className="flex-1 p-4 space-y-2">
-          <Link href="/admin" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <LayoutDashboard className="h-4 w-4" />
-            <span>Dashboard</span>
-          </Link>
-          <Link href="/admin/projects" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <Briefcase className="h-4 w-4" />
-            <span>Projects</span>
-          </Link>
-          <Link href="/admin/case-studies" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <Newspaper className="h-4 w-4" />
-            <span>Case Studies</span>
-          </Link>
-          <Link href="/admin/blog" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <Newspaper className="h-4 w-4" />
-            <span>Blog</span>
-          </Link>
-          <Link href="/admin/podcasts" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <Mic2 className="h-4 w-4" />
-            <span>Podcasts</span>
-          </Link>
-          <Link href="/admin/directors" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <UserRound className="h-4 w-4" />
-            <span>Directors</span>
-          </Link>
-          <Link href="/admin/testimonials" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <MessageSquare className="h-4 w-4" />
-            <span>Testimonials</span>
-          </Link>
-          <Link href="/admin/leads" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-            <Users className="h-4 w-4" />
-            <span>Leads</span>
-          </Link>
-        </nav>
-
-        <div className="p-4 border-t space-y-2">
-          <Link href="/" target="_blank" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors text-sm text-muted-foreground">
-            <ExternalLink className="h-4 w-4" />
-            <span>View Website</span>
-          </Link>
-        </div>
-      </aside>
+      <AdminSidebar />
 
       {/* Main Content */}
       <main className="flex-1 md:pl-64">
-        <div className="min-h-screen p-8">
+        <div className="min-h-screen p-8 max-w-7xl mx-auto">
           {children}
         </div>
       </main>
