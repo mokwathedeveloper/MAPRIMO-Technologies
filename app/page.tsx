@@ -9,21 +9,30 @@ import type { CaseStudy, Testimonial } from "@/lib/types";
 export const revalidate = 3600;
 
 async function getCaseStudies() {
-  const { data } = await supabase
-    .from("case_studies")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(3);
-  return (data || []) as CaseStudy[];
+  try {
+    const { data } = await supabase
+      .from("case_studies")
+      .select("*, projects(*)")
+      .eq("projects.published", true)
+      .order("created_at", { ascending: false })
+      .limit(3);
+    return (data || []) as CaseStudy[];
+  } catch (e) {
+    return [];
+  }
 }
 
 async function getTestimonials() {
-  const { data } = await supabase
-    .from("testimonials")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(2);
-  return (data || []) as Testimonial[];
+  try {
+    const { data } = await supabase
+      .from("testimonials")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(2);
+    return (data || []) as Testimonial[];
+  } catch (e) {
+    return [];
+  }
 }
 
 export default async function HomePage() {
