@@ -233,3 +233,58 @@ export async function deletePost(id: string) {
   revalidatePath("/admin/blog");
   revalidatePath("/blog");
 }
+
+export async function createCaseStudy(formData: FormData) {
+  const supabase = await getAdminSupabase();
+  
+  const projectId = formData.get("project_id") as string;
+  const problem = formData.get("problem") as string;
+  const solution = formData.get("solution") as string;
+  const results = JSON.parse(formData.get("results") as string);
+  const screenshotFiles = formData.getAll("screenshots") as File[];
+
+  // 1. Create case study record
+  const { data: caseStudy, error: insertError } = await supabase
+    .from("case_studies")
+    .insert({
+      project_id: projectId,
+      problem,
+      solution,
+      results,
+      screenshots: [],
+    })
+    .select()
+    .single();
+
+  if (insertError) throw new Error(insertError.message);
+
+  // 2. Upload screenshots
+  const screenshotUrls: string[] = [];
+  for (const file of screenshotFiles) {
+    if (file.size > 0) {
+      const url = await uploadFile(supabase, file, `portfolio/${projectId}/case-study`);
+      screenshotUrls.push(url);
+    }
+  }
+
+  // 3. Update with URLs
+  if (screenshotUrls.length > 0) {
+    await supabase
+      .from("case_studies")
+      .update({ screenshots: screenshotUrls })
+      .eq("id", caseStudy.id);
+  }
+
+  revalidatePath("/admin/case-studies");
+  revalidatePath("/work");
+  return { success: true };
+}
+
+export async function deleteCaseStudy(id: string) {
+  const supabase = await getAdminSupabase();
+  const { error } = await supabase.from("case_studies").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  
+  revalidatePath("/admin/case-studies");
+  revalidatePath("/work");
+}
