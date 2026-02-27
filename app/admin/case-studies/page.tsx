@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
-import { FileText, ExternalLink, Pencil } from "lucide-react";
+import { FileText, ExternalLink, Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { DeleteCaseStudyButton } from "@/components/admin/delete-case-study-button";
 import type { CaseStudy } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -35,9 +36,12 @@ export default async function CaseStudiesAdminPage() {
           <h1 className="text-3xl font-bold tracking-tight">Case Studies</h1>
           <p className="text-muted-foreground">Manage your detailed case studies.</p>
         </div>
-        <Button className="flex items-center gap-2" disabled>
-          New Case Study
-        </Button>
+        <Link href="/admin/case-studies/new">
+          <Button className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            New Case Study
+          </Button>
+        </Link>
       </div>
 
       <div className="grid gap-6">
@@ -57,6 +61,7 @@ export default async function CaseStudiesAdminPage() {
                   <Button variant="ghost" size="icon" disabled title="Edit Case Study">
                     <Pencil className="h-4 w-4" />
                   </Button>
+                  <DeleteCaseStudyButton id={cs.id} title={cs.projects?.title || "Case Study"} />
                   {cs.projects?.slug && (
                     <Link href={`/work/${cs.projects.slug}`} target="_blank">
                       <Button variant="ghost" size="icon" title="View Live">
