@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { createProject } from "@/lib/actions/portfolio";
+import { createProjectFromFormData } from "@/lib/actions/portfolio";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { toast } from "sonner";
 
@@ -33,17 +33,23 @@ export default function NewProjectPage() {
 
     const formData = new FormData(e.currentTarget);
     
-    // Add file and process stack
-    formData.append("cover_image", file);
-    const stack = (formData.get("stack") as string).split(",").map(s => s.trim()).filter(Boolean);
+    // Process form data for server action
+    formData.set("cover", file);
+    const stackRaw = formData.get("stack") as string;
+    const stack = stackRaw.split(",").map(s => s.trim()).filter(Boolean);
     formData.set("stack", JSON.stringify(stack));
-    formData.set("published", String(formData.get("published") === "on"));
+    
+    // Switch value in FormData is 'on' if checked, or missing if not
+    const isPublished = formData.get("published") === "on";
+    formData.set("published", String(isPublished));
 
     try {
-      await createProject(formData);
-      toast.success("Project created successfully!");
-      router.push("/admin/projects");
-      router.refresh();
+      const result = await createProjectFromFormData(formData);
+      if (result.success) {
+        toast.success("Project created successfully!");
+        router.push("/admin/projects");
+        router.refresh();
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
       setError(msg);
