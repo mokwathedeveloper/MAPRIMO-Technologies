@@ -41,4 +41,27 @@ export const caseStudySchema = z.object({
 
 export type CaseStudyFormData = z.infer<typeof caseStudySchema>;
 
+export const directorSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  role: z.string().min(2, "Role must be at least 2 characters"),
+  bio: z.string().min(10, "Bio must be at least 10 characters"),
+  image_url: z.string().url("Invalid image URL").optional().or(z.literal("")),
+  linkedin_url: z.string().url("Invalid LinkedIn URL").optional().or(z.literal("")),
+  twitter_url: z.string().url("Invalid Twitter URL").optional().or(z.literal("")),
+});
+
+export type DirectorFormData = z.infer<typeof directorSchema>;
+
+export const podcastSchema = z.object({
+  title: z.string().min(2, "Title must be at least 2 characters"),
+  slug: z.string().min(2, "Slug must be at least 2 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  audio_url: z.string().url("Invalid audio URL").optional().or(z.literal("")),
+  cover_url: z.string().url("Invalid cover URL").optional().or(z.literal("")),
+  duration: z.string().min(1, "Duration is required"),
+  author: z.string().min(2, "Author must be at least 2 characters"),
+});
+
+export type PodcastFormData = z.infer<typeof podcastSchema>;
+
 
