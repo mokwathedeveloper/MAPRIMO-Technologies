@@ -169,25 +169,14 @@ export function EditProjectForm({ project }: { project: Project }) {
               onFileSelect={setFile} 
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="repo_url">Repository URL (Optional)</Label>
-                <Input 
-                  id="repo_url" 
-                  name="repo_url" 
-                  defaultValue={project.repo_url || ""} 
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="live_url">Live URL (Optional)</Label>
-                <Input 
-                  id="live_url" 
-                  name="live_url" 
-                  defaultValue={project.live_url || ""} 
-                  disabled={isLoading}
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="live_url">Live URL (Optional)</Label>
+              <Input 
+                id="live_url" 
+                name="live_url" 
+                defaultValue={project.live_url || ""} 
+                disabled={isLoading}
+              />
             </div>
           </CardContent>
         </Card>

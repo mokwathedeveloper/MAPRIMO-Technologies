@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
-import { FileText, ExternalLink, Pencil, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { DeleteCaseStudyButton } from "@/components/admin/delete-case-study-button";
-import type { CaseStudy } from "@/lib/types";
+import { CaseStudyList } from "@/components/admin/case-study-list";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +22,7 @@ export default async function CaseStudiesAdminPage() {
   );
   
   // Join with projects to get the title
-  const { data: caseStudies, error } = await supabase
+  const { data: caseStudies } = await supabase
     .from("case_studies")
     .select("*, projects(title, slug)")
     .order("created_at", { ascending: false });
@@ -44,55 +42,7 @@ export default async function CaseStudiesAdminPage() {
         </Link>
       </div>
 
-      <div className="grid gap-6">
-        {caseStudies && caseStudies.length > 0 ? (
-          caseStudies.map((cs: any) => (
-            <Card key={cs.id} className="group">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <div>
-                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                    {cs.projects?.title || "Unknown Project"}
-                  </CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Created on {new Date(cs.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon" disabled title="Edit Case Study">
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <DeleteCaseStudyButton id={cs.id} title={cs.projects?.title || "Case Study"} />
-                  {cs.projects?.slug && (
-                    <Link href={`/work/${cs.projects.slug}`} target="_blank">
-                      <Button variant="ghost" size="icon" title="View Live">
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="mt-4 grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Problem</h4>
-                    <p className="text-sm line-clamp-2">{cs.problem}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Solution</h4>
-                    <p className="text-sm line-clamp-2">{cs.solution}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="text-center py-24 border-2 border-dashed rounded-xl bg-muted/20">
-            <FileText className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground">No case studies yet</h3>
-            <p className="text-sm text-muted-foreground/60">Case studies associated with your projects will appear here.</p>
-          </div>
-        )}
-      </div>
+      <CaseStudyList initialCaseStudies={caseStudies || []} />
     </div>
   );
 }

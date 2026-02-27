@@ -85,7 +85,8 @@ export default function NewProjectPage() {
           setStageIndex(-1);
         }
       } catch (err) {
-        const msg = "A network error occurred. Please try again.";
+        console.error("Submission error:", err);
+        const msg = err instanceof Error ? err.message : "A network error occurred. Please try again.";
         setError(msg);
         toast.error(msg);
         setStageIndex(-1);
@@ -185,31 +186,17 @@ export default function NewProjectPage() {
                 onFileSelect={setFile} 
               />
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="repo_url">Repository URL (Optional)</Label>
-                  <Input 
-                    id="repo_url" 
-                    name="repo_url" 
-                    placeholder="https://github.com/..." 
-                    disabled={isLoading}
-                  />
-                  {fieldErrors.repo_url && (
-                    <p className="text-xs text-red-500">{fieldErrors.repo_url[0]}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="live_url">Live URL (Optional)</Label>
-                  <Input 
-                    id="live_url" 
-                    name="live_url" 
-                    placeholder="https://..." 
-                    disabled={isLoading}
-                  />
-                  {fieldErrors.live_url && (
-                    <p className="text-xs text-red-500">{fieldErrors.live_url[0]}</p>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="live_url">Live URL (Optional)</Label>
+                <Input 
+                  id="live_url" 
+                  name="live_url" 
+                  placeholder="https://..." 
+                  disabled={isLoading}
+                />
+                {fieldErrors.live_url && (
+                  <p className="text-xs text-red-500">{fieldErrors.live_url[0]}</p>
+                )}
               </div>
             </CardContent>
           </Card>

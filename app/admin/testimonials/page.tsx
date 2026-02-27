@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
-import { Plus, MessageSquare, Pencil } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { DeleteTestimonialButton } from "@/components/admin/delete-testimonial-button";
+import { TestimonialList } from "@/components/admin/testimonial-list";
 import type { Testimonial } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +22,7 @@ export default async function TestimonialsAdminPage() {
     }
   );
   
-  const { data: testimonials, error } = await supabase
+  const { data: testimonials } = await supabase
     .from("testimonials")
     .select("*")
     .order("created_at", { ascending: false });
@@ -43,35 +42,7 @@ export default async function TestimonialsAdminPage() {
         </Link>
       </div>
 
-      <div className="grid gap-6">
-        {testimonials && testimonials.length > 0 ? (
-          testimonials.map((t: Testimonial) => (
-            <Card key={t.id}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <div>
-                  <CardTitle className="text-lg font-bold">{t.name}</CardTitle>
-                  <p className="text-sm text-muted-foreground">{t.role} at {t.company}</p>
-                </div>
-                <DeleteTestimonialButton id={t.id} name={t.name} />
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm leading-relaxed italic bg-muted/30 p-4 rounded-md">
-                  "{t.quote}"
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-2">
-                  Added on {new Date(t.created_at).toLocaleDateString()}
-                </p>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="text-center py-24 border-2 border-dashed rounded-xl bg-muted/20">
-            <MessageSquare className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground">No testimonials yet</h3>
-            <p className="text-sm text-muted-foreground/60">Feedback from your clients will appear here.</p>
-          </div>
-        )}
-      </div>
+      <TestimonialList initialTestimonials={(testimonials || []) as Testimonial[]} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,18 +15,28 @@ import {
 import { deletePost } from "@/lib/actions/portfolio";
 import { toast } from "sonner";
 
-export function DeleteBlogButton({ id, title }: { id: string; title: string }) {
+interface DeleteBlogButtonProps {
+  id: string;
+  title: string;
+  onDelete?: (id: string) => void;
+}
+
+export function DeleteBlogButton({ id, title, onDelete }: DeleteBlogButtonProps) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   async function handleDelete() {
     setLoading(true);
     try {
-      await deletePost(id);
-      setOpen(false);
-      toast.success("Blog post deleted successfully");
+      const result = await deletePost(id);
+      if (result.ok) {
+        setOpen(false);
+        toast.success("Blog post deleted successfully");
+        if (onDelete) onDelete(id);
+      } else {
+        toast.error(result.error.message);
+      }
     } catch (error) {
-      console.error(error);
       toast.error("Failed to delete blog post");
     } finally {
       setLoading(false);
@@ -36,8 +46,8 @@ export function DeleteBlogButton({ id, title }: { id: string; title: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-700 hover:bg-red-50">
-          <Trash2 className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-700 hover:bg-red-50" disabled={loading}>
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -5,7 +5,6 @@ export interface Project {
   summary: string;
   stack: string[];
   cover_url: string;
-  repo_url?: string;
   live_url?: string;
   highlights: any[];
   published: boolean;

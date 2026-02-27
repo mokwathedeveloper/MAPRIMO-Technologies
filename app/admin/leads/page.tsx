@@ -1,9 +1,8 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import type { Lead } from "@/lib/types";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { DeleteLeadButton } from "@/components/admin/delete-lead-button";
 import { Users } from "lucide-react";
+import { LeadList } from "@/components/admin/lead-list";
 
 export const dynamic = "force-dynamic";
 
@@ -43,54 +42,7 @@ export default async function LeadsPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {leads && leads.length > 0 ? (
-          leads.map((lead: Lead) => (
-            <Card key={lead.id} className="hover:border-primary/50 transition-colors">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xl font-bold">{lead.name}</CardTitle>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                    {lead.created_at ? new Date(lead.created_at).toLocaleDateString() : ""}
-                  </span>
-                  <DeleteLeadButton id={lead.id!} name={lead.name} />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-6 mt-2">
-                  <div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Contact Details</p>
-                    <p className="font-medium">{lead.email}</p>
-                    {lead.company && <p className="text-sm text-muted-foreground italic">{lead.company}</p>}
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Requested Meeting</p>
-                    <p className="font-medium">{lead.requested_date ? new Date(lead.requested_date).toLocaleString() : "No time requested"}</p>
-                  </div>
-                  {lead.budget && (
-                    <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Budget Range</p>
-                      <p className="font-medium text-green-600">{lead.budget}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-6 pt-4 border-t">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Message</p>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap bg-muted/50 p-4 rounded-md italic">
-                    "{lead.message}"
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="text-center py-24 border-2 border-dashed rounded-xl bg-muted/20">
-            <Users className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground">No leads found yet</h3>
-            <p className="text-sm text-muted-foreground/60">When users fill out your contact form, they will appear here.</p>
-          </div>
-        )}
-      </div>
+      <LeadList initialLeads={(leads || []) as Lead[]} />
     </div>
   );
 }

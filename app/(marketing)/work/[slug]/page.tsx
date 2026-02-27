@@ -86,14 +86,6 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
                     </Button>
                   </Link>
                 )}
-                {project.repo_url && (
-                  <Link href={project.repo_url} target="_blank">
-                    <Button variant="outline" className="gap-2">
-                      <Github className="h-4 w-4" />
-                      View Repository
-                    </Button>
-                  </Link>
-                )}
               </div>
             </div>
             
