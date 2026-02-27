@@ -10,7 +10,6 @@ import {
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { ActionResult } from "./result";
-import { ZodError } from "zod";
 
 /**
  * Helper to get a hardened Supabase client with admin verification.
@@ -43,24 +42,71 @@ async function getAdminSupabase() {
   return supabase;
 }
 
-function handleActionError(error: any): ActionResult {
-  console.error("Action error:", error);
+/**
+ * Safe stringify for errors that might have circular references
+ */
+function safeStringify(x: unknown) {
+  try {
+    return JSON.stringify(x);
+  } catch {
+    return "[Unserializable error]";
+  }
+}
+
+function handleActionError(err: any): ActionResult {
+  // Safe logging: never access deep properties or .value without guards
+  try {
+    if (err instanceof Error) {
+      console.error(err.message, err.stack);
+    } else if (err && typeof err === "object" && "issues" in err) {
+      // Safely log Zod errors
+      console.error("Validation Error:", (err as any).flatten?.() || err);
+    } else {
+      console.error("Action error:", typeof err === "string" ? err : safeStringify(err));
+    }
+  } catch {
+    console.error("Action error: [Logging failed]");
+  }
   
-  if (error instanceof ZodError) {
+  // Return structured response
+  if (err && typeof err === "object" && "issues" in err) {
     return {
       ok: false,
       error: {
         code: "VALIDATION",
         message: "Validation failed",
-        fieldErrors: error.flatten().fieldErrors as Record<string, string[]>,
+        fieldErrors: (err as any).flatten?.().fieldErrors || {},
       },
     };
   }
 
-  if (error.message === "AUTH") {
+  const message = err?.message || (typeof err === "string" ? err : "");
+
+  if (message === "AUTH") {
     return {
       ok: false,
       error: { code: "AUTH", message: "Unauthorized or insufficient permissions" },
+    };
+  }
+
+  if (typeof message === "string" && message.startsWith("DB:")) {
+    return {
+      ok: false,
+      error: { code: "DB", message: message.replace("DB:", "") },
+    };
+  }
+
+  if (typeof message === "string" && message.startsWith("STORAGE:")) {
+    return {
+      ok: false,
+      error: { code: "STORAGE", message: message.replace("STORAGE:", "") },
+    };
+  }
+
+  if (typeof message === "string" && message.startsWith("DB_UPDATE:")) {
+    return {
+      ok: false,
+      error: { code: "DB", message: `Failed to update cover URL: ${message.replace("DB_UPDATE:", "")}` },
     };
   }
 
@@ -68,7 +114,7 @@ function handleActionError(error: any): ActionResult {
     ok: false,
     error: { 
       code: "UNKNOWN", 
-      message: error instanceof Error ? error.message : "An unexpected error occurred" 
+      message: err instanceof Error ? err.message : "An unexpected error occurred" 
     },
   };
 }
@@ -102,7 +148,6 @@ export async function createProjectFromFormData(formData: FormData): Promise<Act
       slug: formData.get("slug"),
       summary: formData.get("summary"),
       stack: JSON.parse(formData.get("stack") as string),
-      repo_url: formData.get("repo_url") || "",
       live_url: formData.get("live_url") || "",
       published: formData.get("published") === "true",
     };
@@ -120,10 +165,11 @@ export async function createProjectFromFormData(formData: FormData): Promise<Act
     if (file && file.size > 0) {
       try {
         const publicUrl = await uploadFile(supabase, file, `portfolio/${project.id}`);
-        await supabase
+        const { error: updateError } = await supabase
           .from("projects")
           .update({ cover_url: publicUrl })
           .eq("id", project.id);
+        if (updateError) throw new Error(`DB_UPDATE:${updateError.message}`);
       } catch (err) {
         await supabase.from("projects").delete().eq("id", project.id);
         throw err;
@@ -149,7 +195,6 @@ export async function updateProject(id: string, formData: FormData): Promise<Act
       slug: formData.get("slug"),
       summary: formData.get("summary"),
       stack: JSON.parse(formData.get("stack") as string),
-      repo_url: formData.get("repo_url") || "",
       live_url: formData.get("live_url") || "",
       published: formData.get("published") === "true",
     };
