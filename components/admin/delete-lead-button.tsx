@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { deleteLead } from "@/lib/actions/portfolio";
+import { toast } from "sonner";
 
 export function DeleteLeadButton({ id, name }: { id: string; name: string }) {
   const [loading, setLoading] = useState(false);
@@ -23,9 +24,10 @@ export function DeleteLeadButton({ id, name }: { id: string; name: string }) {
     try {
       await deleteLead(id);
       setOpen(false);
+      toast.success("Lead deleted successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to delete lead");
+      toast.error("Failed to delete lead");
     } finally {
       setLoading(false);
     }

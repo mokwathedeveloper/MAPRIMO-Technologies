@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { deleteProject } from "@/lib/actions/portfolio";
+import { toast } from "sonner";
 
 export function DeleteProjectButton({ id, title }: { id: string; title: string }) {
   const [loading, setLoading] = useState(false);
@@ -23,9 +24,10 @@ export function DeleteProjectButton({ id, title }: { id: string; title: string }
     try {
       await deleteProject(id);
       setOpen(false);
+      toast.success("Project deleted successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to delete project");
+      toast.error("Failed to delete project");
     } finally {
       setLoading(false);
     }

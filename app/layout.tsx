@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 
@@ -67,6 +68,7 @@ export default function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer />
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

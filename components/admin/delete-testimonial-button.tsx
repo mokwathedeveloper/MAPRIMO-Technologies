@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { deleteTestimonial } from "@/lib/actions/portfolio";
+import { toast } from "sonner";
 
 export function DeleteTestimonialButton({ id, name }: { id: string; name: string }) {
   const [loading, setLoading] = useState(false);
@@ -23,9 +24,10 @@ export function DeleteTestimonialButton({ id, name }: { id: string; name: string
     try {
       await deleteTestimonial(id);
       setOpen(false);
+      toast.success("Testimonial deleted successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to delete testimonial");
+      toast.error("Failed to delete testimonial");
     } finally {
       setLoading(false);
     }
