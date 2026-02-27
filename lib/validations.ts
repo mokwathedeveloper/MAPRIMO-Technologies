@@ -16,7 +16,7 @@ export const projectSchema = z.object({
   slug: z.string().min(2, "Slug must be at least 2 characters"),
   summary: z.string().min(10, "Summary must be at least 10 characters"),
   stack: z.array(z.string()).min(1, "At least one tech stack item required"),
-  cover_url: z.string().url("Invalid cover image URL"),
+  cover_url: z.string().optional().or(z.literal("")),
   repo_url: z.string().url("Invalid repository URL").optional().or(z.literal("")),
   live_url: z.string().url("Invalid live site URL").optional().or(z.literal("")),
   published: z.boolean().default(false),
