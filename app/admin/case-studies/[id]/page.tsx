@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { EditCaseStudyForm } from "@/components/admin/edit-case-study-form";
+import type { CaseStudy } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -22,13 +23,14 @@ export default async function EditCaseStudyPage({ params }: { params: { id: stri
     }
   );
 
-  const { data: caseStudy } = await supabase
+  const { data: caseStudy, error: fetchError } = await supabase
     .from("case_studies")
-    .select("*, projects(title)")
+    .select("*")
     .eq("id", params.id)
     .single();
 
-  if (!caseStudy) {
+  if (fetchError || !caseStudy) {
+    console.error("Error fetching case study:", fetchError);
     notFound();
   }
 
@@ -42,11 +44,11 @@ export default async function EditCaseStudyPage({ params }: { params: { id: stri
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Edit Case Study</h1>
-          <p className="text-muted-foreground">Deep dive into this project's transformation.</p>
+          <p className="text-muted-foreground">Update the details of this transformation.</p>
         </div>
       </div>
 
-      <EditCaseStudyForm caseStudy={caseStudy} />
+      <EditCaseStudyForm caseStudy={caseStudy as CaseStudy} />
     </div>
   );
 }

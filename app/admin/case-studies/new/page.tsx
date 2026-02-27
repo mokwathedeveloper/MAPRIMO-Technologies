@@ -9,15 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { createCaseStudy } from "@/lib/actions/portfolio";
-import { supabase } from "@/lib/supabase";
-import type { Project } from "@/lib/types";
 import { toast } from "sonner";
 
 const STAGES = [
-  { label: "Validating inputs...", progress: 20 },
-  { label: "Uploading screenshots...", progress: 50 },
-  { label: "Linking to project...", progress: 80 },
+  { label: "Validating content...", progress: 20 },
+  { label: "Uploading media...", progress: 50 },
+  { label: "Saving to database...", progress: 80 },
   { label: "Finalizing...", progress: 95 },
 ];
 
@@ -25,19 +24,11 @@ export default function NewCaseStudyPage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [stageIndex, setStageIndex] = useState(-1);
-  const [projects, setProjects] = useState<Project[]>([]);
   const [results, setResults] = useState<string[]>([""]);
   const [screenshotFiles, setScreenshotFiles] = useState<File[]>([]);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-
-  useEffect(() => {
-    async function fetchProjects() {
-      const { data } = await supabase.from("projects").select("id, title").order("title");
-      if (data) setProjects(data as Project[]);
-    }
-    fetchProjects();
-  }, []);
 
   // Perceived progress timer
   useEffect(() => {
@@ -70,25 +61,29 @@ export default function NewCaseStudyPage() {
     setError(null);
     setFieldErrors({});
 
-    const formData = new FormData(e.currentTarget);
-    const projectId = formData.get("project_id") as string;
-    const problem = formData.get("problem") as string;
-    const solution = formData.get("solution") as string;
-    const filteredResults = results.filter(r => r.trim() !== "");
+    if (!coverFile) {
+      toast.error("Please upload a cover image.");
+      return;
+    }
 
-    const submissionData = new FormData();
-    submissionData.append("project_id", projectId);
-    submissionData.append("problem", problem);
-    submissionData.append("solution", solution);
-    submissionData.append("results", JSON.stringify(filteredResults));
+    const formData = new FormData(e.currentTarget);
+    formData.set("cover", coverFile);
+    
+    const filteredResults = results.filter(r => r.trim() !== "");
+    formData.set("results", JSON.stringify(filteredResults));
+    
+    const tagsRaw = formData.get("tags") as string;
+    const tags = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(Boolean) : [];
+    formData.set("tags", JSON.stringify(tags));
+
     screenshotFiles.forEach(file => {
-      submissionData.append("screenshots", file);
+      formData.append("screenshots", file);
     });
 
     startTransition(async () => {
       setStageIndex(0);
       try {
-        const result = await createCaseStudy(submissionData);
+        const result = await createCaseStudy(formData);
         
         if (result.ok) {
           toast.success("Case study created successfully!");
@@ -124,7 +119,7 @@ export default function NewCaseStudyPage() {
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">New Case Study</h1>
-          <p className="text-muted-foreground">Deep dive into a successful project transformation.</p>
+          <p className="text-muted-foreground">Detail a successful project transformation.</p>
         </div>
       </div>
 
@@ -132,25 +127,74 @@ export default function NewCaseStudyPage() {
         <div className="grid gap-8">
           <Card>
             <CardHeader>
-              <CardTitle>Project Association</CardTitle>
+              <CardTitle>Basic Information</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input 
+                    id="title" 
+                    name="title" 
+                    placeholder="e.g. Scaling TechStream's Infrastructure" 
+                    required 
+                    disabled={isLoading}
+                  />
+                  {fieldErrors.title && (
+                    <p className="text-xs text-red-500">{fieldErrors.title[0]}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="slug">URL Slug</Label>
+                  <Input 
+                    id="slug" 
+                    name="slug" 
+                    placeholder="e.g. techstream-scaling" 
+                    required 
+                    disabled={isLoading}
+                  />
+                  {fieldErrors.slug && (
+                    <p className="text-xs text-red-500">{fieldErrors.slug[0]}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="client">Client Name</Label>
+                  <Input 
+                    id="client" 
+                    name="client" 
+                    placeholder="e.g. TechStream Inc." 
+                    required 
+                    disabled={isLoading}
+                  />
+                  {fieldErrors.client && (
+                    <p className="text-xs text-red-500">{fieldErrors.client[0]}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="tags">Tags (comma separated)</Label>
+                  <Input 
+                    id="tags" 
+                    name="tags" 
+                    placeholder="SaaS, Infrastructure, AWS" 
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="project_id">Select Project</Label>
-                <select 
-                  id="project_id" 
-                  name="project_id" 
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
+                <Label htmlFor="summary">Brief Summary</Label>
+                <Textarea 
+                  id="summary" 
+                  name="summary" 
+                  placeholder="A one-sentence summary of the impact..." 
+                  required 
                   disabled={isLoading}
-                >
-                  <option value="">-- Choose a project --</option>
-                  {projects.map(p => (
-                    <option key={p.id} value={p.id}>{p.title}</option>
-                  ))}
-                </select>
-                {fieldErrors.project_id && (
-                  <p className="text-xs text-red-500">{fieldErrors.project_id[0]}</p>
+                />
+                {fieldErrors.summary && (
+                  <p className="text-xs text-red-500">{fieldErrors.summary[0]}</p>
                 )}
               </div>
             </CardContent>
@@ -158,7 +202,7 @@ export default function NewCaseStudyPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Content</CardTitle>
+              <CardTitle>Case Study Content</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
@@ -166,7 +210,7 @@ export default function NewCaseStudyPage() {
                 <Textarea 
                   id="problem" 
                   name="problem" 
-                  placeholder="What was the client facing before MAPRIMO?" 
+                  placeholder="What was the client facing?" 
                   rows={5} 
                   required 
                   disabled={isLoading}
@@ -180,7 +224,7 @@ export default function NewCaseStudyPage() {
                 <Textarea 
                   id="solution" 
                   name="solution" 
-                  placeholder="How did our engineering and QA approach solve it?" 
+                  placeholder="How did we solve it?" 
                   rows={5} 
                   required 
                   disabled={isLoading}
@@ -216,19 +260,21 @@ export default function NewCaseStudyPage() {
                   )}
                 </div>
               ))}
-              {fieldErrors.results && (
-                <p className="text-xs text-red-500">{fieldErrors.results[0]}</p>
-              )}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Visuals (Screenshots)</CardTitle>
+              <CardTitle>Visuals</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-6">
+              <ImageUpload 
+                label="Cover Image" 
+                onFileSelect={setCoverFile} 
+              />
+
               <div className="space-y-2">
-                <Label htmlFor="screenshots">Upload Multiple Images</Label>
+                <Label htmlFor="screenshots">Detailed Screenshots (Optional)</Label>
                 <Input 
                   id="screenshots" 
                   name="screenshots" 
@@ -274,7 +320,7 @@ export default function NewCaseStudyPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Processing...
+                  Saving...
                 </>
               ) : (
                 <>

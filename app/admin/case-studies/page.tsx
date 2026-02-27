@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CaseStudyList } from "@/components/admin/case-study-list";
+import type { CaseStudy } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -21,10 +22,9 @@ export default async function CaseStudiesAdminPage() {
     }
   );
   
-  // Join with projects to get the title
   const { data: caseStudies } = await supabase
     .from("case_studies")
-    .select("*, projects(title, slug)")
+    .select("*")
     .order("created_at", { ascending: false });
 
   return (
@@ -32,7 +32,7 @@ export default async function CaseStudiesAdminPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Case Studies</h1>
-          <p className="text-muted-foreground">Manage your detailed case studies.</p>
+          <p className="text-muted-foreground">Manage your detailed transformation stories.</p>
         </div>
         <Link href="/admin/case-studies/new">
           <Button className="flex items-center gap-2">
@@ -42,7 +42,7 @@ export default async function CaseStudiesAdminPage() {
         </Link>
       </div>
 
-      <CaseStudyList initialCaseStudies={caseStudies || []} />
+      <CaseStudyList initialCaseStudies={(caseStudies || []) as CaseStudy[]} />
     </div>
   );
 }
