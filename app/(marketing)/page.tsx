@@ -340,7 +340,7 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {testimonials.length > 0 ? (
               testimonials.map((t) => (
-                <Card key={t.id} className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300">
+                <Card key={t.id} className="border-none shadow-sm h-full flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden">
                   <CardHeader className="pb-2">
                     <div className="flex gap-1 mb-4">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -349,7 +349,7 @@ export default async function HomePage() {
                         </svg>
                       ))}
                     </div>
-                    <CardDescription className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
+                    <CardDescription className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic break-words">
                       "{t.quote}"
                     </CardDescription>
                   </CardHeader>

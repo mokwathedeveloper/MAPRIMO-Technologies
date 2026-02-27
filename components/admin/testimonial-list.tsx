@@ -50,7 +50,7 @@ export function TestimonialList({ initialTestimonials }: { initialTestimonials: 
           </CardHeader>
           <CardContent className="relative">
             <Quote className="absolute -top-1 -left-1 h-8 w-8 text-primary/5 -rotate-12" />
-            <p className="text-sm leading-relaxed italic bg-muted/30 p-4 rounded-md border-l-4 border-primary/20">
+            <p className="text-sm leading-relaxed italic bg-muted/30 p-4 rounded-md border-l-4 border-primary/20 break-words">
               "{t.quote}"
             </p>
             <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1">
