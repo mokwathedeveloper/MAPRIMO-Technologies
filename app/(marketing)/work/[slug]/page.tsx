@@ -11,14 +11,26 @@ export const revalidate = 3600;
 
 async function getCaseStudy(slug: string) {
   try {
-    const { data } = await supabase
+    // We need !inner to filter the case_study by the joined project's slug
+    const { data, error } = await supabase
       .from("case_studies")
-      .select("*, projects(*)")
+      .select("*, projects!inner(*)")
       .eq("projects.slug", slug)
       .single();
     
-    return data as CaseStudy | null;
+    if (error) {
+      console.error("Error fetching case study by slug:", error);
+      return null;
+    }
+
+    const caseStudy = data as any;
+    if (caseStudy && Array.isArray(caseStudy.projects)) {
+      caseStudy.projects = caseStudy.projects[0];
+    }
+    
+    return caseStudy;
   } catch (e) {
+    console.error("Catch error fetching case study:", e);
     return null;
   }
 }
@@ -110,7 +122,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
             <section className="space-y-6">
               <h2 className="text-3xl font-bold tracking-tight">The Challenge</h2>
               <div className="text-lg leading-relaxed text-muted-foreground space-y-4">
-                {caseStudy.problem.split('\n').map((paragraph, i) => (
+                {caseStudy.problem.split('\n').map((paragraph: string, i: number) => (
                   <p key={i}>{paragraph}</p>
                 ))}
               </div>
@@ -119,7 +131,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
             <section className="space-y-6">
               <h2 className="text-3xl font-bold tracking-tight">Our Solution</h2>
               <div className="text-lg leading-relaxed text-muted-foreground space-y-4">
-                {caseStudy.solution.split('\n').map((paragraph, i) => (
+                {caseStudy.solution.split('\n').map((paragraph: string, i: number) => (
                   <p key={i}>{paragraph}</p>
                 ))}
               </div>
@@ -129,7 +141,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
               <section className="space-y-8">
                 <h2 className="text-3xl font-bold tracking-tight">Project Visuals</h2>
                 <div className="grid gap-8">
-                  {caseStudy.screenshots.map((url, i) => (
+                  {caseStudy.screenshots.map((url: string, i: number) => (
                     <div key={i} className="relative aspect-video rounded-xl overflow-hidden border shadow-lg">
                       <Image 
                         src={url} 
@@ -153,7 +165,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
                 Key Results
               </h3>
               <ul className="space-y-4">
-                {caseStudy.results.map((result: any, index: number) => (
+                {caseStudy.results.map((result: string, index: number) => (
                   <li key={index} className="flex items-start gap-3 text-sm font-medium">
                     <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                     <span>{result}</span>
@@ -168,7 +180,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
                 Technologies
               </h3>
               <div className="flex flex-wrap gap-2">
-                {project.stack.map((tag) => (
+                {project.stack.map((tag: string) => (
                   <span 
                     key={tag} 
                     className="text-xs font-bold bg-background border px-3 py-1.5 rounded-lg shadow-sm"
