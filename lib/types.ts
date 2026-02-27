@@ -60,3 +60,27 @@ export interface Post {
   published_at: string;
   created_at: string;
 }
+
+export interface Director {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  image_url: string;
+  linkedin_url?: string;
+  twitter_url?: string;
+  created_at: string;
+}
+
+export interface Podcast {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  audio_url: string;
+  cover_url: string;
+  duration: string;
+  author: string;
+  published_at: string;
+  created_at: string;
+}
