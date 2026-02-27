@@ -1,8 +1,10 @@
 "use client";
 
 import { useOptimistic, useTransition } from "react";
-import { Users, Linkedin, Twitter } from "lucide-react";
+import Link from "next/link";
+import { Users, Linkedin, Twitter, Pencil } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { DeleteDirectorButton } from "@/components/admin/delete-director-button";
 import { EmptyState } from "@/components/admin/empty-state";
 import type { Director } from "@/lib/types";
@@ -57,6 +59,11 @@ export function DirectorList({ initialDirectors }: { initialDirectors: Director[
                   </p>
                 </div>
                 <div className="flex gap-2">
+                  <Link href={`/admin/directors/${director.id}`}>
+                    <Button variant="ghost" size="icon" title="Edit">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  </Link>
                   <DeleteDirectorButton 
                     id={director.id} 
                     name={director.name} 

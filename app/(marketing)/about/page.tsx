@@ -3,13 +3,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Users, Target, ShieldCheck, Rocket } from "lucide-react";
+import { DirectorsSection } from "@/components/marketing/sections/directors";
+import { supabase } from "@/lib/supabase";
+import type { Director } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "About Us",
   description: "Learn more about MAPRIMO Technologies and our mission to help startups ship quality software fast.",
 };
 
-export default function AboutPage() {
+async function getDirectors() {
+  try {
+    const { data } = await supabase
+      .from("directors")
+      .select("*")
+      .order("created_at", { ascending: true });
+    return (data || []) as Director[];
+  } catch (e) {
+    return [];
+  }
+}
+
+export default async function AboutPage() {
+  const directors = await getDirectors();
+
   return (
     <>
       {/* Hero Section */}
@@ -65,6 +82,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Leadership Section */}
+      <DirectorsSection directors={directors} />
 
       {/* Values Section */}
       <section className="py-24 bg-background">

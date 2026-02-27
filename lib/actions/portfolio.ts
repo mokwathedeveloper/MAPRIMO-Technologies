@@ -489,6 +489,43 @@ export async function deleteDirector(id: string): Promise<ActionResult> {
   }
 }
 
+export async function updateDirector(id: string, formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const file = formData.get("image") as File | null;
+    const rawData = {
+      name: formData.get("name"),
+      role: formData.get("role"),
+      bio: formData.get("bio"),
+      linkedin_url: formData.get("linkedin_url") || "",
+      twitter_url: formData.get("twitter_url") || "",
+    };
+
+    let image_url = formData.get("current_image_url") as string;
+
+    if (file && file.size > 0) {
+      image_url = await uploadFile(supabase, file, `directors/${id}`);
+    }
+
+    const validated = directorSchema.parse({ ...rawData, image_url });
+
+    const { error } = await supabase
+      .from("directors")
+      .update(validated)
+      .eq("id", id);
+
+    if (error) throw new Error(`DB:${error.message}`);
+    
+    revalidatePath("/admin/directors");
+    revalidatePath("/");
+    return { ok: true, data: null };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
 export async function createPodcast(formData: FormData): Promise<ActionResult> {
   try {
     const supabase = await getAdminSupabase();
@@ -555,6 +592,54 @@ export async function deletePodcast(id: string): Promise<ActionResult> {
     if (!supabase) throw new Error("AUTH");
     
     const { error } = await supabase.from("podcasts").delete().eq("id", id);
+    if (error) throw new Error(`DB:${error.message}`);
+    
+    revalidatePath("/admin/podcasts");
+    revalidatePath("/podcast");
+    revalidatePath("/");
+    return { ok: true, data: null };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function updatePodcast(id: string, formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = await getAdminSupabase();
+    if (!supabase) throw new Error("AUTH");
+    
+    const coverFile = formData.get("cover") as File | null;
+    const audioFile = formData.get("audio") as File | null;
+    
+    const rawData = {
+      title: formData.get("title"),
+      slug: formData.get("slug"),
+      description: formData.get("description"),
+      duration: formData.get("duration"),
+      author: formData.get("author") || "MAPRIMO Team",
+    };
+
+    let cover_url = formData.get("current_cover_url") as string;
+    let audio_url = formData.get("current_audio_url") as string;
+
+    if (coverFile && coverFile.size > 0) {
+      cover_url = await uploadFile(supabase, coverFile, `podcasts/${id}/cover`);
+    }
+    if (audioFile && audioFile.size > 0) {
+      audio_url = await uploadFile(supabase, audioFile, `podcasts/${id}/audio`);
+    }
+
+    const validated = podcastSchema.parse({ 
+      ...rawData, 
+      cover_url,
+      audio_url 
+    });
+
+    const { error } = await supabase
+      .from("podcasts")
+      .update(validated)
+      .eq("id", id);
+
     if (error) throw new Error(`DB:${error.message}`);
     
     revalidatePath("/admin/podcasts");

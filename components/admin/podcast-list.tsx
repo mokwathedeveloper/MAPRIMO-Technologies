@@ -2,7 +2,7 @@
 
 import { useOptimistic, useTransition } from "react";
 import Link from "next/link";
-import { Mic2, ExternalLink, Play, Calendar, Clock } from "lucide-react";
+import { Mic2, ExternalLink, Play, Calendar, Clock, Pencil } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DeletePodcastButton } from "@/components/admin/delete-podcast-button";
@@ -67,6 +67,11 @@ export function PodcastList({ initialEpisodes }: { initialEpisodes: Podcast[] })
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  <Link href={`/admin/podcasts/${episode.id}`}>
+                    <Button variant="ghost" size="icon" title="Edit">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  </Link>
                   <DeletePodcastButton 
                     id={episode.id} 
                     title={episode.title} 
