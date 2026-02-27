@@ -15,8 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CaseStudyCard } from "@/components/case-study-card";
 import { AccordionItem } from "@/components/ui/accordion";
+import { DirectorsSection } from "@/components/marketing/sections/directors";
+import { PodcastSection } from "@/components/marketing/sections/podcast";
 import { supabase } from "@/lib/supabase";
-import type { CaseStudy, Testimonial } from "@/lib/types";
+import type { CaseStudy, Testimonial, Director, Podcast } from "@/lib/types";
 
 export const revalidate = 3600;
 
@@ -48,10 +50,37 @@ async function getTestimonials() {
   }
 }
 
+async function getDirectors() {
+  try {
+    const { data } = await supabase
+      .from("directors")
+      .select("*")
+      .order("created_at", { ascending: true });
+    return (data || []) as Director[];
+  } catch (e) {
+    return [];
+  }
+}
+
+async function getPodcasts() {
+  try {
+    const { data } = await supabase
+      .from("podcasts")
+      .select("*")
+      .order("published_at", { ascending: false })
+      .limit(3);
+    return (data || []) as Podcast[];
+  } catch (e) {
+    return [];
+  }
+}
+
 export default async function HomePage() {
-  const [caseStudies, testimonials] = await Promise.all([
+  const [caseStudies, testimonials, directors, podcasts] = await Promise.all([
     getCaseStudies(),
     getTestimonials(),
+    getDirectors(),
+    getPodcasts(),
   ]);
 
   return (
@@ -260,6 +289,9 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Directors Section */}
+      <DirectorsSection directors={directors} />
+
       {/* Testimonials Section */}
       <section className="py-24 bg-muted/30">
         <div className="container animate-in fade-in slide-in-from-bottom-8 duration-1000">
@@ -350,6 +382,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Podcast Section */}
+      <PodcastSection episodes={podcasts} />
 
       {/* FAQ Section */}
       <section className="py-24 bg-background">
