@@ -10,7 +10,14 @@ export function CaseStudyCard({ caseStudy }: { caseStudy: any }) {
     ? caseStudy.projects[0] 
     : caseStudy.projects;
   
-  if (!project) return null;
+  if (!project) {
+    return (
+      <Card className="p-6 border-dashed border-2 flex flex-col items-center justify-center text-center">
+        <p className="text-sm text-muted-foreground">Case study found, but associated project data is missing.</p>
+        <p className="text-[10px] text-muted-foreground/50 mt-2">ID: {caseStudy.id}</p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">

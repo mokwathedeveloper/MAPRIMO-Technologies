@@ -20,18 +20,25 @@ import { PodcastSection } from "@/components/marketing/sections/podcast";
 import { supabase } from "@/lib/supabase";
 import type { CaseStudy, Testimonial, Director, Podcast } from "@/lib/types";
 
-export const revalidate = 3600;
+export const revalidate = 0;
 
 async function getCaseStudies() {
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("case_studies")
-      .select("*, projects(*)")
+      .select("*, projects(title, slug, cover_url, summary)")
       .order("created_at", { ascending: false })
       .limit(3);
+    
+    if (error) {
+      console.error("Supabase error fetching case studies on home:", error);
+      return [];
+    }
+    
+    console.log(`Home: Fetched ${data?.length || 0} case studies`);
     return (data || []) as any[];
   } catch (e) {
-    console.error("Error fetching case studies on home:", e);
+    console.error("Catch error fetching case studies on home:", e);
     return [];
   }
 }

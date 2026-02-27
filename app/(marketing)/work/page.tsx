@@ -36,7 +36,7 @@ async function getCaseStudies() {
     console.log("Fetching case studies...");
     const { data, error } = await supabase
       .from("case_studies")
-      .select("*, projects(*)") // Remove !inner to see if it's a join issue
+      .select("*, projects(title, slug, cover_url, summary)")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -44,12 +44,7 @@ async function getCaseStudies() {
       throw error;
     }
     
-    // Log sample to see structure
-    if (data && data.length > 0) {
-      console.log("Case study sample project structure:", typeof data[0].projects, Array.isArray(data[0].projects) ? "array" : "object");
-    }
-    
-    console.log(`Fetched ${data?.length || 0} case studies`);
+    console.log(`Work: Fetched ${data?.length || 0} case studies`);
     return (data || []) as any[];
   } catch (e) {
     console.error("Error fetching case studies:", e);
