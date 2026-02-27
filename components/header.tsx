@@ -4,9 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, ChevronRight, LayoutDashboard } from "lucide-react";
+import { Menu, X, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/lib/auth-context";
 
 const navLinks = [
   { href: "/services", label: "Services" },
@@ -19,7 +18,6 @@ const navLinks = [
 export function Header() {
   const [isOpen, setIsOpen] = React.useState(false);
   const pathname = usePathname();
-  const { user, signOut } = useAuth();
 
   // Close mobile nav when pathname changes
   React.useEffect(() => {
@@ -61,29 +59,11 @@ export function Header() {
           </div>
           
           <div className="flex items-center gap-4 pl-8 border-l-2 border-muted">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <Link href="/admin">
-                  <Button variant="outline" size="sm" className="rounded-xl font-bold gap-2 border-2">
-                    <LayoutDashboard size={14} /> Dashboard
-                  </Button>
-                </Link>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => signOut()}
-                  className="text-xs font-black uppercase tracking-widest text-red-500 hover:text-red-600 hover:bg-red-50"
-                >
-                  <LogOut size={14} />
-                </Button>
-              </div>
-            ) : (
-              <Link href="/contact">
-                <Button className="h-12 px-8 font-black uppercase tracking-widest text-xs rounded-xl shadow-2xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
-                  Launch Project
-                </Button>
-              </Link>
-            )}
+            <Link href="/contact">
+              <Button className="h-12 px-8 font-black uppercase tracking-widest text-xs rounded-xl shadow-2xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
+                Launch Project
+              </Button>
+            </Link>
           </div>
         </nav>
 
@@ -128,16 +108,6 @@ export function Header() {
                 Launch Project
               </Button>
             </Link>
-            {user && (
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => signOut()}
-                className="w-full h-16 rounded-[1.5rem] font-black uppercase tracking-[0.2em] border-2"
-              >
-                <LogOut size={20} className="mr-3" /> System Logout
-              </Button>
-            )}
           </div>
           <div className="pt-12 text-center">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">MAPRIMO Technologies // V2.0</p>
