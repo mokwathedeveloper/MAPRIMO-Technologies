@@ -80,3 +80,30 @@ Google Analytics is pre-configured. To enable it:
 1. Get your GA4 Measurement ID (e.g., `G-XXXXXXXXXX`).
 2. Add it to your `.env.local` (or Vercel Environment Variables) as `NEXT_PUBLIC_GA_ID`.
 3. The tracking script will automatically inject into the `<head>` on production builds.
+
+---
+
+## 🧪 Testing
+
+The project uses a comprehensive testing framework:
+*   **Vitest**: Unit and Integration tests.
+*   **Playwright**: End-to-End (E2E) testing.
+*   **React Testing Library**: Component testing.
+
+### Running Tests
+```bash
+# Run all unit and integration tests
+npm run test:unit
+
+# Run E2E tests (requires dev server running)
+npm run test:e2e
+
+# Run tests in interactive UI mode
+npx vitest --ui
+npx playwright test --ui
+```
+
+### Test Structure
+*   `tests/unit`: Logic, schemas, and utility tests.
+*   `tests/integration`: Server actions and complex component interactions.
+*   `tests/e2e`: Critical user flows and security guards.
