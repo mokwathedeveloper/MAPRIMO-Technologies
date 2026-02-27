@@ -74,11 +74,11 @@ async function uploadFile(supabase: any, file: File, folder: string) {
   return publicUrl;
 }
 
-export async function createProject(formData: FormData) {
+export async function createProjectFromFormData(formData: FormData) {
   const supabase = await getAdminSupabase();
   
   // Extract file and data
-  const file = formData.get("cover_image") as File;
+  const file = formData.get("cover") as File;
   const rawData = {
     title: formData.get("title"),
     slug: formData.get("slug"),
@@ -89,8 +89,7 @@ export async function createProject(formData: FormData) {
     published: formData.get("published") === "true",
   };
 
-  console.log("Creating project with data:", { ...rawData, stack_count: rawData.stack.length });
-
+  // Initial validation with placeholder URL
   const validated = projectSchema.parse({ ...rawData, cover_url: "https://placeholder.com" });
 
   // 1. Insert row to get ID
@@ -100,17 +99,19 @@ export async function createProject(formData: FormData) {
     .select()
     .single();
 
-  if (insertError) throw new Error(insertError.message);
+  if (insertError) throw new Error(`Project creation failed: ${insertError.message}`);
 
   // 2. Upload file to projects/<id>/
   try {
-    const publicUrl = await uploadFile(supabase, file, `portfolio/${project.id}`);
-    
-    // 3. Update row with actual URL
-    await supabase
-      .from("projects")
-      .update({ cover_url: publicUrl })
-      .eq("id", project.id);
+    if (file && file.size > 0) {
+      const publicUrl = await uploadFile(supabase, file, `portfolio/${project.id}`);
+      
+      // 3. Update row with actual URL
+      await supabase
+        .from("projects")
+        .update({ cover_url: publicUrl })
+        .eq("id", project.id);
+    }
   } catch (err) {
     // Cleanup if upload fails
     await supabase.from("projects").delete().eq("id", project.id);
