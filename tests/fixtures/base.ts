@@ -20,9 +20,7 @@ export const test = base.extend<{
     await use(errors);
 
     // After the test, verify no console errors occurred
-    expect(errors, `Expected no console errors, but found: 
-${errors.join('
-')}`).toHaveLength(0);
+    expect(errors, `Expected no console errors, but found: \n${errors.join('\n')}`).toHaveLength(0);
   },
 });
 
