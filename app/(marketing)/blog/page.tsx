@@ -133,7 +133,7 @@ export default async function BlogPage() {
           {posts.length === 0 && (
             <div className="text-center py-32 border-2 border-dashed rounded-[3rem] bg-muted/10">
               <h3 className="text-2xl font-bold text-muted-foreground mb-4">No posts published yet</h3>
-              <p className="text-muted-foreground/60 max-w-xs mx-auto">We're curating deep technical insights for you. Check back very soon!</p>
+              <p className="text-muted-foreground/60 max-w-xs mx-auto">We&apos;re curating deep technical insights for you. Check back very soon!</p>
             </div>
           )}
         </div>
