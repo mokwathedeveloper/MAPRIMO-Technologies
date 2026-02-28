@@ -60,7 +60,7 @@ export function TestimonialList({ initialTestimonials }: { initialTestimonials: 
           <CardContent className="relative pt-4 border-t border-muted/50">
             <Quote className="absolute -top-1 -left-1 h-8 w-8 text-primary/5 -rotate-12" />
             <p className="text-base leading-relaxed italic bg-muted/20 p-6 rounded-2xl border-l-4 border-primary/20 break-words font-medium">
-              "{t.quote}"
+              &quot;{t.quote}&quot;
             </p>
             <p className="text-[10px] font-bold text-muted-foreground mt-4 uppercase tracking-widest opacity-50">
               LOGGED ON // {new Date(t.created_at).toLocaleDateString()}
