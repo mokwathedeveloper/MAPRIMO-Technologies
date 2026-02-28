@@ -345,11 +345,11 @@ export default async function HomePage() {
                   <CardHeader className="pb-4 space-y-6">
                     <div className="flex items-center gap-4">
                       <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center font-black text-primary text-xl border-2 border-primary/10">
-                        {t.name.charAt(0)}
+                        {t.name ? t.name.charAt(0) : '?'}
                       </div>
                       <div>
-                        <p className="font-black text-xl leading-none tracking-tight break-words">{t.name}</p>
-                        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mt-2">{t.role}, {t.company}</p>
+                        <p className="font-black text-xl leading-none tracking-tight break-words">{t.name || "Anonymous"}</p>
+                        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mt-2">{t.role || "Partner"}, {t.company || "Stealth"}</p>
                       </div>
                     </div>
                     <div className="flex gap-1">
