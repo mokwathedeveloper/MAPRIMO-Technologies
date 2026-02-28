@@ -92,6 +92,10 @@ This project implements a Level 3 QA Maturity system, ensuring security, perform
 *   **Security Headers:** Next.js is configured with hardened headers (`X-Frame-Options`, `X-Content-Type-Options`, `HSTS`) verified via Playwright.
 *   **Dependency Auditing:** CI pipeline enforces `npm audit` on every PR to block high-severity vulnerabilities.
 
+### 🎨 Visual Regression
+*   **Snapshot Testing:** Playwright is configured (`tests/e2e/visual.spec.ts`) to capture and compare screenshots of key pages to detect unintended UI changes.
+*   **Run Visual Tests:** `npx playwright test visual`
+
 ### 📈 Production Monitoring
 *   **Error Tracking:** Integrated **Sentry** for real-time error reporting and performance monitoring.
 *   **Structured Logging:** A custom `logger` (`lib/logger.ts`) provides JSON-formatted logs for better observability in production environments.
