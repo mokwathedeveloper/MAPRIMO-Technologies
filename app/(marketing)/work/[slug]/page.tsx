@@ -201,7 +201,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
             <div className="p-8 rounded-2xl border bg-background shadow-sm space-y-6 text-center">
               <h3 className="text-xl font-bold leading-tight">Ready for similar results?</h3>
               <p className="text-sm text-muted-foreground">
-                Let's discuss how we can apply our engineering expertise to your project.
+                Let&apos;s discuss how we can apply our engineering expertise to your project.
               </p>
               <Link href="/contact" className="block">
                 <Button className="w-full font-bold h-12">
