@@ -35,7 +35,7 @@ export default defineConfig({
   },
 
   /* Fail on console errors */
-  // We can't easily do this globally in the config file itself for all tests without a fixture
+  // We can&apos;t easily do this globally in the config file itself for all tests without a fixture
   // But we can suggest it in the README or add a custom fixture.
   // For now, I will add it to the base test in a helper.
 /* Configure projects for major browsers */
@@ -61,9 +61,8 @@ projects: [
     testMatch: /admin\.spec\.ts/,
   },
 
-  {
-    name: 'firefox',
-...
+    {
+      name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
 
