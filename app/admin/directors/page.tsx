@@ -5,22 +5,17 @@ import { Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DirectorList } from "@/components/admin/director-list";
 import type { Director } from "@/lib/types";
+import { createServerSupabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
 export default async function DirectorsAdminPage() {
   const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
+  const supabase = createServerSupabase(cookieStore);
+  
+  if (!supabase) {
+    return null; // Handled by layout redirect
+  }
   
   const { data: directors } = await supabase
     .from("directors")
