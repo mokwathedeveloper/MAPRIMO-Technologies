@@ -1,22 +1,9 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect, type Page } from '@playwright/test';
 
 export const test = base.extend<{
   consoleErrors: string[];
 }>({
-  consoleErrors: async ({ page }, use) => {
-    const errors: string[] = [];
-    page.on('console', msg => {
-      if (msg.type() === 'error') {
-        // Filter out known/acceptable errors if any
-        if (!msg.text().includes('Warning: ')) {
-          errors.push(msg.text());
-        }
-      }
-    });
-    page.on('pageerror', err => {
-      errors.push(err.message);
-    });
-
+  page: async ({ page }, use) => {
     // Disable animations and transitions for more stable tests
     await page.addInitScript(() => {
       const style = document.createElement('style');
@@ -29,6 +16,26 @@ export const test = base.extend<{
         }
       `;
       document.head.appendChild(style);
+    });
+
+    // Emulate reduced motion
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+
+    await use(page);
+  },
+
+  consoleErrors: async ({ page }, use) => {
+    const errors: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        // Filter out known/acceptable errors if any
+        if (!msg.text().includes('Warning: ')) {
+          errors.push(msg.text());
+        }
+      }
+    });
+    page.on('pageerror', (err) => {
+      errors.push(err.message);
     });
 
     await use(errors);
