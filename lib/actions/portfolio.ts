@@ -87,7 +87,7 @@ export async function handleActionError(err: any): Promise<ActionResult> {
     };
   }
 
-  // Fallback for objects that look like ZodErrors but aren't instances
+  // Fallback for objects that look like ZodErrors but aren&apos;t instances
   if (err && typeof err === "object" && "issues" in err && Array.isArray(err.issues)) {
     try {
       const fieldErrors: Record<string, string[]> = {};
