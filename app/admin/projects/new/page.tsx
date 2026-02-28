@@ -127,6 +127,7 @@ export default function NewProjectPage() {
                     placeholder="e.g. My Awesome App" 
                     required 
                     disabled={isLoading}
+                    data-testid="project-title"
                   />
                   {fieldErrors.title && (
                     <p className="text-xs text-red-500">{fieldErrors.title[0]}</p>
@@ -140,6 +141,7 @@ export default function NewProjectPage() {
                     placeholder="e.g. my-awesome-app" 
                     required 
                     disabled={isLoading}
+                    data-testid="project-slug"
                   />
                   {fieldErrors.slug && (
                     <p className="text-xs text-red-500">{fieldErrors.slug[0]}</p>
@@ -155,6 +157,7 @@ export default function NewProjectPage() {
                   placeholder="A brief description of the project..." 
                   required 
                   disabled={isLoading}
+                  data-testid="project-summary"
                 />
                 {fieldErrors.summary && (
                   <p className="text-xs text-red-500">{fieldErrors.summary[0]}</p>
@@ -169,6 +172,7 @@ export default function NewProjectPage() {
                   placeholder="Next.js, TypeScript, Tailwind" 
                   required 
                   disabled={isLoading}
+                  data-testid="project-stack"
                 />
                 {fieldErrors.stack && (
                   <p className="text-xs text-red-500">{fieldErrors.stack[0]}</p>
@@ -209,7 +213,7 @@ export default function NewProjectPage() {
                   <Label htmlFor="published">Published</Label>
                   <p className="text-sm text-muted-foreground">Make this project visible on the website.</p>
                 </div>
-                <Switch id="published" name="published" disabled={isLoading} />
+                <Switch id="published" name="published" disabled={isLoading} data-testid="project-published" />
               </div>
             </CardContent>
           </Card>
@@ -239,7 +243,7 @@ export default function NewProjectPage() {
             <Link href="/admin/projects">
               <Button variant="outline" type="button" disabled={isLoading}>Cancel</Button>
             </Link>
-            <Button type="submit" disabled={isLoading} className="gap-2 min-w-[120px]">
+            <Button type="submit" disabled={isLoading} className="gap-2 min-w-[120px]" data-testid="project-submit">
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
