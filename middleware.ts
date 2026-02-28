@@ -13,7 +13,13 @@ export async function middleware(req: NextRequest) {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Missing Supabase environment variables in middleware");
+    if (req.nextUrl.pathname.startsWith("/admin")) {
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = "/login";
+      redirectUrl.searchParams.set("error", "misconfigured");
+      return NextResponse.redirect(redirectUrl);
+    }
+    return res;
   }
 
   const supabase = createServerClient(
