@@ -83,27 +83,34 @@ Google Analytics is pre-configured. To enable it:
 
 ---
 
-## 🧪 Testing
+## 🧪 Quality Assurance & Production Reliability
 
-The project uses a comprehensive testing framework:
-*   **Vitest**: Unit and Integration tests.
-*   **Playwright**: End-to-End (E2E) testing.
-*   **React Testing Library**: Component testing.
+This project implements a Level 3 QA Maturity system, ensuring security, performance, and reliability.
 
-### Running Tests
+### 🛡️ Security & RLS
+*   **RLS Verification:** Automated tests (`tests/security/rls.test.ts`) ensure Supabase Row Level Security prevents unauthorized data access or modification.
+*   **Security Headers:** Next.js is configured with hardened headers (`X-Frame-Options`, `X-Content-Type-Options`, `HSTS`) verified via Playwright.
+*   **Dependency Auditing:** CI pipeline enforces `npm audit` on every PR to block high-severity vulnerabilities.
+
+### 📈 Production Monitoring
+*   **Error Tracking:** Integrated **Sentry** for real-time error reporting and performance monitoring.
+*   **Structured Logging:** A custom `logger` (`lib/logger.ts`) provides JSON-formatted logs for better observability in production environments.
+*   **Health Monitoring:** Dedicated `/api/health` endpoint for uptime and database connectivity checks.
+
+### 🚦 Running Tests
 ```bash
-# Run all unit and integration tests
+# Run all unit, integration, and security tests
 npm run test:unit
 
-# Run E2E tests (requires dev server running)
+# Run E2E and header verification tests
 npm run test:e2e
 
-# Run tests in interactive UI mode
-npx vitest --ui
-npx playwright test --ui
+# Run tests in CI mode (Unit + E2E)
+npm run test:ci
 ```
 
-### Test Structure
-*   `tests/unit`: Logic, schemas, and utility tests.
-*   `tests/integration`: Server actions and complex component interactions.
-*   `tests/e2e`: Critical user flows and security guards.
+### 📂 Test Structure
+*   `tests/unit`: Zod schemas, logic, and `ActionResult` validation.
+*   `tests/integration`: Server action flows and database interactions.
+*   `tests/e2e`: Critical user flows (Lead Form, Admin Auth) and UI consistency.
+*   `tests/security`: Supabase RLS policies and HTTP security header verification.
