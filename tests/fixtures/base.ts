@@ -17,6 +17,20 @@ export const test = base.extend<{
       errors.push(err.message);
     });
 
+    // Disable animations and transitions for more stable tests
+    await page.addInitScript(() => {
+      const style = document.createElement('style');
+      style.innerHTML = `
+        *, *::before, *::after {
+          animation: none !important;
+          transition: none !important;
+          animation-duration: 0s !important;
+          transition-duration: 0s !important;
+        }
+      `;
+      document.head.appendChild(style);
+    });
+
     await use(errors);
 
     // After the test, verify no console errors occurred
