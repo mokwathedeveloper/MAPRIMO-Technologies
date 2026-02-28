@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
@@ -116,6 +117,7 @@ export default function RootLayout({
           {children}
         </AuthProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
