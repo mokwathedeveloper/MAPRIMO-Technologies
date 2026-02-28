@@ -18,7 +18,7 @@ export default function ContactPage() {
             Get in touch
           </div>
           <h1 className="text-5xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 leading-[0.9]">
-            Let's build <br /> <span className="text-primary italic">together.</span>
+            Let&apos;s build <br /> <span className="text-primary italic">together.</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
             Have a project in mind? Fill out the form below and our engineering team will get back to you within 24 hours.
@@ -34,7 +34,7 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <h3 className="text-3xl font-black tracking-tight">Strategy awaits.</h3>
                 <p className="text-xl text-muted-foreground leading-relaxed font-medium">
-                  Whether you need a full MVP build, an enterprise QA strategy, or a critical codebase rescue, we're ready to dive in.
+                  Whether you need a full MVP build, an enterprise QA strategy, or a critical codebase rescue, we&apos;re ready to dive in.
                 </p>
               </div>
 
