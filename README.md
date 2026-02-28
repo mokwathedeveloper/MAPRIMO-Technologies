@@ -9,7 +9,7 @@ A premium, full-stack Next.js application designed for a modern software enginee
 *   **Dynamic Portfolio & Case Studies:** Detailed breakdown of project challenges, solutions, and technical stacks.
 *   **Engineering Blog:** Markdown-supported articles with featured highlights and reading time estimates.
 *   **Podcast Integration:** Built-in audio player and episode listings.
-*   **Lead Generation:** Integrated contact form with honeypot bot protection and automated Google Sheets/Calendar sync.
+*   **Lead Generation:** Integrated contact form with honeypot bot protection. (TODO: Automated Google Sheets/Calendar sync).
 
 ### Admin Dashboard (CMS)
 *   **Full CRUD Capabilities:** Manage Projects, Case Studies, Testimonials, Blog Posts, Directors, and Podcasts.
@@ -83,23 +83,22 @@ Google Analytics is pre-configured. To enable it:
 
 ---
 
-## 🧪 Quality Assurance & Production Reliability
+## 🧪 Quality Assurance & Production Reliability (Initial Setup)
 
-This project implements a Level 3 QA Maturity system, ensuring security, performance, and reliability.
+*This section describes the planned QA architecture. Full implementation is in progress.*
 
 ### 🛡️ Security & RLS
-*   **RLS Verification:** Automated tests (`tests/security/rls.test.ts`) ensure Supabase Row Level Security prevents unauthorized data access or modification.
+*   **RLS Verification:** (TODO: Automated tests for Supabase Row Level Security).
 *   **Security Headers:** Next.js is configured with hardened headers (`X-Frame-Options`, `X-Content-Type-Options`, `HSTS`) verified via Playwright.
-*   **Dependency Auditing:** CI pipeline enforces `npm audit` on every PR to block high-severity vulnerabilities.
+*   **Dependency Auditing:** (TODO: CI pipeline enforcement).
 
 ### 🎨 Visual Regression
-*   **Snapshot Testing:** Playwright is configured (`tests/e2e/visual.spec.ts`) to capture and compare screenshots of key pages to detect unintended UI changes.
-*   **Run Visual Tests:** `npx playwright test visual`
+*   **Snapshot Testing:** (TODO: Playwright visual regression configuration).
 
 ### 📈 Production Monitoring
-*   **Error Tracking:** Integrated **Sentry** for real-time error reporting and performance monitoring.
-*   **Structured Logging:** A custom `logger` (`lib/logger.ts`) provides JSON-formatted logs for better observability in production environments.
-*   **Health Monitoring:** Dedicated `/api/health` endpoint for uptime and database connectivity checks.
+*   **Error Tracking:** Sentry pre-configured (Requires `NEXT_PUBLIC_SENTRY_DSN`).
+*   **Structured Logging:** A custom `logger` (`lib/logger.ts`) provides JSON-formatted logs for observability.
+*   **Health Monitoring:** (TODO: Fully automated uptime and database connectivity checks).
 
 ### 🚦 Running Tests
 ```bash
