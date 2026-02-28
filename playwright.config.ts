@@ -1,17 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests/e2e',
-  testMatch: /.*\.spec\.ts/,
+  testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -42,10 +35,6 @@ export default defineConfig({
     navigationTimeout: 30_000,
   },
 
-  /* Fail on console errors */
-  // We can't easily do this globally in the config file itself for all tests without a fixture
-  // But we can suggest it in the README or add a custom fixture.
-  // For now, I will add it to the base test in a helper.
 /* Configure projects for major browsers */
 projects: [
   { name: 'setup', testMatch: /auth\.setup\.ts/ },
@@ -54,8 +43,8 @@ projects: [
     name: 'chromium',
     use: { 
       ...devices['Desktop Chrome'],
-      // Use prepared auth state if available for admin tests
     },
+    testMatch: /e2e\/.*\.spec\.ts/,
     dependencies: ['setup'],
     /* Skip visual tests in CI unless on main branch */
     testIgnore: (process.env.CI && process.env.GITHUB_REF_NAME !== 'master' && process.env.GITHUB_REF_NAME !== 'main') ? /visual\.spec\.ts/ : undefined,
@@ -67,28 +56,32 @@ projects: [
       ...devices['Desktop Chrome'],
       storageState: '.auth/user.json',
     },
+    testMatch: /e2e\/admin\.spec\.ts/,
     dependencies: ['setup'],
-    testMatch: /admin\.spec\.ts/,
   },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      testMatch: /e2e\/.*\.spec\.ts/,
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      testMatch: /e2e\/.*\.spec\.ts/,
     },
 
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
       use: { ...devices['Pixel 5'] },
+      testMatch: /e2e\/.*\.spec\.ts/,
     },
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
+      testMatch: /e2e\/.*\.spec\.ts/,
     },
   ],
 
