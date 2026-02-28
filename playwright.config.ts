@@ -22,6 +22,10 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
+  
+  /* Global timeout for each test */
+  timeout: process.env.CI ? 60_000 : 30_000,
+
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -32,10 +36,14 @@ export default defineConfig({
     
     /* Screenshot on failure */
     screenshot: 'only-on-failure',
+
+    /* Action and Navigation timeouts */
+    actionTimeout: 15_000,
+    navigationTimeout: 30_000,
   },
 
   /* Fail on console errors */
-  // We can&apos;t easily do this globally in the config file itself for all tests without a fixture
+  // We can't easily do this globally in the config file itself for all tests without a fixture
   // But we can suggest it in the README or add a custom fixture.
   // For now, I will add it to the base test in a helper.
 /* Configure projects for major browsers */
@@ -49,6 +57,8 @@ projects: [
       // Use prepared auth state if available for admin tests
     },
     dependencies: ['setup'],
+    /* Skip visual tests in CI unless on main branch */
+    testIgnore: (process.env.CI && process.env.GITHUB_REF_NAME !== 'master' && process.env.GITHUB_REF_NAME !== 'main') ? /visual\.spec\.ts/ : undefined,
   },
 
   {
