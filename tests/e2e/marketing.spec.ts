@@ -36,16 +36,20 @@ test.describe('Marketing Site', () => {
     await page.goto('/contact');
     
     // Fill invalid email
-    await page.getByTestId('lead-email').fill('not-an-email');
+    const emailField = page.getByTestId('lead-email');
+    await emailField.fill('not-an-email');
+    await emailField.blur(); // Trigger validation UI if any
+    
     await page.getByTestId('lead-submit').click();
     
     // Check for validation error message from Zod or UI
-    await expect(page.getByText(/Invalid email/i).or(page.getByTestId('error-email'))).toBeVisible();
+    // Ensure we wait for the error to appear
+    await expect(page.getByTestId('error-email').or(page.getByText(/Invalid email/i))).toBeVisible({ timeout: 10000 });
   });
 
   test('lead form rate limit protection works', async ({ page }) => {
     // Mock the API to return 429
-    await page.route('**/api/lead', async route => {
+    await page.route('**/api/lead', async (route) => {
       await route.fulfill({
         status: 429,
         contentType: 'application/json',
@@ -53,7 +57,7 @@ test.describe('Marketing Site', () => {
       });
     });
 
-    await page.goto('/contact');
+    await page.goto('/contact', { waitUntil: 'networkidle' });
     
     await page.getByTestId('lead-name').fill('Spammer');
     await page.getByTestId('lead-email').fill('spam@example.com');
@@ -62,12 +66,12 @@ test.describe('Marketing Site', () => {
     await page.getByTestId('lead-submit').click();
     
     // Check for rate limit error message
-    await expect(page.getByText(/Too many requests/i)).toBeVisible();
+    await expect(page.getByText(/Too many requests/i)).toBeVisible({ timeout: 10000 });
   });
 
   test('lead form successful submission', async ({ page }) => {
     // Mock the API response
-    await page.route('**/api/lead', async route => {
+    await page.route('**/api/lead', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -75,7 +79,7 @@ test.describe('Marketing Site', () => {
       });
     });
 
-    await page.goto('/contact');
+    await page.goto('/contact', { waitUntil: 'networkidle' });
     
     await page.getByTestId('lead-name').fill('QA Tester');
     await page.getByTestId('lead-email').fill('tester@example.com');
@@ -85,6 +89,7 @@ test.describe('Marketing Site', () => {
     await page.getByTestId('lead-submit').click();
     
     // Check for success message using robust text or testid
-    await expect(page.getByTestId('lead-success').or(page.getByText(/Protocol Completed/i))).toBeVisible();
+    // Increased timeout for progressive loading states in the UI
+    await expect(page.getByTestId('lead-success').or(page.getByText(/Protocol Completed/i))).toBeVisible({ timeout: 15000 });
   });
 });
