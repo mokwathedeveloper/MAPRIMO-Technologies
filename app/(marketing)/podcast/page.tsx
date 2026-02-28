@@ -118,7 +118,7 @@ export default async function PodcastListingPage({
                             {episode.title}
                           </h2>
                           <p className="text-lg md:text-xl text-muted-foreground line-clamp-2 leading-relaxed font-medium opacity-80 italic break-words">
-                            "{episode.description}"
+                            &quot;{episode.description}&quot;
                           </p>
                         </div>
                         <div className="hidden lg:flex items-center justify-center px-6">
