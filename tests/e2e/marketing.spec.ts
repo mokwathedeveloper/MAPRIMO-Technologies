@@ -23,7 +23,7 @@ test.describe('Marketing Site', () => {
     // Test About navigation
     await page.getByRole('link', { name: 'About', exact: true }).click();
     await expect(page).toHaveURL(/\/about/);
-    await expect(page.getByText('Our Mission')).toBeVisible();
+    await expect(page.getByRole('main').getByText('Our Mission', { exact: true })).toBeVisible();
   });
 
   test('lead form validation errors work', async ({ page }) => {
@@ -79,6 +79,7 @@ test.describe('Marketing Site', () => {
     await page.getByTestId('lead-submit').click();
     
     // Check for success message
-    await expect(page.getByText('Transmission successful')).toBeVisible();
+    await expect(page.getByTestId('lead-success')).toBeVisible();
+    await expect(page.getByText('Protocol Completed')).toBeVisible();
   });
 });
