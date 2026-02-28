@@ -22,7 +22,7 @@ export default function NotFound() {
             Lost in the <br /><span className="text-primary italic">Stack.</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed">
-            The page you're looking for has either been refactored, <br className="hidden md:block" /> moved, or deleted from our technical specification.
+            The page you&apos;re looking for has either been refactored, <br className="hidden md:block" /> moved, or deleted from our technical specification.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function NotFound() {
         {/* Terminal-like footer */}
         <div className="pt-12">
           <div className="bg-muted/30 border rounded-2xl p-6 text-left font-mono text-xs text-muted-foreground/60 max-w-sm mx-auto space-y-1">
-            <p>$ maprimo-cli locate-page --slug="current"</p>
+            <p>$ maprimo-cli locate-page --slug=&quot;current&quot;</p>
             <p className="text-red-500/60">error: PAGE_NOT_FOUND_EXCEPTION</p>
             <p>&gt; initializing fallback sequence...</p>
             <p>&gt; redirection protocols ready.</p>
