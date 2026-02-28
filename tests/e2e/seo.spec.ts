@@ -32,7 +32,7 @@ test.describe('SEO & Metadata', () => {
     const response = await request.get('/robots.txt');
     expect(response.ok()).toBeTruthy();
     const text = await response.text();
-    expect(text).toContain('User-agent: *');
+    expect(text.toLowerCase()).toContain('user-agent: *');
   });
 
   test('sitemap.xml is accessible', async ({ request }) => {
