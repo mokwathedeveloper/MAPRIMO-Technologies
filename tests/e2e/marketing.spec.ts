@@ -1,6 +1,15 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Marketing Site', () => {
+  test.beforeEach(async ({ page }) => {
+    // Fail on console errors
+    page.on('console', msg => {
+      if (msg.type() === 'error') {
+        throw new Error(`Browser console error: ${msg.text()}`);
+      }
+    });
+  });
+
   test('home page loads correctly', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(/MAPRIMO Technologies/);
@@ -26,16 +35,37 @@ test.describe('Marketing Site', () => {
     await expect(page.getByText('Our Mission')).toBeVisible();
   });
 
-  test('lead form validation works', async ({ page }) => {
+  test('lead form validation errors work', async ({ page }) => {
     await page.goto('/contact');
     
-    // Submit empty form
+    // Fill invalid email
+    await page.getByTestId('lead-email').fill('not-an-email');
     await page.getByTestId('lead-submit').click();
     
-    // Check for standard browser validation or our custom errors
-    // Since we use 'required' attribute, browser might stop it, but let's check our field errors if any
-    const emailInput = page.getByTestId('lead-email');
-    await expect(emailInput).toHaveAttribute('required', '');
+    // Check for validation error message from Zod
+    await expect(page.getByTestId('error-email')).toContainText('Invalid email address');
+  });
+
+  test('lead form rate limit protection works', async ({ page }) => {
+    // Mock the API to return 429
+    await page.route('**/api/lead', async route => {
+      await route.fulfill({
+        status: 429,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Too many requests. Please try again in 1 minute.' }),
+      });
+    });
+
+    await page.goto('/contact');
+    
+    await page.getByTestId('lead-name').fill('Spammer');
+    await page.getByTestId('lead-email').fill('spam@example.com');
+    await page.getByTestId('lead-message').fill('Spamming the lead form.');
+    
+    await page.getByTestId('lead-submit').click();
+    
+    // Check for rate limit error message
+    await expect(page.getByText('Too many requests')).toBeVisible();
   });
 
   test('lead form successful submission', async ({ page }) => {

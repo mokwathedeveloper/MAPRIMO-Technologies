@@ -34,6 +34,11 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
+  /* Fail on console errors */
+  // We can't easily do this globally in the config file itself for all tests without a fixture
+  // But we can suggest it in the README or add a custom fixture.
+  // For now, I will add it to the base test in a helper.
+
   /* Configure projects for major browsers */
   projects: [
     {
