@@ -5,6 +5,7 @@ import { createBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ShieldCheck, Lock, Mail, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -86,9 +87,12 @@ export default function LoginPage() {
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
+                  <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest opacity-50 ml-1 text-left block">Admin Email</Label>
                   <div className="relative group">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                     <Input
+                      id="email"
+                      name="email"
                       type="email"
                       placeholder="Admin Email"
                       value={email}
@@ -96,13 +100,17 @@ export default function LoginPage() {
                       required
                       className="h-14 pl-12 rounded-2xl border-2 border-muted bg-muted/20 focus-visible:ring-primary focus-visible:border-primary font-medium"
                       disabled={loading}
+                      data-testid="login-email"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest opacity-50 ml-1 text-left block">Access Token</Label>
                   <div className="relative group">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                     <Input
+                      id="password"
+                      name="password"
                       type="password"
                       placeholder="Access Token / Password"
                       value={password}
@@ -110,6 +118,7 @@ export default function LoginPage() {
                       required
                       className="h-14 pl-12 rounded-2xl border-2 border-muted bg-muted/20 focus-visible:ring-primary focus-visible:border-primary font-medium"
                       disabled={loading}
+                      data-testid="login-password"
                     />
                   </div>
                 </div>
@@ -125,6 +134,7 @@ export default function LoginPage() {
                 type="submit" 
                 className="w-full h-14 rounded-2xl font-black text-lg gap-3 shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]" 
                 disabled={loading}
+                data-testid="login-submit"
               >
                 {loading ? (
                   <>
