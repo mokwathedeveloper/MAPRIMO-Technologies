@@ -42,7 +42,7 @@ export function PodcastSection({ episodes }: PodcastSectionProps) {
               <Mic2 className="h-20 w-20 text-muted-foreground/10 mx-auto mb-6" />
               <h3 className="text-2xl font-bold text-muted-foreground uppercase tracking-widest opacity-40">New episodes in production</h3>
               <p className="text-sm text-muted-foreground/60 max-w-xs mx-auto mt-4 font-medium">
-                We're currently preparing insightful conversations for our upcoming episodes.
+                We&apos;re currently preparing insightful conversations for our upcoming episodes.
               </p>
             </div>
           ) : (
@@ -79,7 +79,7 @@ export function PodcastSection({ episodes }: PodcastSectionProps) {
                         </Link>
                       </h3>
                       <p className="text-lg md:text-xl text-muted-foreground line-clamp-1 font-medium italic opacity-80 break-words">
-                        "{episode.description}"
+                        &quot;{episode.description}&quot;
                       </p>
                     </div>
 
