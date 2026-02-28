@@ -11,6 +11,12 @@ blob-report/
 playwright/.cache/
 .auth/
 
+# next.js
+.next/
+out/
+build/
+dist/
+
 # env files
 .env
 .env*.local
