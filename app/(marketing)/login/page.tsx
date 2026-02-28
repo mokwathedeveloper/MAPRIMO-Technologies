@@ -19,8 +19,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   
   const supabase = useMemo(() => createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://none.supabase.co",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy.key"
   ), []);
 
   const router = useRouter();
