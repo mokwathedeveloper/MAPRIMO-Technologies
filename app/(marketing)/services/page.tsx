@@ -24,7 +24,7 @@ const services = [
     title: "MVP Build",
     description: "Architecting for scale from Day 1.",
     icon: Boxes,
-    longDesc: "We don't just build features; we engineer systems. Our MVP process focuses on delivering a production-ready core that's ready for your first 10,000 users, not just a simple proof of concept.",
+    longDesc: "We don&apos;t just build features; we engineer systems. Our MVP process focuses on delivering a production-ready core that&apos;s ready for your first 10,000 users, not just a simple proof of concept.",
     features: [
       "Scalable Next.js Architecture",
       "Clean Code & SOLID Principles",
