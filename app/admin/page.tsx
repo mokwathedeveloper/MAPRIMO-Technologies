@@ -16,21 +16,24 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+import { createServerSupabase } from "@/lib/supabase";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
   const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
+  const supabase = createServerSupabase(cookieStore);
+
+  if (!supabase) {
+    return (
+      <div className="p-8 border-4 border-destructive/20 rounded-[2.5rem] bg-destructive/5 text-center space-y-4">
+        <h1 className="text-2xl font-black uppercase text-destructive">Configuration Error</h1>
+        <p className="text-muted-foreground font-medium">
+          Supabase environment variables are missing. Please check your deployment settings.
+        </p>
+      </div>
+    );
+  }
   
   // Fetch stats in parallel
   const [
