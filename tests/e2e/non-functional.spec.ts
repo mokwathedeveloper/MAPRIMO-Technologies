@@ -30,7 +30,7 @@ test.describe('Non-functional Tests', () => {
 
     await page.goto('/');
     
-    // Ignore Supabase auth warning as it's common in development
+    // Ignore Supabase auth warning as it&apos;s common in development
     const criticalErrors = errors.filter(err => !err.includes('supabase.auth.getSession'));
     
     expect(criticalErrors).toEqual([]);
