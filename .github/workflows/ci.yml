@@ -19,7 +19,16 @@ jobs:
     
     - name: Install dependencies
       run: npm ci
-    
+
+    - name: Security Audit
+      run: npm audit --audit-level=high
+
+    - name: Lint
+      run: npm run lint
+
+    - name: Typecheck
+      run: npx tsc --noEmit
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
@@ -37,6 +46,13 @@ jobs:
       env:
         NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+    - name: Lighthouse CI
+      run: |
+        npm install -g @lhci/cli@0.13.x
+        lhci autorun --collect.staticDistDir="./.next" --assert.assertions.categories:performance="warn" --assert.assertions.categories:accessibility="error"
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
     - uses: actions/upload-artifact@v4
       if: always()
