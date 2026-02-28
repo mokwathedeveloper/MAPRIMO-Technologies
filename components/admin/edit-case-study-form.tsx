@@ -1,5 +1,5 @@
-import { logger } from "@/lib/logger";
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -131,7 +131,7 @@ export function EditCaseStudyForm({ caseStudy }: { caseStudy: CaseStudy }) {
                   id="title" 
                   name="title" 
                   defaultValue={caseStudy.title}
-                  placeholder="e.g. Scaling TechStream's Infrastructure" 
+                  placeholder="e.g. Scaling TechStream&apos;s Infrastructure" 
                   required 
                   disabled={isLoading}
                 />
