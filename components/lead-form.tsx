@@ -98,7 +98,7 @@ export function LeadForm() {
 
   if (message?.type === "success") {
     return (
-      <div className="py-12 px-6 text-center space-y-6 animate-in fade-in zoom-in duration-700">
+      <div className="py-12 px-6 text-center space-y-6 animate-in fade-in zoom-in duration-700" data-testid="lead-success">
         <div className="mx-auto w-20 h-20 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary mb-8 shadow-2xl shadow-primary/20 border-2 border-primary/20">
           <CheckCircle2 size={40} />
         </div>
