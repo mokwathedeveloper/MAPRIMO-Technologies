@@ -72,7 +72,7 @@ export default async function AboutPage() {
                 <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-tight font-heading">Speed and quality are not mutually exclusive.</h3>
               </div>
               <p className="text-xl text-muted-foreground leading-relaxed font-medium">
-                By embedding QA into the development process from day one, we help our clients ship faster by breaking less. We don't just build features; we build scalable, testable systems that grow with your user base.
+                By embedding QA into the development process from day one, we help our clients ship faster by breaking less. We don&apos;t just build features; we build scalable, testable systems that grow with your user base.
               </p>
               <div className="grid gap-6">
                 {[
@@ -109,7 +109,7 @@ export default async function AboutPage() {
               {
                 icon: ShieldCheck,
                 title: "QA First Mentality",
-                desc: "We don't just write code; we ensure it works at scale through robust automation. Bugs are caught before they reach production."
+                desc: "We don&apos;t just write code; we ensure it works at scale through robust automation. Bugs are caught before they reach production."
               },
               {
                 icon: Rocket,
@@ -143,7 +143,7 @@ export default async function AboutPage() {
             <div className="space-y-4 relative z-10">
               <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-none font-heading">Ready to work together?</h2>
               <p className="text-xl md:text-2xl opacity-90 max-w-2xl mx-auto leading-relaxed font-medium">
-                We're always looking for ambitious founders and teams who want to build something exceptional.
+                We&apos;re always looking for ambitious founders and teams who want to build something exceptional.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4 relative z-10">
