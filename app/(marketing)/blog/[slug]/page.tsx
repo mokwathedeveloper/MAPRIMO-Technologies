@@ -192,7 +192,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div className="absolute top-0 left-0 h-64 w-64 rounded-full bg-white/5 blur-[60px]" />
             <h3 className="text-4xl md:text-6xl font-black tracking-tighter leading-none relative z-10">Architect your <br /><span className="italic opacity-80">next breakthrough.</span></h3>
             <p className="text-xl md:text-2xl opacity-90 max-w-2xl mx-auto font-medium leading-relaxed relative z-10">
-              Our engineering team specializes in helping startups build quality products fast. Let's discuss your technical roadmap.
+              Our engineering team specializes in helping startups build quality products fast. Let&apos;s discuss your technical roadmap.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6 relative z-10">
               <Link href="/contact">
