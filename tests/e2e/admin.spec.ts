@@ -1,7 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@/tests/fixtures/base';
 
 test.describe('Admin Security & Management', () => {
-  test('redirects to login if not authenticated', async ({ page }) => {
+  // This test should only run in unauthenticated environments
+  test('redirects to login if not authenticated', async ({ page, browserName }) => {
+    // Skip this test in the 'authenticated' project. 
+    // We can detect it by checking if storageState is set or by checking the project name.
+    // However, it's easier to just skip if we are on the 'authenticated' project.
+    if (test.info().project.name === 'authenticated') {
+      test.skip();
+    }
+    
     // Attempt to access admin dashboard directly
     await page.goto('/admin');
     
@@ -11,6 +19,13 @@ test.describe('Admin Security & Management', () => {
   });
 
   test.describe('Admin Dashboard Features', () => {
+    test.beforeEach(async ({ page }) => {
+      // Skip if not in authenticated project
+      if (test.info().project.name !== 'authenticated') {
+        test.skip();
+      }
+    });
+
     test('complete project lifecycle (create, view public, edit, delete)', async ({ page }) => {
       const projectTitle = `E2E Test Project ${Date.now()}`;
       const projectSlug = `e2e-test-${Date.now()}`;
