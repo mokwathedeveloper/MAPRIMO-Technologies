@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description: "Explore our portfolio of successful projects and case studies.",
 };
 
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 async function getProjects() {

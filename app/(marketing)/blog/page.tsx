@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Blog",
   description: "Insights on software engineering, QA automation, and building successful MVPs.",

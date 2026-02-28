@@ -36,6 +36,12 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
+    - name: Verify Environment Configuration
+      run: |
+        if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then echo "::error::NEXT_PUBLIC_SUPABASE_URL is missing"; exit 1; fi
+        if [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then echo "::error::NEXT_PUBLIC_SUPABASE_ANON_KEY is missing"; exit 1; fi
+        echo "Environment configuration verified."
+
     - name: Build
       run: npm run build
       env:

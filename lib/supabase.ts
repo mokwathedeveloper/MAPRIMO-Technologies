@@ -15,8 +15,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Fallback to a valid URL format if missing, to allow client initialization without immediate crash during build/prerender.
 // Actual requests will fail gracefully with a connection error or be caught by middleware.
 export const supabase = createClient(
-  supabaseUrl || "https://disabled.supabase.co", 
-  supabaseAnonKey || "disabled"
+  supabaseUrl || "https://none.supabase.co", 
+  supabaseAnonKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy.key"
 );
 
 /**

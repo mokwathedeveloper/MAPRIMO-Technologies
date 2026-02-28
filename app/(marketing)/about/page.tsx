@@ -8,6 +8,7 @@ import { DirectorsSection } from "@/components/marketing/sections/directors";
 import { supabase } from "@/lib/supabase";
 import type { Director } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "About Us",
   description: "Learn more about MAPRIMO Technologies and our mission to help startups ship quality software fast.",

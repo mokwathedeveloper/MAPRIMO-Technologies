@@ -27,6 +27,7 @@ import { PodcastSection } from "@/components/marketing/sections/podcast";
 import { supabase } from "@/lib/supabase";
 import type { CaseStudy, Testimonial, Director, Podcast } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 async function getCaseStudies() {

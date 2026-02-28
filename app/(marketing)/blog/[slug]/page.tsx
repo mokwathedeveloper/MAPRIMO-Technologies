@@ -8,6 +8,7 @@ import type { Post } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, User, Share2, ArrowRight } from "lucide-react";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 async function getPost(slug: string) {

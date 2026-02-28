@@ -9,6 +9,7 @@ import type { CaseStudy } from "@/lib/types";
 import { ArrowLeft, CheckCircle2, Code2, Rocket, Globe, Github, ArrowRight } from "lucide-react";
 import { CaseStudyCard } from "@/components/case-study-card";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 async function getCaseStudy(slug: string) {
