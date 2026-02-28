@@ -82,11 +82,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-primary">
               <div className="flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full">
                 <Calendar className="h-3.5 w-3.5" />
-                {new Date(post.published_at).toLocaleDateString('en-US', {
+                {post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
                   year: 'numeric'
-                })}
+                }) : 'Draft'}
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <User className="h-3.5 w-3.5" />
