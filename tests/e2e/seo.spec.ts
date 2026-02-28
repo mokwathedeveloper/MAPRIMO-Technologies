@@ -5,7 +5,9 @@ test.describe('SEO & Metadata', () => {
 
   test('should have essential SEO tags on all key pages', async ({ page }) => {
     for (const route of routes) {
-      await page.goto(route);
+      // Use deterministic load waits
+      await page.goto(route, { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle');
 
       // Check Title
       await expect(page).toHaveTitle(/MAPRIMO Technologies/);
