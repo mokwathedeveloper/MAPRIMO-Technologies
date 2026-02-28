@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ShieldCheck, Lock, Mail, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useMemo } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,10 +18,11 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = useMemo(() => createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+  ), []);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectedFrom = searchParams.get("redirectedFrom") || "/admin";
