@@ -292,7 +292,7 @@ export default async function HomePage() {
                       step: "03", 
                       title: "QA Embedding", 
                       icon: Bug,
-                      desc: "Automated and manual testing are baked into the code as it's written, not added at the end." 
+                      desc: "Automated and manual testing are baked into the code as it&apos;s written, not added at the end." 
                     },
                     { 
                       step: "04", 
@@ -363,7 +363,7 @@ export default async function HomePage() {
                   <CardContent className="pt-0">
                     <div className="h-px w-full bg-foreground/5 mb-6" />
                     <p className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic break-words">
-                      "{t.quote}"
+                      &quot;{t.quote}&quot;
                     </p>
                   </CardContent>
                 </Card>
@@ -390,7 +390,7 @@ export default async function HomePage() {
                   <CardContent className="pt-0">
                     <div className="h-px w-full bg-foreground/5 mb-6" />
                     <p className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
-                      "MAPRIMO transformed our development process. Their QA-first approach saved us weeks of rework and delivered a superior product."
+                      &quot;MAPRIMO transformed our development process. Their QA-first approach saved us weeks of rework and delivered a superior product.&quot;
                     </p>
                   </CardContent>
                 </Card>
@@ -414,7 +414,7 @@ export default async function HomePage() {
                   <CardContent className="pt-0">
                     <div className="h-px w-full bg-foreground/5 mb-6" />
                     <p className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
-                      "The MVP they built was production-ready from day one. Truly a strategic partner, not just another dev shop."
+                      &quot;The MVP they built was production-ready from day one. Truly a strategic partner, not just another dev shop.&quot;
                     </p>
                   </CardContent>
                 </Card>
@@ -437,7 +437,7 @@ export default async function HomePage() {
           
           <div className="max-w-2xl mx-auto bg-muted/20 rounded-xl border p-2 md:p-6">
             <AccordionItem trigger="How long does an MVP take?">
-              Typically 4-8 weeks depending on complexity. We focus on building the "Minimum" part of MVP so you can start gathering real user feedback as fast as possible without compromising quality.
+              Typically 4-8 weeks depending on complexity. We focus on building the &quot;Minimum&quot; part of MVP so you can start gathering real user feedback as fast as possible without compromising quality.
             </AccordionItem>
             <AccordionItem trigger="Do you work with non-technical founders?">
               Absolutely. We act as your technical partner, explaining trade-offs in plain English and helping you make product decisions that align with your business goals.
@@ -445,7 +445,7 @@ export default async function HomePage() {
             <AccordionItem trigger="What tech stack do you use?">
               While we are experts in Next.js, React, Node.js, and Supabase, we choose the right tool for the job. Our primary focus is on choosing technology that is scalable, secure, and cost-effective.
             </AccordionItem>
-            <AccordionItem trigger="What does 'QA-first' mean?">
+            <AccordionItem trigger="What does &apos;QA-first&apos; mean?">
               It means we write tests alongside code. Instead of waiting until the end of the project to find bugs, we catch them instantly. This results in faster delivery and a significantly more stable product.
             </AccordionItem>
             <AccordionItem trigger="Do you offer ongoing support?">
@@ -466,7 +466,7 @@ export default async function HomePage() {
           <div className="relative z-10 max-w-3xl mx-auto space-y-8">
             <h2 className="text-4xl md:text-6xl font-black tracking-tight font-heading">Ready to build your next breakthrough?</h2>
             <p className="text-xl opacity-90 leading-relaxed">
-              Stop fighting bugs and start shipping features. Let's discuss your project roadmap and how we can help you hit your next milestone.
+              Stop fighting bugs and start shipping features. Let&apos;s discuss your project roadmap and how we can help you hit your next milestone.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link href="/contact">
