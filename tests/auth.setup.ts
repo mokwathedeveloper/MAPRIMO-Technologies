@@ -1,11 +1,16 @@
 import { test as setup, expect } from '@playwright/test';
 import path from 'path';
+import fs from 'fs';
 
 const authFile = path.join(__dirname, '../.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
-  // Increase timeout for CI environment
-  setup.setTimeout(90_000);
+  // Ensure the directory for the auth file exists
+  if (!fs.existsSync(path.dirname(authFile))) {
+    fs.mkdirSync(path.dirname(authFile), { recursive: true });
+  }
+
+  // Increase timeout for CI environment  setup.setTimeout(90_000);
 
   // Use a dedicated admin login for E2E
   // These should be set in CI secrets
