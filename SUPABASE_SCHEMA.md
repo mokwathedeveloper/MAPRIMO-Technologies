@@ -96,3 +96,4 @@ create table posts (
 alter table posts enable row level security;
 create policy "Allow public read-only access" on posts for select using (true);
 ```
+\n## TODO: Document remaining tables (directors, podcasts, admins, case_studies extension)
