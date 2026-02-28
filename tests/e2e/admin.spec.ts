@@ -17,11 +17,14 @@ test.describe('Admin Security & Management', () => {
 
       // 1. Create Project
       await page.goto('/admin/projects/new');
-      await page.fill('input[name="title"]', projectTitle);
-      await page.fill('input[name="slug"]', projectSlug);
-      await page.fill('textarea[name="summary"]', 'Automation testing project summary.');
-      await page.check('input[name="published"]'); // Ensure it is published
-      await page.click('button[type="submit"]');
+      await expect(page).toHaveURL(/\/admin\/projects\/new/);
+      
+      await expect(page.getByTestId('project-title')).toBeVisible();
+      await page.getByTestId('project-title').fill(projectTitle);
+      await page.getByTestId('project-slug').fill(projectSlug);
+      await page.getByTestId('project-summary').fill('Automation testing project summary.');
+      await page.getByTestId('project-published').check(); 
+      await page.getByTestId('project-submit').click();
 
       // Verify creation
       await expect(page.getByText('Project created successfully')).toBeVisible();
