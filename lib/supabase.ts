@@ -12,11 +12,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
 }
 
-// Fallback to empty string if missing, to allow client initialization without immediate crash
-// Middleware and AuthContext will handle redirection or error state
+// Fallback to a valid URL format if missing, to allow client initialization without immediate crash during build/prerender.
+// Actual requests will fail gracefully with a connection error or be caught by middleware.
 export const supabase = createClient(
-  supabaseUrl || "", 
-  supabaseAnonKey || ""
+  supabaseUrl || "https://disabled.supabase.co", 
+  supabaseAnonKey || "disabled"
 );
 
 /**
