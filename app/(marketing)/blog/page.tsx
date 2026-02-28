@@ -72,7 +72,7 @@ export default async function BlogPage() {
                   <div className="space-y-6">
                     <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
                       <span className="bg-primary/10 px-3 py-1 rounded-full">Featured Article</span>
-                      <span className="text-muted-foreground">{new Date(featuredPost.published_at).toLocaleDateString()}</span>
+                      <span className="text-muted-foreground">{featuredPost.published_at ? new Date(featuredPost.published_at).toLocaleDateString() : 'Draft'}</span>
                     </div>
                     <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight group-hover:text-primary transition-colors break-words">
                       {featuredPost.title}
@@ -109,7 +109,7 @@ export default async function BlogPage() {
                 )}
                 <CardHeader className="flex-grow p-8">
                   <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 flex items-center justify-between">
-                    <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                    <span>{post.published_at ? new Date(post.published_at).toLocaleDateString() : 'Draft'}</span>
                     <span className="opacity-50">5 min read</span>
                   </div>
                   <CardTitle className="line-clamp-2 text-2xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight break-words">
