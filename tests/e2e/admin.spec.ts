@@ -11,21 +11,49 @@ test.describe('Admin Security & Management', () => {
   });
 
   test.describe('Admin Dashboard Features', () => {
-    test('project creation flow', async ({ page }) => {
-      // 1. Navigate to new project
+    test('complete project lifecycle (create, view public, edit, delete)', async ({ page }) => {
+      const projectTitle = `E2E Test Project ${Date.now()}`;
+      const projectSlug = `e2e-test-${Date.now()}`;
+
+      // 1. Create Project
       await page.goto('/admin/projects/new');
-      
-      // 2. Fill in project details
-      await page.fill('input[name="title"]', 'E2E Test Project');
-      await page.fill('input[name="slug"]', 'e2e-test-project');
-      await page.fill('textarea[name="summary"]', 'This is an E2E test project summary.');
-      
-      // 3. Submit
+      await page.fill('input[name="title"]', projectTitle);
+      await page.fill('input[name="slug"]', projectSlug);
+      await page.fill('textarea[name="summary"]', 'Automation testing project summary.');
+      await page.check('input[name="published"]'); // Ensure it is published
       await page.click('button[type="submit"]');
 
-      // 4. Verify success toast and redirection
+      // Verify creation
       await expect(page.getByText('Project created successfully')).toBeVisible();
       await expect(page).toHaveURL(/\/admin\/projects/);
+      await expect(page.getByText(projectTitle)).toBeVisible();
+
+      // 2. Verify visibility on public /work page
+      await page.goto('/work');
+      await expect(page.getByText(projectTitle)).toBeVisible();
+
+      // 3. Edit Project
+      await page.goto('/admin/projects');
+      // Find the card with our project and click edit (Pencil icon)
+      const projectCard = page.locator('.group', { hasText: projectTitle });
+      await projectCard.getByTitle('Edit').click();
+      
+      const updatedTitle = `${projectTitle} (Updated)`;
+      await page.fill('input[name="title"]', updatedTitle);
+      await page.click('button[type="submit"]');
+
+      // Verify edit
+      await expect(page.getByText('Project updated successfully')).toBeVisible();
+      await expect(page.getByText(updatedTitle)).toBeVisible();
+
+      // 4. Delete Project
+      await projectCard.getByRole('button', { name: /delete/i }).click();
+      // Confirm dialog (assuming it uses window.confirm or a custom dialog)
+      // If it's a custom dialog, we need to click the confirm button inside it.
+      await page.getByRole('button', { name: 'Confirm Delete' }).click();
+
+      // Verify deletion
+      await expect(page.getByText(updatedTitle)).not.toBeVisible();
     });
   });
 });
