@@ -12,10 +12,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
 }
 
-// Fallback to placeholder if missing, to allow client initialization without immediate crash
+// Fallback to empty string if missing, to allow client initialization without immediate crash
+// Middleware and AuthContext will handle redirection or error state
 export const supabase = createClient(
-  supabaseUrl || "https://placeholder.supabase.co", 
-  supabaseAnonKey || "placeholder"
+  supabaseUrl || "", 
+  supabaseAnonKey || ""
 );
 
 /**
