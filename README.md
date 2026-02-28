@@ -1,119 +1,109 @@
-# MAPRIMO Technologies
+# MAPRIMO Technologies Platform
 
-A premium, full-stack Next.js application designed for a modern software engineering and QA agency. It features a complete marketing frontend and a robust, secure administrative dashboard.
-
-## 🚀 Features
-
-### Client-Facing Frontend
-*   **Immersive Design:** High-impact typography, dark-mode elements, and smooth scroll animations.
-*   **Dynamic Portfolio & Case Studies:** Detailed breakdown of project challenges, solutions, and technical stacks.
-*   **Engineering Blog:** Markdown-supported articles with featured highlights and reading time estimates.
-*   **Podcast Integration:** Built-in audio player and episode listings.
-*   **Lead Generation:** Integrated contact form with honeypot bot protection. (TODO: Automated Google Sheets/Calendar sync).
-
-### Admin Dashboard (CMS)
-*   **Full CRUD Capabilities:** Manage Projects, Case Studies, Testimonials, Blog Posts, Directors, and Podcasts.
-*   **Premium UX:** Consistent forms with perceived progress tracking, optimistic UI updates via `useTransition`, and robust error handling.
-*   **Automated Storage Cleanup:** Deleting a database record automatically removes its associated media files from the Supabase storage bucket, preventing orphaned files.
-*   **Lead Management:** View comprehensive details of incoming inquiries in a structured dialog.
-
-## 🛠️ Tech Stack
-*   **Framework:** Next.js 14 (App Router, Server Actions)
-*   **Styling:** Tailwind CSS, shadcn/ui, Lucide Icons
-*   **Database & Auth:** Supabase (PostgreSQL, Row Level Security, Storage Buckets)
-*   **Validation:** Zod
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase" />
+  <img src="https://img.shields.io/badge/PostgreSQL-DB-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
+  <br />
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License MIT" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" />
+</div>
 
 ---
 
-## 💻 Local Development Setup
+## 🚀 Overview
+**MAPRIMO Technologies** is an enterprise-grade platform combining a high-performance marketing frontend with a hardened administrative CMS. Built for technical agencies, it features automated content lifecycles, real-time observability, and a security-first data model.
 
-### 1. Clone & Install
+## 🏗️ Architecture
+The system utilizes a **Unidirectional Data Flow** with strict server-side validation boundaries.
+
+```mermaid
+graph LR
+  Client[Browser] --> Middleware[Auth Gate]
+  Middleware --> RSC[Server Components]
+  RSC --> Actions[Server Actions]
+  Actions --> DB[(Supabase/PostgreSQL)]
+  Actions --> Storage[Supabase Storage]
+```
+
+### Core Design Principles
+*   **Zero-Trust mutations:** Every Server Action validates admin session and Zod schemas before hitting the DB.
+*   **Source-of-truth Security:** Row Level Security (RLS) acts as the final firewall at the database level.
+*   **Optimistic UI:** CMS uses `useTransition` and `useOptimistic` for instantaneous feedback during CRUD operations.
+
+---
+
+## 📂 Project Structure
+| Path | Responsibility |
+| :--- | :--- |
+| `app/(marketing)` | Public routes (Home, Work, Blog, Services) |
+| `app/admin` | Gated CMS Dashboard and Management |
+| `components/admin` | CMS-specific forms, tables, and editors |
+| `lib/actions` | Domain-specific Server Actions (Mutations) |
+| `lib/supabase` | Hardened client initializers (Server/Client/Admin) |
+| `tests/` | Multi-tier testing suite (E2E, Unit, Security) |
+
+---
+
+## 🛠️ System Components
+
+### 1. Content Management (CMS)
+*   **Projects & Case Studies:** Full CRUD with automated storage cleanup.
+*   **Insights Engine:** Markdown-based Blog and Podcast management.
+*   **Leadership Team:** Sorted directory of agency directors.
+
+### 2. Lead Generation
+*   **Hardened Forms:** Integrated honeypot bot protection.
+*   **Rate Limiting:** IP-based throttling to prevent API abuse.
+*   **Sync (Planned):** Automated Google Sheets and Calendar integration.
+
+### 3. Observability & Reliability
+*   **Error Tracking:** Production-grade Sentry integration.
+*   **Structured Logging:** JSON logs for real-time monitoring via `lib/logger.ts`.
+*   **Health API:** Dedicated `/api/health` heartbeat for DB/API status.
+
+---
+
+## 🛡️ Security & Performance
+*   **RLS Policies:** Granular access control (e.g., Anon can read published, Admin can CRUD).
+*   **Hardened Headers:** Configured HSTS, CSP, and Frame Options in `next.config.mjs`.
+*   **Dynamic Rendering:** `force-dynamic` ensures CMS updates are reflected instantly without cache stale-out.
+*   **Optimized Assets:** Automatic WebP conversion and lazy loading via `next/image`.
+
+---
+
+## 🚦 Getting Started
+
+### Environment Variables
+Create a `.env.local` file with the following:
 ```bash
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+### Installation
+```bash
+# Install dependencies
 npm install
-```
 
-### 2. Configure Environment Variables
-Copy the example environment file and fill in your Supabase details:
-```bash
-cp .env.local.example .env.local
-```
-
-### 3. Database Setup (Supabase)
-This project requires a specific database schema and Row Level Security (RLS) policies.
-1. Log in to your [Supabase Dashboard](https://supabase.com/dashboard).
-2. Go to the **SQL Editor**.
-3. Copy the contents of `bucketv3.sql` (found in the root of this project) and paste it into the editor.
-4. Click **Run**. This will create all necessary tables (Projects, Case Studies, Blog, Directors, Podcasts, Leads, Admins), configure RLS, and set up your storage buckets safely.
-
-### 4. Create an Admin User
-To access the `/admin` dashboard, your user ID must be present in the `admins` table.
-1. Sign up a new user via the `/login` page on your local site.
-2. Go to the Supabase Dashboard -> **Authentication** and copy that user's `User UID`.
-3. Go to the **Table Editor** -> `admins` table.
-4. Insert a new row and paste the `User UID` into the `user_id` column.
-
-### 5. Run the Server
-```bash
+# Start development server
 npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
----
-
-## 🌍 Deployment (Vercel)
-
-This application is optimized for zero-config deployment on Vercel.
-
-1. Push your code to a GitHub repository.
-2. Log in to [Vercel](https://vercel.com/) and click **Add New... > Project**.
-3. Import your GitHub repository.
-4. In the **Environment Variables** section, add all the variables from your `.env.local` file (especially `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
-5. Click **Deploy**.
-
-*Note: Since this application uses Next.js Server Actions, it requires a Node.js runtime environment (which Vercel provides automatically). Static exporting (`output: 'export'`) is not supported without refactoring the admin backend to an external API.*
-
----
-
-## 📈 Analytics
-
-Google Analytics is pre-configured. To enable it:
-1. Get your GA4 Measurement ID (e.g., `G-XXXXXXXXXX`).
-2. Add it to your `.env.local` (or Vercel Environment Variables) as `NEXT_PUBLIC_GA_ID`.
-3. The tracking script will automatically inject into the `<head>` on production builds.
-
----
-
-## 🧪 Quality Assurance & Production Reliability (Initial Setup)
-
-*This section describes the planned QA architecture. Full implementation is in progress.*
-
-### 🛡️ Security & RLS
-*   **RLS Verification:** (TODO: Automated tests for Supabase Row Level Security).
-*   **Security Headers:** Next.js is configured with hardened headers (`X-Frame-Options`, `X-Content-Type-Options`, `HSTS`) verified via Playwright.
-*   **Dependency Auditing:** The CI pipeline monitors dependencies for critical vulnerabilities. We maintain stability by pinning the latest secure versions within the Next.js 14.x line (currently 14.2.35). High-severity advisories are reviewed weekly to balance security with continuous delivery.
-
-### 🎨 Visual Regression
-*   **Snapshot Testing:** (TODO: Playwright visual regression configuration).
-
-### 📈 Production Monitoring
-*   **Error Tracking:** Sentry pre-configured (Requires `NEXT_PUBLIC_SENTRY_DSN`).
-*   **Structured Logging:** A custom `logger` (`lib/logger.ts`) provides JSON-formatted logs for observability.
-*   **Health Monitoring:** (TODO: Fully automated uptime and database connectivity checks).
-
-### 🚦 Running Tests
-```bash
-# Run all unit, integration, and security tests
-npm run test:unit
-
-# Run E2E and header verification tests
-npm run test:e2e
-
-# Run tests in CI mode (Unit + E2E)
+# Run test suite
 npm run test:ci
 ```
 
-### 📂 Test Structure
-*   `tests/unit`: Zod schemas, logic, and `ActionResult` validation.
-*   `tests/integration`: Server action flows and database interactions.
-*   `tests/e2e`: Critical user flows (Lead Form, Admin Auth) and UI consistency.
-*   `tests/security`: Supabase RLS policies and HTTP security header verification.
+---
+
+## 📜 License
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+  Built with Precision by MAPRIMO Engineering
+</div>
