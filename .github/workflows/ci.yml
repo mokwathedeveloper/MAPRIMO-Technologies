@@ -36,15 +36,29 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Verify Environment Configuration
-      if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    - name: Verify Supabase env (push requires secrets)
+      if: github.event_name == 'push'
       env:
         NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       run: |
-        if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then echo "::error::NEXT_PUBLIC_SUPABASE_URL is missing"; exit 1; fi
-        if [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then echo "::error::NEXT_PUBLIC_SUPABASE_ANON_KEY is missing"; exit 1; fi
-        echo "Environment configuration verified."
+        test -n "$NEXT_PUBLIC_SUPABASE_URL" || (echo "::error::NEXT_PUBLIC_SUPABASE_URL is missing" && exit 1)
+        test -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" || (echo "::error::NEXT_PUBLIC_SUPABASE_ANON_KEY is missing" && exit 1)
+        echo "Env OK"
+
+    - name: Verify Supabase env (internal PRs only)
+      if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+      env:
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      run: |
+        test -n "$NEXT_PUBLIC_SUPABASE_URL" || (echo "::error::NEXT_PUBLIC_SUPABASE_URL is missing" && exit 1)
+        test -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" || (echo "::error::NEXT_PUBLIC_SUPABASE_ANON_KEY is missing" && exit 1)
+        echo "Env OK"
+
+    - name: Skip Supabase env check (fork PR)
+      if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+      run: echo "Skipping env check on fork PR (secrets are not available)."
 
     - name: Build
       run: npm run build
