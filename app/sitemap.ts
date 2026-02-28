@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { MetadataRoute } from "next";
 import { supabase } from "@/lib/supabase";
 
@@ -37,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(p.created_at),
     }));
   } catch (err) {
-    console.warn("Failed to fetch dynamic routes for sitemap. Using static routes only.");
+    logger.warn("Failed to fetch dynamic routes for sitemap. Using static routes only.");
   }
 
   return [

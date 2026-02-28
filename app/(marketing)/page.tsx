@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -37,13 +38,13 @@ async function getCaseStudies() {
       .limit(3);
     
     if (error) {
-      console.error("Supabase error fetching case studies on home:", error);
+      logger.error("Supabase error fetching case studies on home:", error);
       return [];
     }
     
     return (data || []) as CaseStudy[];
   } catch (e) {
-    console.error("Catch error fetching case studies on home:", e);
+    logger.error("Catch error fetching case studies on home:", e);
     return [];
   }
 }

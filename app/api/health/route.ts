@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 
 export async function GET() {
   try {
@@ -17,7 +18,7 @@ export async function GET() {
       database: 'connected'
     }, { status: 200 });
   } catch (error) {
-    console.error('Health check failed:', error);
+    logger.error('Health check failed', error);
     return NextResponse.json({ 
       status: 'unhealthy', 
       timestamp: new Date().toISOString(),

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { supabase } from "@/lib/supabase";
 import type { Podcast } from "@/lib/types";
 import { Mic2, Calendar, Clock, ArrowLeft, Play, User, Share2 } from "lucide-react";
@@ -17,7 +18,7 @@ async function getPodcast(slug: string) {
     if (error) throw error;
     return data as Podcast;
   } catch (e) {
-    console.error("Error fetching podcast episode:", e);
+    logger.error("Error fetching podcast episode:", e);
     return null;
   }
 }

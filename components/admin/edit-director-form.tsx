@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
@@ -70,7 +71,7 @@ export function EditDirectorForm({ director }: { director: Director }) {
           setStageIndex(-1);
         }
       } catch (err) {
-        console.error("Submission error:", err);
+        logger.error("Submission error:", err);
         const msg = "A network error occurred. Please try again.";
         setError(msg);
         toast.error(msg);

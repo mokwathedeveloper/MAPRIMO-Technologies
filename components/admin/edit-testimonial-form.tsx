@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 "use client";
 
 import { useState, useTransition } from "react";
@@ -49,7 +50,7 @@ export function EditTestimonialForm({ testimonial }: { testimonial: Testimonial 
           toast.error(result.error.message);
         }
       } catch (err) {
-        console.error("Submission error:", err);
+        logger.error("Submission error:", err);
         const msg = "A network error occurred. Please try again.";
         setError(msg);
         toast.error(msg);

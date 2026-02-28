@@ -17,6 +17,7 @@ import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { ActionResult } from "./result";
 import { ZodError } from "zod";
+import { logger } from "@/lib/logger";
 
 /**
  * Helper to get a hardened Supabase client with admin verification.
@@ -64,14 +65,14 @@ export async function handleActionError(err: any): Promise<ActionResult> {
   // Safe logging: never access deep properties or .value without guards
   try {
     if (err instanceof ZodError) {
-      console.error("Validation Error:", err.flatten());
+      logger.error("Validation Error", err.flatten());
     } else if (err instanceof Error) {
-      console.error(err.message, err.stack);
+      logger.error(err.message, err);
     } else {
-      console.error("Action error:", typeof err === "string" ? err : safeStringify(err));
+      logger.error("Action error", typeof err === "string" ? { message: err } : { error: err });
     }
   } catch {
-    console.error("Action error: [Logging failed]");
+    logger.error("Action error: [Logging failed]");
   }
   
   // Return structured response
@@ -175,13 +176,13 @@ async function deleteFileByUrl(supabase: any, url: string | null | undefined) {
       const filePath = parts[1];
       const { error } = await supabase.storage.from("projects").remove([filePath]);
       if (error) {
-        console.error(`Error deleting storage file ${filePath}:`, error);
+        logger.error(`Error deleting storage file ${filePath}`, error);
       } else {
-        console.log(`Successfully deleted storage file: ${filePath}`);
+        logger.info(`Successfully deleted storage file: ${filePath}`);
       }
     }
   } catch (e) {
-    console.error("Failed to delete storage file:", e);
+    logger.error("Failed to delete storage file", e);
   }
 }
 

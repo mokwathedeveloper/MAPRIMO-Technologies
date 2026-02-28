@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -19,13 +20,13 @@ async function getCaseStudy(slug: string) {
       .single();
     
     if (error) {
-      console.error("Error fetching case study by slug:", error);
+      logger.error("Error fetching case study by slug:", error);
       return null;
     }
 
     return data as CaseStudy;
   } catch (e) {
-    console.error("Catch error fetching case study:", e);
+    logger.error("Catch error fetching case study:", e);
     return null;
   }
 }

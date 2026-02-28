@@ -49,9 +49,11 @@ function log(level: LogLevel, message: string, context?: Record<string, any>, er
   // For now, we print JSON to stdout/stderr which is standard for containerized apps
   const output = JSON.stringify(entry);
 
+  /* eslint-disable no-console */
   if (level === 'error') {
-    console.error(output);
+    logger.error(output);
   } else {
-    console.log(output);
+    logger.info(output);
   }
+  /* eslint-enable no-console */
 }

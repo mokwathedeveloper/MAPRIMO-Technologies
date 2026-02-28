@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,12 +23,12 @@ async function getPosts() {
       .order("published_at", { ascending: false });
     
     if (error) {
-      console.error("Error fetching posts:", error);
+      logger.error("Error fetching posts:", error);
       return [];
     }
     return (data || []) as Post[];
   } catch (e) {
-    console.error("Failed to get posts:", e);
+    logger.error("Failed to get posts:", e);
     return [];
   }
 }

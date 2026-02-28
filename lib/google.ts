@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { google } from "googleapis";
 
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
@@ -24,7 +25,7 @@ export async function appendToSheet(data: {
 }) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   if (!sheetId || !process.env.GOOGLE_CLIENT_ID) {
-    console.warn("Google Sheets credentials not fully configured. Skipping sheet update.");
+    logger.warn("Google Sheets credentials not fully configured. Skipping sheet update.");
     return;
   }
 
@@ -48,7 +49,7 @@ export async function appendToSheet(data: {
       requestBody: { values },
     });
   } catch (error) {
-    console.error("Error appending to Google Sheet:", error);
+    logger.error("Error appending to Google Sheet:", error);
   }
 }
 
@@ -60,7 +61,7 @@ export async function createCalendarEvent(data: {
   attendeeEmail: string;
 }) {
   if (!process.env.GOOGLE_CLIENT_ID) {
-    console.warn("Google Calendar credentials not configured.");
+    logger.warn("Google Calendar credentials not configured.");
     return;
   }
 
@@ -87,7 +88,7 @@ export async function createCalendarEvent(data: {
       },
     });
   } catch (error) {
-    console.error("Error creating calendar event:", error);
+    logger.error("Error creating calendar event:", error);
     throw error;
   }
 }

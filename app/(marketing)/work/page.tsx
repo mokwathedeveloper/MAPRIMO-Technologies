@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { Metadata } from "next";
 import { ProjectCard } from "@/components/project-card";
 import { CaseStudyCard } from "@/components/case-study-card";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 async function getProjects() {
-  console.log("Fetching projects with simple client...");
+  logger.info("Fetching projects with simple client...");
   try {
     const { data, error } = await supabase
       .from("projects")
@@ -21,13 +22,13 @@ async function getProjects() {
       .order("created_at", { ascending: false });
     
     if (error) {
-      console.error("Supabase error fetching projects:", error);
+      logger.error("Supabase error fetching projects:", error);
       throw error;
     }
-    console.log(`Successfully fetched ${data?.length || 0} projects`);
+    logger.info(`Successfully fetched ${data?.length || 0} projects`);
     return (data || []) as Project[];
   } catch (e) {
-    console.error("Catch error fetching projects:", e);
+    logger.error("Catch error fetching projects:", e);
     return [];
   }
 }
@@ -40,13 +41,13 @@ async function getCaseStudies() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Supabase error fetching case studies:", error);
+      logger.error("Supabase error fetching case studies:", error);
       throw error;
     }
     
     return (data || []) as CaseStudy[];
   } catch (e) {
-    console.error("Error fetching case studies:", e);
+    logger.error("Error fetching case studies:", e);
     return [];
   }
 }

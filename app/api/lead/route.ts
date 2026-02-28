@@ -4,6 +4,7 @@ import { leadSchema } from "@/lib/validations";
 import { appendToSheet, createCalendarEvent } from "@/lib/google";
 import { rateLimit } from "@/lib/rate-limit";
 import { Resend } from "resend";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: Request) {
   try {
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     
     // 1. Honeypot check (Bot protection)
     if (json.honeypot && json.honeypot.length > 0) {
-      console.warn("Honeypot triggered, possible bot submission.");
+      logger.warn("Honeypot triggered, possible bot submission.");
       return NextResponse.json({ message: "Success" }, { status: 200 });
     }
 
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
     ]);
 
     if (supabaseError) {
-      console.error("Supabase error:", supabaseError);
+      logger.error("Supabase error:", supabaseError);
       return NextResponse.json({ error: "Failed to save lead" }, { status: 500 });
     }
 
@@ -64,13 +65,13 @@ export async function POST(req: Request) {
           <hr />
           <p><a href="${process.env.NEXT_PUBLIC_SITE_URL}/admin">View in Dashboard</a></p>
         `,
-      }).catch(err => console.error("Resend error:", err));
+      }).catch(err => logger.error("Resend error:", err));
     }
 
     // 4. Optional Sync to Google Sheets
     if (process.env.GOOGLE_SHEET_ID) {
       appendToSheet({ name, email, company, message, requested_date }).catch(err => 
-        console.error("Failed to sync to Google Sheets:", err)
+        logger.error("Failed to sync to Google Sheets:", err)
       );
     }
 
@@ -85,12 +86,12 @@ export async function POST(req: Request) {
         startDateTime: start.toISOString(),
         endDateTime: end.toISOString(),
         attendeeEmail: email,
-      }).catch(err => console.error("Failed to create calendar event:", err));
+      }).catch(err => logger.error("Failed to create calendar event:", err));
     }
 
     return NextResponse.json({ message: "Success" });
   } catch (err) {
-    console.error("API error:", err);
+    logger.error("API error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

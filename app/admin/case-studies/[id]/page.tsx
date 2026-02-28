@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
@@ -30,7 +31,7 @@ export default async function EditCaseStudyPage({ params }: { params: { id: stri
     .single();
 
   if (fetchError || !caseStudy) {
-    console.error("Error fetching case study:", fetchError);
+    logger.error("Error fetching case study:", fetchError);
     notFound();
   }
 

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { supabase } from "@/lib/supabase";
 import type { Podcast } from "@/lib/types";
 import { Mic2, Search, Calendar, Clock, Play } from "lucide-react";
@@ -23,7 +24,7 @@ async function getPodcasts(searchQuery?: string) {
     if (error) throw error;
     return (data || []) as Podcast[];
   } catch (e) {
-    console.error("Error fetching podcasts:", e);
+    logger.error("Error fetching podcasts:", e);
     return [];
   }
 }
