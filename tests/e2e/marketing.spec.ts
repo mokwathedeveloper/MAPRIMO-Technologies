@@ -69,7 +69,7 @@ test.describe('Marketing Site', () => {
   });
 
   test('lead form successful submission', async ({ page }) => {
-    // We can mock the API response if we don't want to hit the real DB
+    // We can mock the API response if we don&apos;t want to hit the real DB
     await page.route('**/api/lead', async route => {
       await route.fulfill({
         status: 200,
