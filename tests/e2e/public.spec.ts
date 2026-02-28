@@ -19,6 +19,23 @@ test.describe('Public Data Rendering', () => {
     await expect(emptyState.or(podcastCards.first())).toBeVisible();
   });
 
+  test('podcast detail page renders audio/video player if available', async ({ page }) => {
+    await page.goto('/podcast');
+    
+    const podcastCard = page.locator('.group').filter({ hasText: 'AUDIO LOG' }).first();
+    
+    if (await podcastCard.count() > 0) {
+      await podcastCard.click();
+      
+      // Check for media section
+      await expect(page.getByText('Episode Media')).toBeVisible();
+      
+      // Check for at least one player type or the pending message
+      const player = page.locator('iframe, video, audio, .text-muted-foreground');
+      await expect(player.first()).toBeVisible();
+    }
+  });
+
   test('directors section renders on about page', async ({ page }) => {
     await page.goto('/about');
     
