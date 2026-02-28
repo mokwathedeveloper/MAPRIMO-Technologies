@@ -1,5 +1,5 @@
-import { logger } from "@/lib/logger";
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -137,7 +137,7 @@ export default function NewCaseStudyPage() {
                   <Input 
                     id="title" 
                     name="title" 
-                    placeholder="e.g. Scaling TechStream's Infrastructure" 
+                    placeholder="e.g. Scaling TechStream&apos;s Infrastructure" 
                     required 
                     disabled={isLoading}
                   />
