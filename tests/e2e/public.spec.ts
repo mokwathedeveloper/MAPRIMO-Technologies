@@ -14,7 +14,7 @@ test.describe('Public Data Rendering', () => {
     
     await page.goto('/');
     
-    // Validate we're on the right page
+    // Validate we&apos;re on the right page
     await expect(page).toHaveTitle(/MAPRIMO/i);
     
     // Validate no serious console errors
@@ -53,7 +53,7 @@ test.describe('Public Data Rendering', () => {
     await page.click('button[type="submit"]');
     
     // We expect HTML5 validation to stop it if required, or we get a UI message
-    // Just verify the form is still there and we haven't navigated away
+    // Just verify the form is still there and we haven&apos;t navigated away
     await expect(page).toHaveURL(/.*\/contact/);
   });
 });
