@@ -106,7 +106,7 @@ export default async function WorkPage() {
         {projects.length === 0 && caseStudies.length === 0 && (
           <div className="text-center py-32 border-2 border-dashed rounded-[3rem] bg-muted/10">
             <h3 className="text-2xl font-bold text-muted-foreground mb-4">No projects published yet</h3>
-            <p className="text-muted-foreground/60 max-w-xs mx-auto">We're currently documenting our latest engineering successes. Check back soon!</p>
+            <p className="text-muted-foreground/60 max-w-xs mx-auto">We&apos;re currently documenting our latest engineering successes. Check back soon!</p>
           </div>
         )}
       </div>
