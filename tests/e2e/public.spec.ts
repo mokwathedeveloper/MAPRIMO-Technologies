@@ -1,24 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@/tests/fixtures/base';
 
 test.describe('Public Data Rendering', () => {
-  test('home page loads without console errors', async ({ page }) => {
-    const consoleErrors: string[] = [];
-    page.on('console', msg => {
-      if (msg.type() === 'error') {
-        // Ignore next.js hydration or HMR errors in dev if any
-        if (!msg.text().includes('Warning: ')) {
-          consoleErrors.push(msg.text());
-        }
-      }
-    });
-    
+  test('home page loads', async ({ page }) => {
     await page.goto('/');
-    
-    // Validate we&apos;re on the right page
+
+    // Validate we're on the right page
     await expect(page).toHaveTitle(/MAPRIMO/i);
-    
-    // Validate no serious console errors
-    expect(consoleErrors.length).toBe(0);
   });
 
   test('podcast listing page loads and displays episodes', async ({ page }) => {

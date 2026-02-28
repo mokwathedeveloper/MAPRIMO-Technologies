@@ -1,15 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@/tests/fixtures/base';
 
 test.describe('Marketing Site', () => {
-  test.beforeEach(async ({ page }) => {
-    // Fail on console errors
-    page.on('console', msg => {
-      if (msg.type() === 'error') {
-        throw new Error(`Browser console error: ${msg.text()}`);
-      }
-    });
-  });
-
   test('home page loads correctly', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(/MAPRIMO Technologies/);
