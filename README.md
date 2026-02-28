@@ -90,7 +90,7 @@ Google Analytics is pre-configured. To enable it:
 ### 🛡️ Security & RLS
 *   **RLS Verification:** (TODO: Automated tests for Supabase Row Level Security).
 *   **Security Headers:** Next.js is configured with hardened headers (`X-Frame-Options`, `X-Content-Type-Options`, `HSTS`) verified via Playwright.
-*   **Dependency Auditing:** (TODO: CI pipeline enforcement).
+*   **Dependency Auditing:** The CI pipeline monitors dependencies for critical vulnerabilities. We maintain stability by pinning the latest secure versions within the Next.js 14.x line (currently 14.2.35). High-severity advisories are reviewed weekly to balance security with continuous delivery.
 
 ### 🎨 Visual Regression
 *   **Snapshot Testing:** (TODO: Playwright visual regression configuration).
