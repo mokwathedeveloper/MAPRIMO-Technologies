@@ -2,31 +2,30 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Admin Security & Management', () => {
   test('redirects to login if not authenticated', async ({ page }) => {
-    // Attempt to access admin dashboard
+    // Attempt to access admin dashboard directly
     await page.goto('/admin');
     
-    // Should be redirected to login page
+    // Should be redirected to login page by the server-side guard
     await expect(page).toHaveURL(/\/login/);
     await expect(page.getByText('Authorized Personnel Only')).toBeVisible();
   });
 
-  test.describe('Authenticated Admin', () => {
-    // In a real scenario, we would use a storageState or a global setup to be logged in
-    // For this demonstration, we'll show how a project creation test would look
-    
-    test('can access admin dashboard when logged in', async ({ page }) => {
-      // Mocking the session for Playwright would usually happen via cookies/localStorage
-      // This is a placeholder for where the actual authenticated flow would go
-      await page.goto('/login');
-      // ... perform login ...
-    });
-
+  test.describe('Admin Dashboard Features', () => {
     test('project creation flow', async ({ page }) => {
-      // 1. Navigate to new project page
-      // 2. Fill in details
-      // 3. Upload image
-      // 4. Submit
-      // 5. Verify success toast and redirect
+      // 1. Navigate to new project
+      await page.goto('/admin/projects/new');
+      
+      // 2. Fill in project details
+      await page.fill('input[name="title"]', 'E2E Test Project');
+      await page.fill('input[name="slug"]', 'e2e-test-project');
+      await page.fill('textarea[name="summary"]', 'This is an E2E test project summary.');
+      
+      // 3. Submit
+      await page.click('button[type="submit"]');
+
+      // 4. Verify success toast and redirection
+      await expect(page.getByText('Project created successfully')).toBeVisible();
+      await expect(page).toHaveURL(/\/admin\/projects/);
     });
   });
 });

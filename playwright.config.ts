@@ -38,16 +38,32 @@ export default defineConfig({
   // We can't easily do this globally in the config file itself for all tests without a fixture
   // But we can suggest it in the README or add a custom fixture.
   // For now, I will add it to the base test in a helper.
+/* Configure projects for major browsers */
+projects: [
+  { name: 'setup', testMatch: /auth\.setup\.ts/ },
 
-  /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+  {
+    name: 'chromium',
+    use: { 
+      ...devices['Desktop Chrome'],
+      // Use prepared auth state if available for admin tests
     },
+    dependencies: ['setup'],
+  },
 
-    {
-      name: 'firefox',
+  {
+    name: 'authenticated',
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: '.auth/user.json',
+    },
+    dependencies: ['setup'],
+    testMatch: /admin\.spec\.ts/,
+  },
+
+  {
+    name: 'firefox',
+...
       use: { ...devices['Desktop Firefox'] },
     },
 

@@ -9,17 +9,13 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
-
-# next.js
-.next/
-out/
-build/
-dist/
+.auth/
 
 # env files
 .env
 .env*.local
 .env.production
+.env.test
 
 # vercel
 .vercel
