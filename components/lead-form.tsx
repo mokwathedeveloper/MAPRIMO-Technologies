@@ -104,7 +104,7 @@ export function LeadForm() {
         </div>
         <h3 className="text-3xl font-black tracking-tight font-heading">Protocol Completed.</h3>
         <p className="text-muted-foreground text-lg font-medium leading-relaxed max-w-sm mx-auto">
-          Your technical requirements have been received. We'll be in touch within 24 hours.
+          Your technical requirements have been received. We&apos;ll be in touch within 24 hours.
         </p>
         <Button variant="outline" onClick={() => setMessage(null)} className="rounded-xl font-bold border-2">
           Send another message
