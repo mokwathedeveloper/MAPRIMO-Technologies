@@ -17,7 +17,7 @@ test.describe('Security Headers', () => {
     
     // 3. Strict-Transport-Security (HSTS)
     // Only expect this if the test is running on HTTPS or a production-like environment
-    // If it's localhost, it might not be there unless explicitly added
+    // If it&apos;s localhost, it might not be there unless explicitly added
     if (response.url().startsWith('https://')) {
       expect(headers['strict-transport-security']).toBeDefined();
     }
